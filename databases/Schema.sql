@@ -145,20 +145,3 @@ CREATE TABLE IF NOT EXISTS Pago (
                       FOREIGN KEY (CodigoInfoBancaria) REFERENCES InformacionBancaria(CodigoInfoBancaria),
                       FOREIGN KEY (CodigoPedido) REFERENCES Pedido(CodigoPedido)
 );
-
--- ============================
---        TABLA PERSONA
--- ============================
-INSERT INTO Persona (Nombres, Apellidos, Direccion, Telefono, CorreoElectronico) VALUES
-                                                                                     ('Juan Carlos', 'Rodríguez Pérez', 'Av. Central 123, Lima', '987654321', 'juan.rodriguez@email.com'),
-                                                                                     ('María Elena', 'González López', 'Calle San Martín 456, Lima', '923456789', 'maria.gonzalez@email.com'),
-                                                                                     ('Carlos Alberto', 'Martínez Sánchez', 'Jr. Las Flores 789, Lima', '912345678', 'carlos.martinez@email.com'),
-                                                                                     ('Ana Patricia', 'Fernández Torres', 'Av. Los Álamos 321, Lima', '934567890', 'ana.fernandez@email.com'),
-                                                                                     ('Luis Fernando', 'Ramírez Castro', 'Calle Real 654, Lima', '945678901', 'luis.ramirez@email.com'),
-                                                                                     ('Sofía Isabel', 'Herrera Mendoza', 'Jr. Santa Rosa 987, Lima', '956789012', 'sofia.herrera@email.com'),
-                                                                                     ('Diego Armando', 'Vargas Silva', 'Av. Bolognesi 147, Lima', '967890123', 'diego.vargas@email.com'),
-                                                                                     ('Valentina Rose', 'Cruz Morales', 'Calle Los Robles 258, Lima', '978901234', 'valentina.cruz@email.com'),
-                                                                                     ('Andrés Felipe', 'Reyes Aguilar', 'Jr. Las Palmeras 369, Lima', '989012345', 'andres.reyes@email.com'),
-                                                                                     ('Camila Andrea', 'Gómez Paredes', 'Av. Tacna 741, Lima', '990123456', 'camila.gomez@email.com');
-
-
