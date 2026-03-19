@@ -4,16 +4,16 @@ USE UrbanEats;
 --        TABLA PERSONA
 -- ============================
 INSERT INTO Persona (Nombres, Apellidos, Direccion, Telefono, CorreoElectronico) VALUES
-                                                                                     ('Juan Carlos', 'Rodríguez Pérez', 'Av. Central 123, Lima', '987654321', 'juan.rodriguez@email.com'),
-                                                                                     ('María Elena', 'González López', 'Calle San Martín 456, Lima', '923456789', 'maria.gonzalez@email.com'),
-                                                                                     ('Carlos Alberto', 'Martínez Sánchez', 'Jr. Las Flores 789, Lima', '912345678', 'carlos.martinez@email.com'),
-                                                                                     ('Ana Patricia', 'Fernández Torres', 'Av. Los Álamos 321, Lima', '934567890', 'ana.fernandez@email.com'),
-                                                                                     ('Luis Fernando', 'Ramírez Castro', 'Calle Real 654, Lima', '945678901', 'luis.ramirez@email.com'),
-                                                                                     ('Sofía Isabel', 'Herrera Mendoza', 'Jr. Santa Rosa 987, Lima', '956789012', 'sofia.herrera@email.com'),
-                                                                                     ('Diego Armando', 'Vargas Silva', 'Av. Bolognesi 147, Lima', '967890123', 'diego.vargas@email.com'),
-                                                                                     ('Valentina Rose', 'Cruz Morales', 'Calle Los Robles 258, Lima', '978901234', 'valentina.cruz@email.com'),
-                                                                                     ('Andrés Felipe', 'Reyes Aguilar', 'Jr. Las Palmeras 369, Lima', '989012345', 'andres.reyes@email.com'),
-                                                                                     ('Camila Andrea', 'Gómez Paredes', 'Av. Tacna 741, Lima', '990123456', 'camila.gomez@email.com');
+                                                                                    ('Juan Carlos', 'Rodríguez Pérez', 'Av. Caracas 123, Bogotá', '3001234567', 'juan.rodriguez@email.com'),
+                                                                                    ('María Elena', 'González López', 'Calle 72 #10-34, Bogotá', '3012345678', 'maria.gonzalez@email.com'),
+                                                                                    ('Carlos Alberto', 'Martínez Sánchez', 'Cra 15 #93-45, Bogotá', '3023456789', 'carlos.martinez@email.com'),
+                                                                                    ('Ana Patricia', 'Fernández Torres', 'Av. Suba 67-21, Bogotá', '3034567890', 'ana.fernandez@email.com'),
+                                                                                    ('Luis Fernando', 'Ramírez Castro', 'Calle 80 #45-67, Bogotá', '3045678901', 'luis.ramirez@email.com'),
+                                                                                    ('Sofía Isabel', 'Herrera Mendoza', 'Cra 7 #45-12, Bogotá', '3056789012', 'sofia.herrera@email.com'),
+                                                                                    ('Diego Armando', 'Vargas Silva', 'Av. Boyacá 120-33, Bogotá', '3067890123', 'diego.vargas@email.com'),
+                                                                                    ('Valentina Rose', 'Cruz Morales', 'Calle 100 #15-20, Bogotá', '3078901234', 'valentina.cruz@email.com'),
+                                                                                    ('Andrés Felipe', 'Reyes Aguilar', 'Cra 11 #82-19, Bogotá', '3089012345', 'andres.reyes@email.com'),
+                                                                                    ('Camila Andrea', 'Gómez Paredes', 'Av. El Dorado 68-40, Bogotá', '3090123456', 'camila.gomez@email.com');
 
 -- ============================
 --  TABLA INFORMACIÓN BANCARIA
@@ -69,18 +69,17 @@ INSERT INTO Repartidor (CodigoPersona, Placa) VALUES
 -- ============================
 --        TABLA RESTAURANTE
 -- ============================
-INSERT INTO Restaurante (Nombre, Ubicacion, Horario) VALUES
-                                                         ('Pollería El Rico Sabor', 'Av. Aviación 567, Lima', '10:00 AM - 10:00 PM'),
-                                                         ('Pizzería Don Giuseppe', 'Calle Manuel Gonzales 234, Lima', '12:00 PM - 11:00 PM'),
-                                                         ('Cevichería La Mar', 'Jr. Monterrey 789, Lima', '11:00 AM - 6:00 PM'),
-                                                         ('Hamburguesería Big Bite', 'Av. Javier Prado 456, Lima', '11:00 AM - 12:00 AM'),
-                                                         ('Taller de Cocina', 'Calle Las Artes 321, Lima', '1:00 PM - 9:00 PM'),
-                                                         ('Sabor Criollo', 'Jr. Huancavelica 654, Lima', '9:00 AM - 8:00 PM'),
-                                                         ('Sushi Bar Samurai', 'Av. Caminos del Inca 987, Lima', '12:00 PM - 10:00 PM'),
-                                                         ('Taco Libre', 'Calle México 147, Lima', '11:00 AM - 11:00 PM'),
-                                                         ('Parrilla Argentina', 'Jr. Mendoza 258, Lima', '6:00 PM - 12:00 AM'),
-                                                         ('Café del Bosque', 'Av. La Molina 369, Lima', '7:00 AM - 7:00 PM');
-
+INSERT INTO Restaurante (Nombre, Ubicacion, Horario, Latitud, Longitud) VALUES
+                                                                          ('Pollería El Rico Sabor', 'Av. Caracas 123, Bogotá', '10:00 AM - 10:00 PM', 4.7115, -74.0725),
+                                                                          ('Pizzería Don Giuseppe', 'Calle 93 #11-20, Bogotá', '12:00 PM - 11:00 PM', 4.6760, -74.0489),
+                                                                          ('Cevichería La Mar', 'Zona G, Bogotá', '11:00 AM - 6:00 PM', 4.6486, -74.0573),
+                                                                          ('Hamburguesería Big Bite', 'Av. Suba 45, Bogotá', '11:00 AM - 12:00 AM', 4.7281, -74.0930),
+                                                                          ('Taller de Cocina', 'Chapinero, Bogotá', '1:00 PM - 9:00 PM', 4.6480, -74.0628),
+                                                                          ('Sabor Criollo', 'Centro Histórico, Bogotá', '9:00 AM - 8:00 PM', 4.5981, -74.0758),
+                                                                          ('Sushi Bar Samurai', 'Usaquén, Bogotá', '12:00 PM - 10:00 PM', 4.6950, -74.0305),
+                                                                          ('Taco Libre', 'Zona T, Bogotá', '11:00 AM - 11:00 PM', 4.6672, -74.0535),
+                                                                          ('Parrilla Argentina', 'Parque de la 93, Bogotá', '6:00 PM - 12:00 AM', 4.6765, -74.0480),
+                                                                          ('Café del Bosque', 'La Calera, Cundinamarca', '7:00 AM - 7:00 PM', 4.7200, -73.9700);
 -- ============================
 --            MENU
 -- ============================
@@ -175,9 +174,28 @@ INSERT INTO Pago (CodigoCliente, CodigoInfoBancaria, CodigoPedido, Monto, Metodo
 --   INSERTAR 5 PERSONAS
 -- ============================
 INSERT INTO Persona (CodigoPersona, Nombres, Apellidos, Direccion, Telefono, CorreoElectronico) VALUES
-                                                                                                    (11, 'Lucía', 'Paredes Soto', 'Av. Primavera 100, Lima', '911111111', 'lucia.paredes@example.com'),
-                                                                                                    (12, 'Renato', 'Campos Vera', 'Calle Las Lomas 233, Lima', '922222222', 'renato.campos@example.com'),
-                                                                                                    (13, 'Daniela', 'Fuentes Ríos', 'Jr. Palmeras 560, Lima', '933333333', 'daniela.fuentes@example.com'),
-                                                                                                    (14, 'Mateo', 'Quispe Bravo', 'Av. Arequipa 450, Lima', '944444444', 'mateo.quispe@example.com'),
-                                                                                                    (15, 'Isabella', 'Torres Mena', 'Calle Los Cedros 345, Lima', '955555555', 'isabella.torres@example.com');
+                                                                                                    (11, 'Lucía', 'Paredes Soto', 'Calle 134 #19-50, Bogotá', '3101111111', 'lucia.paredes@example.com'),
+                                                                                                    (12, 'Renato', 'Campos Vera', 'Cra 9 #116-10, Bogotá', '3112222222', 'renato.campos@example.com'),
+                                                                                                    (13, 'Daniela', 'Fuentes Ríos', 'Calle 170 #7-55, Bogotá', '3123333333', 'daniela.fuentes@example.com'),
+                                                                                                    (14, 'Mateo', 'Quispe Bravo', 'Av. Ciudad de Cali 26-90, Bogotá', '3134444444', 'mateo.quispe@example.com'),
+                                                                                                    (15, 'Isabella', 'Torres Mena', 'Cra 68 #40-21, Bogotá', '3145555555', 'isabella.torres@example.com');
 
+-- ============================
+--         DEPARTAMENTOS
+-- ============================
+INSERT INTO Departamentos (CodigoDepartamento, Nombre) VALUES
+                                                            (1, 'Cundinamarca'),
+                                                            (2, 'Antioquia'),
+                                                            (3, 'Valle del Cauca'),
+                                                            (4, 'Atlántico'),
+                                                            (5, 'Santander');
+
+-- ============================
+--           Ciudades
+-- ============================
+INSERT INTO Ciudades (CodigoCiudad, CodigoDepartamento, Nombre, Latitud, Longitud) VALUES
+                                                                                      (1, 1, 'Bogotá', 4.7110, -74.0721),
+                                                                                      (2, 2, 'Medellín', 6.2442, -75.5812),
+                                                                                      (3, 3, 'Cali', 3.4516, -76.5320),
+                                                                                      (4, 4, 'Barranquilla', 10.9685, -74.7813),
+                                                                                      (5, 5, 'Bucaramanga', 7.1193, -73.1227);
