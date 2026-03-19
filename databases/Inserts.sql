@@ -1,6 +1,26 @@
 USE UrbanEats;
 
 -- ============================
+--         DEPARTAMENTOS
+-- ============================
+INSERT INTO Departamentos (CodigoDepartamento, Nombre) VALUES
+                                                            (1, 'Cundinamarca'),
+                                                            (2, 'Antioquia'),
+                                                            (3, 'Valle del Cauca'),
+                                                            (4, 'Atlántico'),
+                                                            (5, 'Santander');
+
+-- ============================
+--           Ciudades
+-- ============================
+INSERT INTO Ciudades (CodigoCiudad, CodigoDepartamento, Nombre, Latitud, Longitud) VALUES
+                                                                                      (1, 1, 'Bogotá', 4.7110, -74.0721),
+                                                                                      (2, 2, 'Medellín', 6.2442, -75.5812),
+                                                                                      (3, 3, 'Cali', 3.4516, -76.5320),
+                                                                                      (4, 4, 'Barranquilla', 10.9685, -74.7813),
+                                                                                      (5, 5, 'Bucaramanga', 7.1193, -73.1227);
+
+-- ============================
 --        TABLA PERSONA
 -- ============================
 INSERT INTO Persona (Nombres, Apellidos, Direccion, Telefono, CorreoElectronico) VALUES
@@ -30,11 +50,6 @@ INSERT INTO InformacionBancaria (NumeroCuenta, Banco, TipoCuenta, TitularCuenta,
                                                                                                     ('9012345678', 'BCP', 'Ahorros', 'Andrés Felipe Reyes Aguilar', 9),
                                                                                                     ('0123456789', 'Interbank', 'Corriente', 'Camila Andrea Gómez Paredes', 10);
 
--- ============================
---        TABLA CLIENTE
--- ============================
-INSERT INTO Cliente (CodigoPersona) VALUES
-                                        (1), (2), (3), (4), (5), (6), (7), (8), (9), (10);
 
 -- ============================
 --        TABLA VEHICULO
@@ -180,23 +195,3 @@ INSERT INTO Persona (CodigoPersona, Nombres, Apellidos, Direccion, Telefono, Cor
                                                                                                     (13, 'Daniela', 'Fuentes Ríos', 'Calle 170 #7-55, Bogotá', '3123333333', 'daniela.fuentes@example.com'),
                                                                                                     (14, 'Mateo', 'Quispe Bravo', 'Av. Ciudad de Cali 26-90, Bogotá', '3134444444', 'mateo.quispe@example.com'),
                                                                                                     (15, 'Isabella', 'Torres Mena', 'Cra 68 #40-21, Bogotá', '3145555555', 'isabella.torres@example.com');
-
--- ============================
---         DEPARTAMENTOS
--- ============================
-INSERT INTO Departamentos (CodigoDepartamento, Nombre) VALUES
-                                                            (1, 'Cundinamarca'),
-                                                            (2, 'Antioquia'),
-                                                            (3, 'Valle del Cauca'),
-                                                            (4, 'Atlántico'),
-                                                            (5, 'Santander');
-
--- ============================
---           Ciudades
--- ============================
-INSERT INTO Ciudades (CodigoCiudad, CodigoDepartamento, Nombre, Latitud, Longitud) VALUES
-                                                                                      (1, 1, 'Bogotá', 4.7110, -74.0721),
-                                                                                      (2, 2, 'Medellín', 6.2442, -75.5812),
-                                                                                      (3, 3, 'Cali', 3.4516, -76.5320),
-                                                                                      (4, 4, 'Barranquilla', 10.9685, -74.7813),
-                                                                                      (5, 5, 'Bucaramanga', 7.1193, -73.1227);
