@@ -69,17 +69,18 @@ INSERT INTO Repartidor (CodigoPersona, Placa) VALUES
 -- ============================
 --        TABLA RESTAURANTE
 -- ============================
-INSERT INTO Restaurante (Nombre, Ubicacion, Horario, Latitud, Longitud) VALUES
-                                                                          ('Pollería El Rico Sabor', 'Av. Caracas 123, Bogotá', '10:00 AM - 10:00 PM', 4.7115, -74.0725),
-                                                                          ('Pizzería Don Giuseppe', 'Calle 93 #11-20, Bogotá', '12:00 PM - 11:00 PM', 4.6760, -74.0489),
-                                                                          ('Cevichería La Mar', 'Zona G, Bogotá', '11:00 AM - 6:00 PM', 4.6486, -74.0573),
-                                                                          ('Hamburguesería Big Bite', 'Av. Suba 45, Bogotá', '11:00 AM - 12:00 AM', 4.7281, -74.0930),
-                                                                          ('Taller de Cocina', 'Chapinero, Bogotá', '1:00 PM - 9:00 PM', 4.6480, -74.0628),
-                                                                          ('Sabor Criollo', 'Centro Histórico, Bogotá', '9:00 AM - 8:00 PM', 4.5981, -74.0758),
-                                                                          ('Sushi Bar Samurai', 'Usaquén, Bogotá', '12:00 PM - 10:00 PM', 4.6950, -74.0305),
-                                                                          ('Taco Libre', 'Zona T, Bogotá', '11:00 AM - 11:00 PM', 4.6672, -74.0535),
-                                                                          ('Parrilla Argentina', 'Parque de la 93, Bogotá', '6:00 PM - 12:00 AM', 4.6765, -74.0480),
-                                                                          ('Café del Bosque', 'La Calera, Cundinamarca', '7:00 AM - 7:00 PM', 4.7200, -73.9700);
+INSERT INTO Restaurante (Nombre, Ubicacion, Horario, Latitud, Longitud, CodigoCiudad) VALUES
+                                                                                          ('Pollería El Rico Sabor', 'Av. Caracas 123, Bogotá', '10:00 AM - 10:00 PM', 4.7115, -74.0725, 1),
+                                                                                          ('Pizzería Don Giuseppe', 'Calle 93 #11-20, Bogotá', '12:00 PM - 11:00 PM', 4.6760, -74.0489, 1),
+                                                                                          ('Cevichería La Mar', 'Zona G, Bogotá', '11:00 AM - 6:00 PM', 4.6486, -74.0573, 1),
+                                                                                          ('Hamburguesería Big Bite', 'Av. Suba 45, Bogotá', '11:00 AM - 12:00 AM', 4.7281, -74.0930, 1),
+                                                                                          ('Taller de Cocina', 'Chapinero, Bogotá', '1:00 PM - 9:00 PM', 4.6480, -74.0628, 1),
+                                                                                          ('Sabor Criollo', 'Centro Histórico, Bogotá', '9:00 AM - 8:00 PM', 4.5981, -74.0758, 1),
+                                                                                          ('Sushi Bar Samurai', 'Usaquén, Bogotá', '12:00 PM - 10:00 PM', 4.6950, -74.0305, 1),
+                                                                                          ('Taco Libre', 'Zona T, Bogotá', '11:00 AM - 11:00 PM', 4.6672, -74.0535, 1),
+                                                                                          ('Parrilla Argentina', 'Parque de la 93, Bogotá', '6:00 PM - 12:00 AM', 4.6765, -74.0480, 1),
+                                                                                          ('Café del Bosque', 'La Calera, Cundinamarca', '7:00 AM - 7:00 PM', 4.7200, -73.9700, 1);
+
 -- ============================
 --            MENU
 -- ============================
