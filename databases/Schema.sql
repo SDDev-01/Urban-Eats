@@ -76,11 +76,13 @@ CREATE TABLE IF NOT EXISTS Envio (
 -- ============================
 CREATE TABLE IF NOT EXISTS Restaurante (
                              CodigoRestaurante INT AUTO_INCREMENT PRIMARY KEY,
+                            CodigoCiudad INT,
                              Nombre VARCHAR(150),
                              Ubicacion VARCHAR(200),
                              Horario VARCHAR(100),
                             Latitud DECIMAL(10, 8),
                             Longitud DECIMAL(10, 8)
+                            FOREIGN KEY (CodigoCiudad) REFERENCES Ciudades(CodigoCiudad)
 );
 
 -- ============================
@@ -161,12 +163,12 @@ CREATE TABLE IF NOT EXISTS Departamentos(
 --  TABLA CIUDADES
 -- ============================
 CREATE TABLE IF NOT EXISTS Ciudades (
-    CodigoCiudad INT PRIMARY KEY,
-    CodigoDepartamento INT,
-    Nombre VARCHAR(255),
-    Latitud DECIMAL(10, 8),
-    Longitud DECIMAL(10, 8),
-    FOREIGN KEY (CodigoDepartamento) REFERENCES Departamentos(CodigoDepartamento)
+                      CodigoCiudad INT PRIMARY KEY,
+                      CodigoDepartamento INT,
+                      Nombre VARCHAR(255),
+                      Latitud DECIMAL(10, 8),
+                      Longitud DECIMAL(10, 8),
+                      FOREIGN KEY (CodigoDepartamento) REFERENCES Departamentos(CodigoDepartamento)
 );
  
                       
