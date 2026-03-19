@@ -79,6 +79,8 @@ CREATE TABLE IF NOT EXISTS Restaurante (
                              Nombre VARCHAR(150),
                              Ubicacion VARCHAR(200),
                              Horario VARCHAR(100)
+                            latitud VARCHAR(100)
+                            longitud VARCHAR(100)
 );
 
 -- ============================
@@ -145,3 +147,18 @@ CREATE TABLE IF NOT EXISTS Pago (
                       FOREIGN KEY (CodigoInfoBancaria) REFERENCES InformacionBancaria(CodigoInfoBancaria),
                       FOREIGN KEY (CodigoPedido) REFERENCES Pedido(CodigoPedido)
 );
+CREATE TABLE IF NOT EXISTS Departamentos(
+                      CodigoDepartamento INT  PRIMARY KEY,
+                      Nombre varchar(255)
+  
+  );
+CREATE TABLE Ciudades (
+    CodigoCiudad INT PRIMARY KEY,
+    CodigoDepartamento INT,
+    Nombre VARCHAR(255),
+    Latitud DECIMAL(10, 8),
+    Longitud DECIMAL(11, 8),
+    FOREIGN KEY (CodigoDepartamento) REFERENCES Departamentos(CodigoDepartamento)
+);
+ 
+                      
