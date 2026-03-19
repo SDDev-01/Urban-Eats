@@ -1,6 +1,26 @@
 -- Crear la base de datos
 CREATE DATABASE IF NOT EXISTS UrbanEats;
 USE UrbanEats;
+-- ============================
+--  TABLA DEPARTAMENTOS
+-- ============================
+CREATE TABLE IF NOT EXISTS Departamentos(
+                      CodigoDepartamento INT  PRIMARY KEY,
+                      Nombre varchar(255)
+  
+);
+
+-- ============================
+--  TABLA CIUDADES
+-- ============================
+CREATE TABLE IF NOT EXISTS Ciudades (
+                      CodigoCiudad INT PRIMARY KEY,
+                      CodigoDepartamento INT,
+                      Nombre VARCHAR(255),
+                      Latitud DECIMAL(10, 8),
+                      Longitud DECIMAL(10, 8),
+                      FOREIGN KEY (CodigoDepartamento) REFERENCES Departamentos(CodigoDepartamento)
+);
 
 -- ============================
 --        TABLA PERSONA
@@ -75,13 +95,13 @@ CREATE TABLE IF NOT EXISTS Envio (
 --        RESTAURANTE
 -- ============================
 CREATE TABLE IF NOT EXISTS Restaurante (
-                             CodigoRestaurante INT AUTO_INCREMENT PRIMARY KEY,
+							CodigoRestaurante INT AUTO_INCREMENT PRIMARY KEY,
                             CodigoCiudad INT,
                              Nombre VARCHAR(150),
                              Ubicacion VARCHAR(200),
                              Horario VARCHAR(100),
                             Latitud DECIMAL(10, 8),
-                            Longitud DECIMAL(10, 8)
+                            Longitud DECIMAL(10, 8),
                             FOREIGN KEY (CodigoCiudad) REFERENCES Ciudades(CodigoCiudad)
 );
 
@@ -149,26 +169,3 @@ CREATE TABLE IF NOT EXISTS Pago (
                       FOREIGN KEY (CodigoInfoBancaria) REFERENCES InformacionBancaria(CodigoInfoBancaria),
                       FOREIGN KEY (CodigoPedido) REFERENCES Pedido(CodigoPedido)
 );
-
--- ============================
---  TABLA DEPARTAMENTOS
--- ============================
-CREATE TABLE IF NOT EXISTS Departamentos(
-                      CodigoDepartamento INT  PRIMARY KEY,
-                      Nombre varchar(255)
-  
-);
-
--- ============================
---  TABLA CIUDADES
--- ============================
-CREATE TABLE IF NOT EXISTS Ciudades (
-                      CodigoCiudad INT PRIMARY KEY,
-                      CodigoDepartamento INT,
-                      Nombre VARCHAR(255),
-                      Latitud DECIMAL(10, 8),
-                      Longitud DECIMAL(10, 8),
-                      FOREIGN KEY (CodigoDepartamento) REFERENCES Departamentos(CodigoDepartamento)
-);
- 
-                      
