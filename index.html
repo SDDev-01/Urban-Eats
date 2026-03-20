@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Curso de Diseño Web y UX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Curso introductorio de Diseño Web, HTML5, CSS3 y JavaScript.">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <div class="logo">Web&UX</div>
+    <nav>
+        
+      <ul>
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#contenido">Contenido</a></li>
+        <li><a href="#instructor">Instructor</a></li>
+        <li><a href="#mapa">Ubicación</a></li>
+        <li><a href="login.html">Iniciar sesión</a></li>
+        <li><a href="registro.html">Registrarse</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="inicio" class="hero">
+      <div class="hero-texto">
+        <h1>Curso de Diseño Web y Experiencia de Usuario</h1>
+        <p>Aprende HTML5, CSS3 y JavaScript creando una aplicación web desde cero.</p>
+        <button id="btn-ver-contenido">Ver contenido del curso</button>
+      </div>
+      <div class="hero-media">
+        <video controls width="80%">
+          <source src="video/download.mp4" type="video/mp4">
+          Tu navegador no soporta video HTML5.
+        </video>
+      </div>
+    </section>
+
+    <section id="ubicacion">
+        <h2>Ubicación</h2>
+         <div id="mapa">
+            <iframe 
+                src="mapa.html"
+                width="100%" 
+                height="100%" 
+                style="border:0;" 
+                loading="lazy">
+            </iframe>
+        </div>
+    </section>
+
+
+    <section id="contenido">
+      <h2>Contenido del curso</h2>
+      <article class="unidad">
+        <h3>Unidad 1. Fundamentos de Diseño Web y UX</h3>
+        <ul>
+          <li>Conceptos básicos: cliente, servidor, dominio y hosting.</li>
+          <li>Diferencia entre UI y UX.</li>
+          <li>Usabilidad, accesibilidad y navegación intuitiva.</li>
+        </ul>
+      </article>
+
+      <article class="unidad">
+        <h3>Unidad 2. Estructura del Contenido con HTML5</h3>
+        <ul>
+          <li>Estructura semántica con <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;footer&gt;</code>.</li>
+          <li>Formularios, tablas, listas, imágenes y enlaces.</li>
+        </ul>
+      </article>
+
+      <article class="unidad">
+        <h3>Unidad 3. Diseño Visual y Responsive con CSS3</h3>
+        <ul>
+          <li>Color, tipografía, espaciado y alineación.</li>
+          <li>Flexbox, Grid y Media Queries.</li>
+        </ul>
+      </article>
+
+      <article class="unidad">
+        <h3>Unidad 4. Interactividad con JavaScript</h3>
+        <ul>
+          <li>Variables, funciones y eventos.</li>
+          <li>Manipulación del DOM y validación básica.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section id="instructor">
+      <h2>Sobre la instructora</h2>
+      <article>
+        <h3>Nubia Esperanza Pava Ramírez</h3>
+        <p>Ingeniera de Sistemas, especialista en SIG y arquitecta en la nube. Apasionada por la formación en desarrollo web y UX.</p>
+      </article>
+    </section>
+
+    <section id="inscripcion">
+      <h2>Formulario de inscripción</h2>
+      <form id="form-inscripcion" novalidate>
+        <div class="campo">
+          <label for="nombre">Nombre completo</label>
+          <input type="text" id="nombre" name="nombre" required>
+          <span class="error" id="error-nombre"></span>
+        </div>
+
+        <div class="campo">
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" name="email" required>
+          <span class="error" id="error-email"></span>
+        </div>
+
+        <div class="campo">
+          <label for="nivel">Nivel de experiencia</label>
+          <select id="nivel" name="nivel" required>
+            <option value="">Selecciona una opción</option>
+            <option value="principiante">Principiante</option>
+            <option value="intermedio">Intermedio</option>
+            <option value="avanzado">Avanzado</option>
+          </select>
+          <span class="error" id="error-nivel"></span>
+        </div>
+
+        <div class="campo">
+          <label for="mensaje">¿Qué esperas del curso?</label>
+          <textarea id="mensaje" name="mensaje" rows="4"></textarea>
+        </div>
+
+        <button type="submit">Enviar inscripción</button>
+        <p id="mensaje-exito" class="exito"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Curso de Diseño Web y UX. Todos los derechos reservados.</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
+
