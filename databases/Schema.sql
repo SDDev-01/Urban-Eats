@@ -1,6 +1,7 @@
 -- Crear la base de datos
 CREATE DATABASE IF NOT EXISTS UrbanEats;
 USE UrbanEats;
+-- estas son las tablas de nuestra base de datos
 -- ============================
 --  TABLA DEPARTAMENTOS
 -- ============================
