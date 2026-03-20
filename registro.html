@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <section class="form-container">
+    <h2>Crear Cuenta</h2>
+
+    <form id="form-registro" novalidate>
+
+      <div class="campo">
+        <label for="nombre-registro">Nombre completo</label>
+        <input type="text" id="nombre-registro" required>
+        <span class="error" id="error-nombre-registro"></span>
+      </div>
+
+      <div class="campo">
+        <label for="email-registro">Correo electrónico</label>
+        <input type="email" id="email-registro" required>
+        <span class="error" id="error-email-registro"></span>
+      </div>
+
+      <div class="campo">
+        <label for="password-registro">Contraseña</label>
+        <input type="password" id="password-registro" required>
+        <span class="error" id="error-password-registro"></span>
+      </div>
+
+      <button type="submit">Registrarse</button>
+
+      <p class="texto-secundario">
+        ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
+      </p>
+
+      <p id="registro-exito" class="exito"></p>
+    </form>
+  </section>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

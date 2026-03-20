@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Bienvenido al Curso</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header>
+    <div class="logo">Web&UX</div>
+    <nav>
+      <ul>
+        <li><a href="home.html">Inicio</a></li>
+        <li><a href="index.html">Landing pública</a></li>
+        <li><a href="#" id="cerrar-sesion">Cerrar sesión</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section style="padding: 2rem;">
+      <h1>Bienvenido al curso, estudiante</h1>
+      <p>Has iniciado sesión correctamente. Aquí podrás acceder a contenido exclusivo, materiales y tu progreso.</p>
+
+      <div class="unidad">
+        <h2>Materiales del curso</h2>
+        <ul>
+          <li>Guía de HTML5</li>
+          <li>Ejercicios de CSS3</li>
+          <li>Prácticas de JavaScript</li>
+        </ul>
+      </div>
+
+      <div class="unidad">
+        <h2>Próximas actividades</h2>
+        <p>Pronto verás aquí tus tareas y evaluaciones.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Curso de Diseño Web y UX</p>
+  </footer>
+
+  <script>
+    // Cerrar sesión (simple)
+    document.getElementById('cerrar-sesion').addEventListener('click', () => {
+      alert("Sesión cerrada");
+      window.location.href = "login.html";
+    });
+  </script>
+
+</body>
+</html>
