@@ -3,10 +3,11 @@
    ============================ */
 
 const CLIENTE_DEFAULT = {
-  nombres: 'Laura', apellidos: 'Martínez',
-  email: 'laura@email.com', telefono: '311 234 5678',
-  direccion: 'Cra 7 # 45-12, Bogotá'
+  nombres: '', apellidos: '',
+  email: '', telefono: '',
+  direccion: ''
 };
+
 
 let cliente = JSON.parse(localStorage.getItem('ue_cliente') || 'null') || { ...CLIENTE_DEFAULT };
 

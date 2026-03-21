@@ -3,9 +3,9 @@
    ============================ */
 
 const RESTAURANTE_DEFAULT = {
-  nombre: 'Green Kitchen', direccion: 'Cra 11 # 93-16, Bogotá',
-  horario: '12:00 AM – 5:00 AM',
-  menu: ['Bowl Mediterráneo', 'Wrap de Vegetales', 'Jugo Verde Detox']
+  nombre: '', direccion: '',
+  horario: '',
+  menu: []
 };
 
 let restaurante = JSON.parse(localStorage.getItem('ue_restaurante') || 'null') ||

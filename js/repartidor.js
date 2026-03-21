@@ -3,11 +3,11 @@
    ============================ */
 
 const REPARTIDOR_DEFAULT = {
-  nombres: 'Carlos', apellidos: 'Rodríguez',
-  email: 'carlos.r@email.com', telefono: '310 555 7890',
-  direccion: 'Calle 30 # 8-20, Bogotá',
-  vehiculo: 'Moto', placa: 'ABC-123',
-  licencia: '12345678', soat: 'SOA-001122', seguro: 'Sura / POL-456'
+  nombres: '', apellidos: '',
+  email: '', telefono: '',
+  direccion: '',
+  vehiculo: '', placa: '',
+  licencia: '', soat: '', seguro: ''
 };
 
 let repartidor = JSON.parse(localStorage.getItem('ue_repartidor') || 'null') || { ...REPARTIDOR_DEFAULT };
