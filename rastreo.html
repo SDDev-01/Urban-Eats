@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Seguimiento – Urban Eats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/rastreo.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="catalogo.html" class="navbar-logo"><i class="fas fa-utensils"></i><span>Urban Eats</span></a>
+    <ul class="navbar-nav">
+      <li><a href="catalogo.html"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="cliente.html"><i class="fas fa-user"></i> Cliente</a></li>
+      <li><a href="restaurante.html"><i class="fas fa-store"></i> Restaurante</a></li>
+      <li><a href="carrito.html"><i class="fas fa-receipt"></i> Pedidos</a></li>
+      <li><a href="pago.html"><i class="fas fa-credit-card"></i> Pago</a></li>
+      <li><a href="repartidor.html"><i class="fas fa-motorcycle"></i> Repartidor</a></li>
+    </ul>
+    <div class="navbar-right">
+      <a href="registro.html" class="navbar-usuario" style="text-decoration:none;"><i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span></a>
+      <a href="carrito.html" class="btn-carrito">
+        <i class="fas fa-shopping-cart"></i> Carrito
+        <span class="carrito-badge" id="carrito-badge">0</span>
+      </a>
+      <button class="btn-salir" id="btn-salir"><i class="fas fa-sign-out-alt"></i> Salir</button>
+    </div>
+  </nav>
+
+  <div class="pagina">
+    <div class="rastreo-titulo">
+      <h2>Seguimiento del Pedido</h2>
+      <p id="pedido-id-label">Pedido #ORD-000000000000</p>
+    </div>
+
+    <div class="rastreo-layout">
+      <!-- Columna izquierda: mapa y repartidor -->
+      <div>
+        <!-- Mapa visual -->
+        <div class="mapa-card">
+          <div class="mapa-header">
+            <i class="fas fa-map-marker-alt"></i> Ubicación en Tiempo Real
+          </div>
+          <div class="mapa-contenedor">
+            <!-- Grid SVG decorativo -->
+            <svg class="mapa-grid" xmlns="http://www.w3.org/2000/svg">
+              <!-- Líneas horizontales -->
+              <line x1="0" y1="50"  x2="100%" y2="50"/>
+              <line x1="0" y1="100" x2="100%" y2="100"/>
+              <line x1="0" y1="150" x2="100%" y2="150"/>
+              <line x1="0" y1="200" x2="100%" y2="200"/>
+              <!-- Líneas verticales -->
+              <line x1="80"  y1="0" x2="80"  y2="100%"/>
+              <line x1="160" y1="0" x2="160" y2="100%"/>
+              <line x1="240" y1="0" x2="240" y2="100%"/>
+              <line x1="320" y1="0" x2="320" y2="100%"/>
+              <line x1="400" y1="0" x2="400" y2="100%"/>
+              <!-- Ruta animada del repartidor -->
+              <path class="ruta-linea" d="M 50 200 Q 120 160 200 130 Q 280 100 360 80" stroke-dashoffset="0"/>
+            </svg>
+            <!-- Marcador de ubicación del usuario -->
+            <div class="marcador-ubicacion">
+              <div class="marcador-icono"><i class="fas fa-home"></i></div>
+              <div class="marcador-label">Tu ubicación</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Repartidor -->
+        <div class="mapa-card" style="padding:1.2rem 1.3rem; margin-bottom:0;">
+          <div class="mapa-header" style="border-bottom:none; padding:0 0 0.75rem;">
+            <i class="fas fa-user-circle"></i> Tu Repartidor
+          </div>
+          <div class="repartidor-card" style="box-shadow:none; padding:0;">
+            <div class="repartidor-avatar">C</div>
+            <div class="repartidor-info">
+              <h4>Carlos Rodríguez</h4>
+              <span>Repartidor Urban Eats</span>
+            </div>
+            <button class="btn-llamar">
+              <i class="fas fa-phone"></i> Llamar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna derecha: timer, pasos, resumen -->
+      <div>
+        <!-- Temporizador -->
+        <div class="timer-card">
+          <div><i class="fas fa-clock"></i></div>
+          <div class="timer-numero" id="timer-display">35:00</div>
+          <div class="timer-label">minutos restantes</div>
+        </div>
+
+        <!-- Estado y alerta -->
+        <div class="estado-card">
+          <div class="alerta-estado">
+            <i class="fas fa-bicycle"></i>
+            <div>
+              <h4>Tu pedido está en camino</h4>
+              <p>Carlos Rodríguez va hacia tu ubicación</p>
+            </div>
+          </div>
+
+          <div class="pasos" id="pasos-pedido">
+            <!-- Se renderizan desde JS -->
+          </div>
+        </div>
+
+        <!-- Resumen del pedido -->
+        <div class="resumen-card-rastreo">
+          <h3>Resumen del Pedido</h3>
+          <div id="rastreo-items"></div>
+          <div class="resumen-total-rastreo">
+            <span>Total</span>
+            <span class="monto" id="rastreo-total">$0 COP</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer><p>&copy; 2026 Urban Eats – Proyecto Formativo SENA</p></footer>
+  <div id="toast-container"></div>
+  <script src="js/app.js"></script>
+  <script src="js/rastreo.js"></script>
+</body>
+</html>

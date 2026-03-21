@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Carrito – Urban Eats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/carrito.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="catalogo.html" class="navbar-logo"><i class="fas fa-utensils"></i><span>Urban Eats</span></a>
+    <ul class="navbar-nav">
+      <li><a href="catalogo.html"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="cliente.html"><i class="fas fa-user"></i> Cliente</a></li>
+      <li><a href="restaurante.html"><i class="fas fa-store"></i> Restaurante</a></li>
+      <li><a href="carrito.html" class="activo"><i class="fas fa-receipt"></i> Pedidos</a></li>
+      <li><a href="pago.html"><i class="fas fa-credit-card"></i> Pago</a></li>
+      <li><a href="repartidor.html"><i class="fas fa-motorcycle"></i> Repartidor</a></li>
+    </ul>
+    <div class="navbar-right">
+      <a href="registro.html" class="navbar-usuario" style="text-decoration:none;"><i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span></a>
+      <a href="carrito.html" class="btn-carrito">
+        <i class="fas fa-shopping-cart"></i> Carrito
+        <span class="carrito-badge" id="carrito-badge">0</span>
+      </a>
+      <button class="btn-salir" id="btn-salir"><i class="fas fa-sign-out-alt"></i> Salir</button>
+    </div>
+  </nav>
+
+  <div class="pagina">
+    <div style="max-width:1100px; margin:0 auto; padding:0 2rem 0.5rem;">
+      <a href="catalogo.html" style="display:inline-flex; align-items:center; gap:0.4rem; color:var(--texto-gris); font-size:0.875rem; font-weight:500;">
+        <i class="fas fa-arrow-left"></i> Seguir comprando
+      </a>
+    </div>
+
+    <div class="carrito-layout">
+      <div>
+        <h2 class="carrito-titulo" id="carrito-titulo">Tu Carrito</h2>
+        <div id="carrito-items-wrap"></div>
+      </div>
+
+      <div class="resumen-card">
+        <h3>Resumen del Pedido</h3>
+        <div class="resumen-fila"><span class="label">Subtotal</span><span id="resumen-subtotal">$0</span></div>
+        <div class="resumen-fila"><span class="label">Domicilio</span><span>$5.000</span></div>
+        <hr class="resumen-separador">
+        <div class="resumen-total">
+          <span>Total</span>
+          <span class="monto" id="resumen-total">$5.000 COP</span>
+        </div>
+        <button class="btn-pedido" id="btn-realizar-pedido">
+          <i class="fas fa-check-circle"></i> Realizar Pedido
+        </button>
+        <button class="btn-limpiar" id="btn-limpiar-carrito">Limpiar carrito</button>
+        <div class="entrega-info">
+          <strong>🚀 Entrega en 30-45 minutos</strong>
+          <span>Servicio disponible 24/7</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer><p>&copy; 2026 Urban Eats – Proyecto Formativo SENA</p></footer>
+  <div id="toast-container"></div>
+  <script src="js/app.js"></script>
+  <script src="js/carrito.js"></script>
+</body>
+</html>
