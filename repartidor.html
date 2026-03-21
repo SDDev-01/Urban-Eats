@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Repartidor – Urban Eats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/repartidor.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="catalogo.html" class="navbar-logo"><i class="fas fa-utensils"></i><span>Urban Eats</span></a>
+    <ul class="navbar-nav">
+      <li><a href="catalogo.html"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="cliente.html"><i class="fas fa-user"></i> Cliente</a></li>
+      <li><a href="restaurante.html"><i class="fas fa-store"></i> Restaurante</a></li>
+      <li><a href="carrito.html"><i class="fas fa-receipt"></i> Pedidos</a></li>
+      <li><a href="pago.html"><i class="fas fa-credit-card"></i> Pago</a></li>
+      <li><a href="repartidor.html" class="activo"><i class="fas fa-motorcycle"></i> Repartidor</a></li>
+    </ul>
+    <div class="navbar-right">
+      <a href="registro.html" class="navbar-usuario" style="text-decoration:none;">
+        <i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span>
+      </a>
+      <a href="carrito.html" class="btn-carrito">
+        <i class="fas fa-shopping-cart"></i> Carrito
+        <span class="carrito-badge" id="carrito-badge">0</span>
+      </a>
+      <button class="btn-salir" id="btn-salir"><i class="fas fa-sign-out-alt"></i> Salir</button>
+    </div>
+  </nav>
+
+  <div class="pagina-form">
+    <div class="form-wrapper">
+
+      <div class="form-page-header">
+        <h2><i class="fas fa-motorcycle"></i> Datos del Repartidor</h2>
+        <p>Ingresa o actualiza la información del repartidor.</p>
+      </div>
+
+      <div class="form-card">
+        <div class="form-card-body">
+          <form id="form-repartidor" novalidate>
+
+            <div class="form-grid">
+              <div class="campo">
+                <label for="rp-nombres">Nombres</label>
+                <input type="text" id="rp-nombres" placeholder="Carlos">
+                <span class="error" id="err-nombres"></span>
+              </div>
+              <div class="campo">
+                <label for="rp-apellidos">Apellidos</label>
+                <input type="text" id="rp-apellidos" placeholder="Rodríguez">
+                <span class="error" id="err-apellidos"></span>
+              </div>
+            </div>
+
+            <div class="campo">
+              <label for="rp-email">Correo electrónico</label>
+              <div class="campo-icono">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="rp-email" placeholder="rep@email.com">
+              </div>
+              <span class="error" id="err-email"></span>
+            </div>
+
+            <div class="campo">
+              <label for="rp-telefono">Teléfono</label>
+              <div class="campo-icono">
+                <i class="fas fa-phone"></i>
+                <input type="tel" id="rp-telefono" placeholder="310 555 7890">
+              </div>
+              <span class="error" id="err-telefono"></span>
+            </div>
+
+            <div class="campo">
+              <label for="rp-direccion">Dirección</label>
+              <div class="campo-icono">
+                <i class="fas fa-map-marker-alt"></i>
+                <input type="text" id="rp-direccion" placeholder="Calle 30 # 8-20, Bogotá">
+              </div>
+              <span class="error" id="err-dir"></span>
+            </div>
+
+            <div class="seccion-sep">
+              <i class="fas fa-motorcycle"></i> Datos del Vehículo
+            </div>
+
+            <div class="form-grid">
+              <div class="campo">
+                <label for="rp-vehiculo">Tipo de vehículo</label>
+                <select id="rp-vehiculo">
+                  <option value="">Seleccionar...</option>
+                  <option value="Moto">Moto</option>
+                  <option value="Bicicleta">Bicicleta</option>
+                  <option value="Patineta eléctrica">Patineta eléctrica</option>
+                  <option value="Carro">Carro</option>
+                </select>
+                <span class="error" id="err-vehiculo"></span>
+              </div>
+              <div class="campo">
+                <label for="rp-placa">Placa</label>
+                <input type="text" id="rp-placa" placeholder="ABC-123" style="text-transform:uppercase;">
+                <span class="error" id="err-placa"></span>
+              </div>
+            </div>
+
+            <div class="campo">
+              <label for="rp-licencia">Licencia de conducción</label>
+              <div class="campo-icono">
+                <i class="fas fa-id-card"></i>
+                <input type="text" id="rp-licencia" placeholder="Número de licencia">
+              </div>
+              <span class="error" id="err-licencia"></span>
+            </div>
+
+            <div class="campo">
+              <label for="rp-soat">SOAT (número de póliza)</label>
+              <div class="campo-icono">
+                <i class="fas fa-file-alt"></i>
+                <input type="text" id="rp-soat" placeholder="SOA-987654">
+              </div>
+              <span class="error" id="err-soat"></span>
+            </div>
+
+            <div class="campo">
+              <label for="rp-seguro">Seguro del vehículo</label>
+              <div class="campo-icono">
+                <i class="fas fa-shield-alt"></i>
+                <input type="text" id="rp-seguro" placeholder="Aseguradora / N° póliza">
+              </div>
+              <span class="error" id="err-seguro"></span>
+            </div>
+
+            <!-- Mensaje de verificación -->
+            <div id="msg-verificacion" class="msg-verificacion" style="display:none;"></div>
+
+            <!-- Botón al final del formulario -->
+            <div class="form-btn-wrap">
+              <button type="button" class="btn btn-verde btn-grande" id="btn-verificar">
+                <i class="fas fa-check-circle"></i> Aceptar
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer><p>&copy; 2026 Urban Eats – Proyecto Formativo SENA</p></footer>
+  <div id="toast-container"></div>
+  <script src="js/app.js"></script>
+  <script src="js/repartidor.js"></script>
+</body>
+</html>

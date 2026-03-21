@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Restaurante – Urban Eats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/restaurante.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="catalogo.html" class="navbar-logo"><i class="fas fa-utensils"></i><span>Urban Eats</span></a>
+    <ul class="navbar-nav">
+      <li><a href="catalogo.html"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="cliente.html"><i class="fas fa-user"></i> Cliente</a></li>
+      <li><a href="restaurante.html" class="activo"><i class="fas fa-store"></i> Restaurante</a></li>
+      <li><a href="carrito.html"><i class="fas fa-receipt"></i> Pedidos</a></li>
+      <li><a href="pago.html"><i class="fas fa-credit-card"></i> Pago</a></li>
+      <li><a href="repartidor.html"><i class="fas fa-motorcycle"></i> Repartidor</a></li>
+    </ul>
+    <div class="navbar-right">
+      <a href="registro.html" class="navbar-usuario" style="text-decoration:none;">
+        <i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span>
+      </a>
+      <a href="carrito.html" class="btn-carrito">
+        <i class="fas fa-shopping-cart"></i> Carrito
+        <span class="carrito-badge" id="carrito-badge">0</span>
+      </a>
+      <button class="btn-salir" id="btn-salir"><i class="fas fa-sign-out-alt"></i> Salir</button>
+    </div>
+  </nav>
+
+  <div class="pagina-form">
+    <div class="form-wrapper">
+
+      <div class="form-page-header">
+        <h2><i class="fas fa-store"></i> Datos del Restaurante</h2>
+        <p>Ingresa o actualiza la información del restaurante.</p>
+      </div>
+
+      <div class="form-card">
+        <div class="form-card-body">
+          <form id="form-restaurante" novalidate>
+
+            <div class="campo">
+              <label for="r-nombre">Nombre del restaurante</label>
+              <input type="text" id="r-nombre" placeholder="Ej: Green Kitchen">
+              <span class="error" id="err-r-nombre"></span>
+            </div>
+
+            <div class="campo">
+              <label for="r-direccion">Dirección</label>
+              <div class="campo-icono">
+                <i class="fas fa-map-marker-alt"></i>
+                <input type="text" id="r-direccion" placeholder="Calle 72 # 5-80, Bogotá">
+              </div>
+              <span class="error" id="err-r-dir"></span>
+            </div>
+
+            <div class="campo">
+              <label for="r-horario">Horario de atención</label>
+              <div class="campo-icono">
+                <i class="fas fa-clock"></i>
+                <input type="text" id="r-horario" placeholder="Ej: 12:00 AM – 5:00 AM">
+              </div>
+              <span class="error" id="err-r-horario"></span>
+            </div>
+
+            <!-- Menú editable -->
+            <div class="campo">
+              <label>Menú</label>
+              <div class="menu-chips-wrap" id="menu-chips"></div>
+              <div class="menu-add-row" id="menu-add-row">
+                <input type="text" id="input-menu" placeholder="Agregar ítem al menú...">
+                <button type="button" class="btn btn-verde" id="btn-add-item" style="padding:0.6rem 0.9rem;">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Mensaje de verificación -->
+            <div id="msg-verificacion" class="msg-verificacion" style="display:none;"></div>
+
+            <!-- Botón al final del formulario -->
+            <div class="form-btn-wrap">
+              <button type="button" class="btn btn-verde btn-grande" id="btn-verificar">
+                <i class="fas fa-check-circle"></i> Aceptar
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer><p>&copy; 2026 Urban Eats – Proyecto Formativo SENA</p></footer>
+  <div id="toast-container"></div>
+  <script src="js/app.js"></script>
+  <script src="js/restaurante.js"></script>
+</body>
+</html>

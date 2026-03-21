@@ -1,0 +1,194 @@
+/* ============================
+   URBAN EATS - PAGO.CSS
+   Estilos específicos de pago.html
+   ============================ */
+
+.pago-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 2rem 3rem;
+      align-items: start;
+    }
+
+    .pago-seccion {
+      background: white;
+      border-radius: var(--radio);
+      box-shadow: var(--sombra);
+      padding: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .pago-seccion h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pago-seccion h3 i { color: var(--verde); }
+
+    /* Tarjeta visual */
+    .tarjeta-visual {
+      background: linear-gradient(135deg, #2ecc71, #1a9e50);
+      border-radius: 16px;
+      padding: 1.5rem;
+      color: white;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      min-height: 160px;
+    }
+
+    .tarjeta-visual::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .tarjeta-visual::after {
+      content: '';
+      position: absolute;
+      bottom: -30px; left: 50px;
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .tarjeta-chip {
+      width: 38px; height: 28px;
+      background: #f0c040;
+      border-radius: 5px;
+      margin-bottom: 1.2rem;
+    }
+
+    .tarjeta-numero {
+      font-size: 1.3rem;
+      letter-spacing: 0.2em;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .tarjeta-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      opacity: 0.9;
+    }
+
+    .tarjeta-footer .label { font-size: 0.68rem; opacity: 0.7; text-transform: uppercase; margin-bottom: 0.1rem; }
+
+    /* Métodos de pago */
+    .metodos-pago {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .metodo-btn {
+      flex: 1;
+      padding: 0.75rem;
+      border: 2px solid var(--borde);
+      border-radius: var(--radio-sm);
+      background: white;
+      cursor: pointer;
+      font-family: var(--fuente);
+      font-size: 0.875rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      color: var(--texto-gris);
+      transition: all 0.2s;
+    }
+
+    .metodo-btn.activo {
+      border-color: var(--verde);
+      background: var(--verde-muy-claro);
+      color: var(--verde-oscuro);
+    }
+
+    .metodo-btn:hover { border-color: var(--verde); color: var(--verde-oscuro); }
+
+    /* Resumen lateral */
+    .resumen-pago {
+      background: white;
+      border-radius: var(--radio);
+      box-shadow: var(--sombra);
+      padding: 1.5rem;
+      position: sticky;
+      top: calc(var(--navbar-height) + 1rem);
+    }
+
+    .resumen-pago h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 1.2rem; }
+    .resumen-linea { display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 0.6rem; }
+    .resumen-linea .label { color: var(--texto-gris); }
+    .resumen-separador { border: none; border-top: 1px solid var(--borde); margin: 1rem 0; }
+    .resumen-total-pago { display: flex; justify-content: space-between; font-weight: 800; font-size: 1.05rem; }
+    .resumen-total-pago .monto { color: var(--verde-oscuro); }
+
+    .btn-pagar {
+      width: 100%;
+      padding: 0.9rem;
+      background: var(--verde);
+      color: white;
+      border: none;
+      border-radius: var(--radio-sm);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--fuente);
+      transition: background 0.2s, transform 0.15s;
+      margin-top: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .btn-pagar:hover { background: var(--verde-oscuro); transform: translateY(-2px); }
+
+    .seguridad-nota {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--texto-gris);
+      margin-top: 0.75rem;
+      justify-content: center;
+    }
+
+    .tipo-cuenta-opts {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .tipo-cuenta-opts label {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 0.8rem;
+      border: 1.5px solid var(--borde);
+      border-radius: var(--radio-sm);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .tipo-cuenta-opts input[type="radio"] { accent-color: var(--verde); }
+    .tipo-cuenta-opts label:has(input:checked) { border-color: var(--verde); background: var(--verde-muy-claro); color: var(--verde-oscuro); }
+
+    @media (max-width: 800px) {
+      .pago-layout { grid-template-columns: 1fr; }
+      .resumen-pago { position: static; }
+    }

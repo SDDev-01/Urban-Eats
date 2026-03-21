@@ -2,45 +2,83 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Registro</title>
+  <title>Registro – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/registro.css">
 </head>
 <body>
 
-  <section class="form-container">
-    <h2>Crear Cuenta</h2>
+  <div class="registro-card">
+    <div class="registro-header">
+      <div class="registro-logo"><i class="fas fa-user-plus"></i></div>
+      <h1>Crear Cuenta</h1>
+      <p>Únete a Urban Eats y disfruta comida saludable</p>
+    </div>
 
     <form id="form-registro" novalidate>
-
-      <div class="campo">
-        <label for="nombre-registro">Nombre completo</label>
-        <input type="text" id="nombre-registro" required>
-        <span class="error" id="error-nombre-registro"></span>
+      <div class="form-grid">
+        <div class="campo">
+          <label for="reg-nombres">Nombres</label>
+          <input type="text" id="reg-nombres" placeholder="Juan">
+          <span class="error" id="error-nombres"></span>
+        </div>
+        <div class="campo">
+          <label for="reg-apellidos">Apellidos</label>
+          <input type="text" id="reg-apellidos" placeholder="Pérez">
+          <span class="error" id="error-apellidos"></span>
+        </div>
       </div>
 
       <div class="campo">
-        <label for="email-registro">Correo electrónico</label>
-        <input type="email" id="email-registro" required>
-        <span class="error" id="error-email-registro"></span>
+        <label for="reg-email">Correo electrónico</label>
+        <div class="campo-icono">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="reg-email" placeholder="tu@email.com">
+        </div>
+        <span class="error" id="error-email"></span>
+      </div>
+
+      <div class="form-grid">
+        <div class="campo">
+          <label for="reg-telefono">Teléfono</label>
+          <div class="campo-icono">
+            <i class="fas fa-phone"></i>
+            <input type="tel" id="reg-telefono" placeholder="300 123 4567">
+          </div>
+          <span class="error" id="error-telefono"></span>
+        </div>
+        <div class="campo">
+          <label for="reg-password">Contraseña</label>
+          <div class="campo-icono">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="reg-password" placeholder="Mínimo 4 caracteres">
+          </div>
+          <span class="error" id="error-password"></span>
+        </div>
       </div>
 
       <div class="campo">
-        <label for="password-registro">Contraseña</label>
-        <input type="password" id="password-registro" required>
-        <span class="error" id="error-password-registro"></span>
+        <label for="reg-direccion">Dirección de entrega</label>
+        <div class="campo-icono">
+          <i class="fas fa-map-marker-alt"></i>
+          <input type="text" id="reg-direccion" placeholder="Calle 45 # 12-30, Bogotá">
+        </div>
+        <span class="error" id="error-direccion"></span>
       </div>
 
-      <button type="submit">Registrarse</button>
+      <button type="submit" class="btn-registro">
+        <i class="fas fa-user-check"></i> Crear Cuenta
+      </button>
 
-      <p class="texto-secundario">
+      <div class="reg-footer">
         ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
-      </p>
-
-      <p id="registro-exito" class="exito"></p>
+      </div>
     </form>
-  </section>
+  </div>
 
-  <script src="js/script.js"></script>
+  <div id="toast-container"></div>
+  <script src="js/app.js"></script>
 </body>
 </html>

@@ -1,0 +1,238 @@
+/* ============================
+   URBAN EATS - RASTREO.CSS
+   Estilos específicos de rastreo.html
+   ============================ */
+
+.rastreo-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem 3rem;
+    }
+
+    .rastreo-titulo {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem 1.5rem;
+    }
+
+    .rastreo-titulo h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.2rem; }
+    .rastreo-titulo p { color: var(--texto-gris); font-size: 0.9rem; }
+
+    /* Mapa visual */
+    .mapa-card {
+      background: white;
+      border-radius: var(--radio);
+      box-shadow: var(--sombra);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .mapa-header {
+      padding: 1rem 1.3rem;
+      border-bottom: 1px solid var(--borde);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .mapa-header i { color: var(--verde); }
+
+    /* Mapa SVG animado */
+    .mapa-contenedor {
+      height: 250px;
+      background: linear-gradient(180deg, #e8f5f0 0%, #d1edd8 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mapa-grid {
+      position: absolute;
+      inset: 0;
+    }
+
+    .mapa-grid line { stroke: rgba(0,0,0,0.07); stroke-width: 1; }
+
+    .ruta-linea {
+      stroke: var(--verde);
+      stroke-width: 2.5;
+      stroke-dasharray: 6 3;
+      fill: none;
+      animation: dashMove 1.5s linear infinite;
+    }
+
+    @keyframes dashMove {
+      to { stroke-dashoffset: -18; }
+    }
+
+    .marcador-ubicacion {
+      position: absolute;
+      bottom: 20px;
+      right: 40px;
+      text-align: center;
+    }
+
+    .marcador-icono {
+      width: 40px; height: 40px;
+      background: var(--verde);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.1rem;
+      box-shadow: 0 3px 10px rgba(46,204,113,0.4);
+      animation: pulsar 2s ease-in-out infinite;
+    }
+
+    @keyframes pulsar {
+      0%, 100% { transform: scale(1); box-shadow: 0 3px 10px rgba(46,204,113,0.4); }
+      50% { transform: scale(1.08); box-shadow: 0 5px 20px rgba(46,204,113,0.5); }
+    }
+
+    .marcador-label { font-size: 0.75rem; font-weight: 600; color: var(--texto); margin-top: 0.3rem; }
+
+    /* Repartidor card */
+    .repartidor-card {
+      background: white;
+      border-radius: var(--radio);
+      box-shadow: var(--sombra);
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .repartidor-avatar {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: var(--verde);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .repartidor-info { flex: 1; }
+    .repartidor-info h4 { font-weight: 700; font-size: 1rem; margin-bottom: 0.15rem; }
+    .repartidor-info span { color: var(--texto-gris); font-size: 0.85rem; }
+
+    .btn-llamar {
+      background: var(--verde-claro);
+      color: var(--verde-oscuro);
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: var(--radio-sm);
+      font-size: 0.875rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--fuente);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s;
+    }
+
+    .btn-llamar:hover { background: var(--verde); color: white; }
+
+    /* Columna derecha */
+    /* Temporizador */
+    .timer-card {
+      background: var(--verde);
+      border-radius: var(--radio);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      color: white;
+      margin-bottom: 1.5rem;
+    }
+
+    .timer-card i { font-size: 2rem; opacity: 0.9; margin-bottom: 0.5rem; }
+    .timer-numero { font-size: 3.5rem; font-weight: 800; line-height: 1; margin-bottom: 0.3rem; }
+    .timer-label { font-size: 0.9rem; opacity: 0.85; }
+
+    /* Estado del pedido */
+    .estado-card {
+      background: white;
+      border-radius: var(--radio);
+      box-shadow: var(--sombra);
+      padding: 1.3rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .estado-card .alerta-estado {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.9rem 1rem;
+      background: #fff8ee;
+      border-radius: var(--radio-sm);
+      margin-bottom: 1.2rem;
+    }
+
+    .alerta-estado i { color: #e67e22; font-size: 1.1rem; margin-top: 0.1rem; }
+    .alerta-estado h4 { font-size: 0.95rem; font-weight: 700; color: #c0392b; margin-bottom: 0.15rem; }
+    .alerta-estado p { font-size: 0.85rem; color: var(--texto-gris); }
+
+    /* Pasos */
+    .pasos { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .paso {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.9rem;
+    }
+
+    .paso-icono {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .paso-icono.completado { background: var(--verde); color: white; }
+    .paso-icono.activo { background: var(--verde); color: white; }
+    .paso-icono.pendiente { background: #f0f0f0; color: var(--texto-gris); }
+
+    .paso-info h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.1rem; }
+    .paso-info h4.inactivo { color: var(--texto-gris); font-weight: 500; }
+    .paso-info span { font-size: 0.8rem; color: var(--texto-gris); }
+
+    .paso-linea {
+      width: 2px; height: 16px;
+      background: var(--verde-claro);
+      margin-left: 15px;
+    }
+
+    /* Resumen pedido */
+    .resumen-card-rastreo {
+      background: white;
+      border-radius: var(--radio);
+      box-shadow: var(--sombra);
+      padding: 1.3rem 1.5rem;
+    }
+
+    .resumen-card-rastreo h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
+    .resumen-item { display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 0.5rem; }
+    .resumen-item .nombre { color: var(--texto-gris); }
+    .resumen-total-rastreo {
+      display: flex; justify-content: space-between;
+      font-weight: 800; font-size: 0.95rem;
+      margin-top: 0.75rem; padding-top: 0.75rem;
+      border-top: 1px solid var(--borde);
+    }
+    .resumen-total-rastreo .monto { color: var(--verde-oscuro); }
+
+    @media (max-width: 800px) {
+      .rastreo-layout { grid-template-columns: 1fr; }
+    }

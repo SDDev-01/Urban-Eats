@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Catálogo – Urban Eats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/catalogo.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="catalogo.html" class="navbar-logo">
+      <i class="fas fa-utensils"></i>
+      <span>Urban Eats</span>
+    </a>
+    <ul class="navbar-nav">
+      <li><a href="catalogo.html" class="activo"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="cliente.html"><i class="fas fa-user"></i> Cliente</a></li>
+      <li><a href="restaurante.html"><i class="fas fa-store"></i> Restaurante</a></li>
+      <li><a href="carrito.html"><i class="fas fa-receipt"></i> Pedidos</a></li>
+      <li><a href="pago.html"><i class="fas fa-credit-card"></i> Pago</a></li>
+      <li><a href="repartidor.html"><i class="fas fa-motorcycle"></i> Repartidor</a></li>
+    </ul>
+    <div class="navbar-right">
+      <a href="registro.html" class="navbar-usuario" style="text-decoration:none;">
+        <i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span>
+      </a>
+      <a href="carrito.html" class="btn-carrito">
+        <i class="fas fa-shopping-cart"></i> Carrito
+        <span class="carrito-badge" id="carrito-badge">0</span>
+      </a>
+      <button class="btn-salir" id="btn-salir"><i class="fas fa-sign-out-alt"></i> Salir</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div style="padding-top: var(--navbar-height);">
+    <div class="hero">
+      <h1>Comida Saludable, Entrega Rápida</h1>
+      <p>Perfecta para trabajadores, estudiantes y personas activas 🌙</p>
+      <div class="hero-badges">
+        <span><i class="fas fa-clock"></i> Abierto 24/7</span>
+        <span><i class="fas fa-leaf"></i> 100% Saludable</span>
+        <span><i class="fas fa-seedling"></i> Ingredientes Frescos</span>
+      </div>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="filtros-wrap">
+      <button class="btn-filtro activo" data-categoria="todos">Todos</button>
+      <button class="btn-filtro" data-categoria="Bowls">Bowls</button>
+      <button class="btn-filtro" data-categoria="Platos Principales">Platos Principales</button>
+      <button class="btn-filtro" data-categoria="Desayunos">Desayunos</button>
+      <button class="btn-filtro" data-categoria="Wraps">Wraps</button>
+      <button class="btn-filtro" data-categoria="Bebidas">Bebidas</button>
+    </div>
+
+    <!-- GRID -->
+    <div class="productos-grid" id="productos-grid"></div>
+  </div>
+
+  <!-- MODAL DETALLE PRODUCTO -->
+  <div class="modal-overlay" id="modal-detalle">
+    <div class="modal" style="max-width: 660px;">
+      <div class="modal-header">
+        <h3 id="modal-titulo">Detalle del producto</h3>
+        <button class="modal-cerrar" id="modal-cerrar-btn"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="detalle-grid">
+        <div id="modal-imagen-wrap"></div>
+        <div class="detalle-info">
+          <span class="categoria-tag" id="modal-categoria"></span>
+          <h2 id="modal-nombre"></h2>
+          <p id="modal-descripcion"></p>
+          <div class="detalle-stats" id="modal-stats"></div>
+          <div class="cantidad-control">
+            <label>Cantidad</label>
+            <button class="btn-cantidad" id="btn-menos"><i class="fas fa-minus"></i></button>
+            <span id="detalle-cantidad">1</span>
+            <button class="btn-cantidad" id="btn-mas"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="detalle-precio" id="modal-precio"></div>
+          <button class="btn btn-verde btn-grande" id="btn-agregar-carrito">
+            <i class="fas fa-shopping-cart"></i> Agregar al Carrito
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Urban Eats – Proyecto Formativo SENA. Comida saludable para todos.</p>
+  </footer>
+
+  <div id="toast-container"></div>
+  <script src="js/app.js"></script>
+  <script src="js/catalogo.js"></script>
+</body>
+</html>

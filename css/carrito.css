@@ -1,0 +1,87 @@
+/* ============================
+   URBAN EATS - CARRITO.CSS
+   Estilos específicos de carrito.html
+   ============================ */
+
+.carrito-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem 2rem;
+      align-items: start;
+    }
+    .carrito-titulo { font-size: 1.8rem; font-weight: 800; margin-bottom: 1.5rem; }
+    .carrito-items { display: flex; flex-direction: column; gap: 1rem; }
+    .item-card {
+      background: white; border-radius: var(--radio);
+      box-shadow: var(--sombra); padding: 1.1rem 1.3rem;
+      display: flex; align-items: center; gap: 1.2rem;
+    }
+    .item-emoji {
+      width: 72px; height: 72px; border-radius: var(--radio-sm);
+      background: linear-gradient(135deg, #d5f5e3, #a9dfbf);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; flex-shrink: 0;
+    }
+    .item-info { flex: 1; }
+    .item-info h4 { font-size: 1rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .item-info .precio-unit { color: var(--texto-gris); font-size: 0.85rem; }
+    .item-cantidad { display: flex; align-items: center; gap: 0.6rem; }
+    .btn-cant {
+      width: 30px; height: 30px; border-radius: 50%;
+      border: 1.5px solid var(--borde); background: white;
+      cursor: pointer; font-size: 0.9rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; font-family: var(--fuente);
+    }
+    .btn-cant:hover { border-color: var(--verde); background: var(--verde-muy-claro); }
+    .cant-num { font-weight: 700; font-size: 1rem; min-width: 20px; text-align: center; }
+    .item-precio { font-size: 1.05rem; font-weight: 700; color: var(--verde-oscuro); min-width: 90px; text-align: right; }
+    .btn-eliminar {
+      background: none; border: none; color: #e74c3c;
+      cursor: pointer; padding: 0.4rem; border-radius: var(--radio-sm);
+      transition: background 0.2s; font-size: 1rem;
+    }
+    .btn-eliminar:hover { background: #fdecea; }
+
+    .resumen-card {
+      background: white; border-radius: var(--radio); box-shadow: var(--sombra);
+      padding: 1.5rem; position: sticky; top: calc(var(--navbar-height) + 1rem);
+    }
+    .resumen-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1.2rem; }
+    .resumen-fila { display: flex; justify-content: space-between; margin-bottom: 0.65rem; font-size: 0.9rem; }
+    .resumen-fila .label { color: var(--texto-gris); }
+    .resumen-separador { border: none; border-top: 1px solid var(--borde); margin: 1rem 0; }
+    .resumen-total { display: flex; justify-content: space-between; font-weight: 800; font-size: 1.05rem; margin-bottom: 1.2rem; }
+    .resumen-total .monto { color: var(--verde-oscuro); }
+    .btn-pedido {
+      width: 100%; padding: 0.9rem;
+      background: var(--verde); color: white;
+      border: none; border-radius: var(--radio-sm);
+      font-size: 1rem; font-weight: 700; cursor: pointer;
+      font-family: var(--fuente);
+      transition: background 0.2s, transform 0.15s; margin-bottom: 0.6rem;
+    }
+    .btn-pedido:hover { background: var(--verde-oscuro); transform: translateY(-2px); }
+    .btn-limpiar {
+      width: 100%; padding: 0.6rem; background: none;
+      border: none; color: var(--texto-gris); font-size: 0.875rem;
+      cursor: pointer; font-family: var(--fuente); transition: color 0.2s;
+    }
+    .btn-limpiar:hover { color: #e74c3c; }
+    .entrega-info {
+      margin-top: 1rem; background: var(--verde-muy-claro);
+      border-radius: var(--radio-sm); padding: 0.9rem 1rem; font-size: 0.85rem;
+    }
+    .entrega-info strong { display: block; margin-bottom: 0.2rem; }
+    .entrega-info span { color: var(--texto-gris); }
+    .carrito-vacio { text-align: center; padding: 4rem 2rem; }
+    .carrito-vacio .icono { font-size: 4rem; margin-bottom: 1rem; opacity: 0.25; }
+    .carrito-vacio h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--texto-gris); }
+    .carrito-vacio p { color: var(--texto-gris); margin-bottom: 1.5rem; }
+    @media (max-width: 800px) {
+      .carrito-layout { grid-template-columns: 1fr; }
+      .resumen-card { position: static; }
+    }

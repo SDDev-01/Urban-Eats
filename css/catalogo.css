@@ -1,0 +1,210 @@
+/* ============================
+   URBAN EATS - CATALOGO.CSS
+   Estilos específicos de catalogo.html
+   ============================ */
+
+/* ---- HERO ---- */
+    .hero {
+      background: var(--verde);
+      color: white;
+      text-align: center;
+      padding: 3.5rem 2rem 2.5rem;
+      margin-bottom: 2rem;
+    }
+    .hero h1 { font-size: 2.4rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .hero p { font-size: 1.05rem; opacity: 0.9; margin-bottom: 1.5rem; }
+    .hero-badges {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      font-size: 0.875rem;
+      opacity: 0.92;
+    }
+    .hero-badges span { display: flex; align-items: center; gap: 0.4rem; }
+
+    /* ---- FILTROS ---- */
+    .filtros-wrap {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      padding: 0 2rem 1.5rem;
+    }
+    .btn-filtro {
+      padding: 0.5rem 1.2rem;
+      border-radius: 30px;
+      border: 1.5px solid var(--borde);
+      background: white;
+      color: var(--texto-gris);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--fuente);
+    }
+    .btn-filtro:hover { border-color: var(--verde); color: var(--verde-oscuro); }
+    .btn-filtro.activo {
+      background: var(--verde);
+      color: white;
+      border-color: var(--verde);
+      font-weight: 600;
+    }
+
+    /* ---- GRID DE PRODUCTOS ---- */
+    .productos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      padding: 0 2rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .producto-card {
+      background: white;
+      border-radius: var(--radio);
+      overflow: hidden;
+      box-shadow: var(--sombra);
+      transition: box-shadow 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+    .producto-card:hover {
+      box-shadow: var(--sombra-hover);
+      transform: translateY(-4px);
+    }
+    /* Contenedor de imagen con altura fija */
+    .producto-img-wrap {
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0;
+      transition: background 0.2s;
+    }
+    .producto-emoji {
+      font-size: 5rem;
+      line-height: 1;
+      transition: transform 0.3s ease;
+      display: block;
+    }
+    .producto-card:hover .producto-emoji {
+      transform: scale(1.15);
+    }
+    .producto-img-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+    .producto-body { padding: 1.1rem; }
+    .producto-categoria {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--verde-oscuro);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.3rem;
+    }
+    .producto-nombre { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .producto-desc { color: var(--texto-gris); font-size: 0.85rem; margin-bottom: 0.8rem; line-height: 1.5; }
+    .producto-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .producto-precio { font-size: 1.1rem; font-weight: 700; color: var(--verde-oscuro); }
+    .btn-ver {
+      padding: 0.4rem 0.9rem;
+      border-radius: var(--radio-sm);
+      background: var(--fondo);
+      border: 1.5px solid var(--borde);
+      color: var(--texto-gris);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--fuente);
+      transition: all 0.2s;
+    }
+    .btn-ver:hover { background: var(--verde); color: white; border-color: var(--verde); }
+
+    /* ---- MODAL DETALLE ---- */
+    .detalle-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    .detalle-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: var(--radio);
+    }
+    .detalle-img-fallback {
+      width: 100%;
+      height: 220px;
+      background: linear-gradient(135deg, #d5f5e3, #a9dfbf);
+      border-radius: var(--radio);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+    }
+    .detalle-info .categoria-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--verde-oscuro);
+      background: var(--verde-claro);
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 0.6rem;
+    }
+    .detalle-info h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .detalle-info p { color: var(--texto-gris); font-size: 0.875rem; margin-bottom: 0.8rem; }
+    .detalle-stats {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .stat-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: var(--fondo);
+      padding: 0.3rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .stat-chip i { font-size: 0.85rem; }
+    .cantidad-control {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .cantidad-control label { font-weight: 600; font-size: 0.875rem; }
+    .btn-cantidad {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 1.5px solid var(--borde);
+      background: white;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .btn-cantidad:hover { border-color: var(--verde); background: var(--verde-muy-claro); }
+    #detalle-cantidad { font-weight: 700; font-size: 1.1rem; min-width: 24px; text-align: center; }
+    .detalle-precio { font-size: 1.4rem; font-weight: 800; color: var(--verde-oscuro); margin-bottom: 1rem; }
+    @media (max-width: 600px) {
+      .detalle-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 1.8rem; }
+    }

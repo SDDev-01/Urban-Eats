@@ -1,0 +1,439 @@
+/* ============================
+   URBAN EATS - Estilos Globales
+   ============================ */
+
+:root {
+  --verde: #2ecc71;
+  --verde-oscuro: #27ae60;
+  --verde-claro: #d5f5e3;
+  --verde-muy-claro: #eafaf1;
+  --fondo: #f8f9fa;
+  --blanco: #ffffff;
+  --texto: #1a1a2e;
+  --texto-gris: #6c757d;
+  --borde: #e0e0e0;
+  --sombra: 0 2px 12px rgba(0,0,0,0.08);
+  --sombra-hover: 0 6px 20px rgba(0,0,0,0.14);
+  --radio: 12px;
+  --radio-sm: 8px;
+  --radio-lg: 20px;
+  --fuente: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --navbar-height: 64px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--fuente);
+  background-color: var(--fondo);
+  color: var(--texto);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+img { max-width: 100%; display: block; }
+
+/* ============================
+   NAVBAR
+   ============================ */
+.navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--navbar-height);
+  background: var(--blanco);
+  border-bottom: 1px solid var(--borde);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--texto);
+}
+
+.navbar-logo i { color: var(--verde); font-size: 1.4rem; }
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.navbar-nav a {
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radio-sm);
+  color: var(--texto-gris);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.navbar-nav a:hover { background: var(--verde-muy-claro); color: var(--verde-oscuro); }
+.navbar-nav a.activo { background: var(--verde-muy-claro); color: var(--verde-oscuro); font-weight: 600; }
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.navbar-usuario {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  color: var(--texto-gris);
+}
+
+.btn-carrito {
+  position: relative;
+  background: var(--verde);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radio-sm);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: background 0.2s, transform 0.15s;
+  text-decoration: none;
+}
+
+.btn-carrito:hover { background: var(--verde-oscuro); transform: translateY(-1px); }
+
+.carrito-badge {
+  position: absolute;
+  top: -6px; right: -6px;
+  background: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  width: 18px; height: 18px;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.btn-salir {
+  background: none;
+  border: none;
+  color: var(--texto-gris);
+  cursor: pointer;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radio-sm);
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-salir:hover { background: #fdecea; color: #e74c3c; }
+
+.pagina {
+  padding-top: calc(var(--navbar-height) + 1.5rem);
+  min-height: 100vh;
+}
+
+/* ============================
+   BOTONES
+   ============================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radio-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-family: var(--fuente);
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.btn:hover { transform: translateY(-2px); box-shadow: var(--sombra-hover); }
+.btn-verde { background: var(--verde); color: white; }
+.btn-verde:hover { background: var(--verde-oscuro); }
+.btn-outline { background: transparent; border: 1.5px solid var(--borde); color: var(--texto-gris); }
+.btn-outline:hover { border-color: var(--verde); color: var(--verde-oscuro); background: var(--verde-muy-claro); }
+.btn-rojo { background: #fdecea; color: #e74c3c; border: 1.5px solid #f5c6c6; }
+.btn-rojo:hover { background: #e74c3c; color: white; }
+.btn-grande { padding: 0.85rem 2rem; font-size: 1rem; border-radius: var(--radio); width: 100%; justify-content: center; }
+
+/* ============================
+   FORMULARIOS
+   ============================ */
+.campo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.campo label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--texto);
+  margin-bottom: 0.3rem;
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid var(--borde);
+  border-radius: var(--radio-sm);
+  font-family: var(--fuente);
+  font-size: 0.9rem;
+  color: var(--texto);
+  background: var(--blanco);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+  border-color: var(--verde);
+  box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.15);
+}
+
+.campo input::placeholder,
+.campo textarea::placeholder { color: #adb5bd; }
+.campo .error { color: #e74c3c; font-size: 0.8rem; margin-top: 0.25rem; min-height: 1rem; display: block; }
+
+.campo-icono { position: relative; }
+.campo-icono i { position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); color: #adb5bd; font-size: 0.9rem; }
+.campo-icono input { padding-left: 2.4rem; }
+
+/* Grilla de 2 columnas para formularios */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1.2rem;
+}
+
+/* ============================
+   TARJETAS
+   ============================ */
+.card {
+  background: var(--blanco);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 1.5rem;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+/* ============================
+   TOAST
+   ============================ */
+#toast-container {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toast {
+  background: #1a1a2e;
+  color: white;
+  padding: 0.75rem 1.2rem;
+  border-radius: var(--radio-sm);
+  box-shadow: var(--sombra-hover);
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: slideIn 0.3s ease, fadeOut 0.4s ease 2.6s forwards;
+  max-width: 320px;
+}
+
+.toast i { color: var(--verde); font-size: 1.1rem; }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; transform: translateX(30px); }
+}
+
+/* ============================
+   TABLA CRUD
+   ============================ */
+.tabla-container {
+  overflow-x: auto;
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--blanco);
+  font-size: 0.875rem;
+}
+
+table thead { background: var(--fondo); border-bottom: 2px solid var(--borde); }
+
+table th {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--texto-gris);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--borde);
+  vertical-align: middle;
+}
+
+table tbody tr:last-child td { border-bottom: none; }
+table tbody tr:hover { background: var(--fondo); }
+
+/* ============================
+   MODAL
+   ============================ */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-overlay.abierto { display: flex; }
+
+.modal {
+  background: var(--blanco);
+  border-radius: var(--radio-lg);
+  padding: 2rem;
+  max-width: 540px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  animation: modalIn 0.25s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-header h3 { font-size: 1.15rem; font-weight: 700; }
+
+.modal-cerrar {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: var(--texto-gris);
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.modal-cerrar:hover { background: var(--fondo); }
+
+/* ============================
+   BADGE
+   ============================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-verde { background: var(--verde-claro); color: var(--verde-oscuro); }
+.badge-naranja { background: #fef3e2; color: #d68910; }
+.badge-rojo { background: #fdecea; color: #e74c3c; }
+.badge-gris { background: #f0f0f0; color: var(--texto-gris); }
+
+/* ============================
+   FOOTER
+   ============================ */
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--blanco);
+  border-top: 1px solid var(--borde);
+  color: var(--texto-gris);
+  font-size: 0.85rem;
+  margin-top: 3rem;
+}
+
+/* ============================
+   RESPONSIVE
+   ============================ */
+@media (max-width: 900px) {
+  .navbar-nav { display: none; }
+  .form-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .navbar { padding: 0 1rem; }
+  .pagina { padding-left: 1rem; padding-right: 1rem; }
+}
+
+/* ============================
+   BOTÓN AL FINAL DEL FORMULARIO
+   ============================ */
+.form-btn-wrap {
+  margin-top: 1.5rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--borde);
+}
+
+.form-btn-wrap .btn-grande {
+  width: 100%;
+  padding: 0.9rem;
+  font-size: 1rem;
+  justify-content: center;
+}
