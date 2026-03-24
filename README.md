@@ -23,7 +23,7 @@ Antes de hacer cualquier cambio, SIEMPRE ejecuten:
 
 ```bash
 cd Documents/
-cd Urban\ Eats/
+cd Urban-Eats/
 git checkout main
 git pull origin main
 ```
