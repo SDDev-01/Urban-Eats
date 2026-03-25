@@ -16,8 +16,8 @@ CREATE TRIGGER crear_pedido_automaticamente
 AFTER INSERT ON Envio
 FOR EACH ROW
 BEGIN
-	INSERT INTO Pedido(CodigoEnvio,Descripcion,FechaPedido,Estado)
-    VALUES (NEW.CodigoEnvio,curdate(),"En proceso");
+	INSERT INTO Pedido(CodigoEnvio, CodigoRestaurante, FechaPedido, Estado)
+    VALUES (NEW.CodigoEnvio, NEW.CodigoRestaurante, curdate(), "En proceso");
 END //
 
 DELIMITER ;
