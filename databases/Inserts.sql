@@ -144,32 +144,18 @@ INSERT INTO Plato_menu (CodigoMenu, CodigoPlato) VALUES
 -- ============================
 --          ENVÍO
 -- ============================
-INSERT INTO Envio (CodigoCliente, CodigoRepartidor, FechaEnvio, HoraEntrega) VALUES
-                                                                                 (1, 1, '2025-11-20', '13:30:00'),
-                                                                                 (2, 2, '2025-11-20', '14:15:00'),
-                                                                                 (3, 3, '2025-11-21', '12:45:00'),
-                                                                                 (4, 4, '2025-11-21', '19:20:00'),
-                                                                                 (5, 5, '2025-11-22', '15:10:00'),
-                                                                                 (6, 6, '2025-11-22', '20:30:00'),
-                                                                                 (7, 7, '2025-11-23', '16:45:00'),
-                                                                                 (8, 8, '2025-11-23', '18:00:00'),
-                                                                                 (9, 9, '2025-11-24', '14:30:00'),
-                                                                                 (10, 10, '2025-11-24', '21:15:00');
+INSERT INTO Envio (CodigoCliente, CodigoRepartidor, CodigoRestaurante, Descripcion, FechaEnvio, HoraEntrega) VALUES 
+																										(1, 1, 1, '1 Pollo a la Brasa 1/4 con papas', '2025-11-20', '13:30:00'),
+																										(2, 2, 2, '1 Pizza Margherita mediana', '2025-11-20', '14:15:00'),
+																										(3, 3, 3, '2 Ceviches de Pescado', '2025-11-21', '12:45:00'),
+																										(4, 4, 4, '1 Hamburguesa Clásica con papas', '2025-11-21', '19:20:00'),
+																										(5, 5, 5, '1 Lomo Saltado grande', '2025-11-22', '15:10:00'),
+																										(6, 6, 6, '2 Aji de Gallina', '2025-11-22', '20:30:00'),
+																										(7, 7, 7, '3 California Rolls', '2025-11-23', '16:45:00'),
+																										(8, 8, 8, '2 Tacos de Carnitas', '2025-11-23', '18:00:00'),
+																										(9, 9, 9, '1 Churrasco Argentino', '2025-11-24', '14:30:00'),
+																										(10, 10, 10, '2 Capuccinos y 1 tarta', '2025-11-24', '21:15:00');
 
--- ============================
---          PEDIDO
--- ============================
-INSERT INTO Pedido (CodigoEnvio, CodigoRestaurante, Descripcion, FechaPedido, Estado) VALUES
-                                                                                          (1, 1, '1 Pollo a la Brasa 1/4 con papas', '2025-11-20', 'Entregado'),
-                                                                                          (2, 2, '1 Pizza Margherita mediana', '2025-11-20', 'Entregado'),
-                                                                                          (3, 3, '2 Ceviches de Pescado', '2025-11-21', 'Entregado'),
-                                                                                          (4, 4, '1 Hamburguesa Clásica con papas', '2025-11-21', 'Entregado'),
-                                                                                          (5, 5, '1 Lomo Saltado grande', '2025-11-22', 'En proceso'),
-                                                                                          (6, 6, '2 Aji de Gallina', '2025-11-22', 'Entregado'),
-                                                                                          (7, 7, '3 California Rolls', '2025-11-23', 'Entregado'),
-                                                                                          (8, 8, '2 Tacos de Carnitas', '2025-11-23', 'Cancelado'),
-                                                                                          (9, 9, '1 Churrasco Argentino', '2025-11-24', 'Entregado'),
-                                                                                          (10, 10, '2 Capuccinos y 1 tarta', '2025-11-24', 'En proceso');
 
 -- ============================
 --            PAGO

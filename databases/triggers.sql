@@ -9,3 +9,15 @@ BEGIN
 END //
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER crear_pedido_automaticamente
+AFTER INSERT ON Envio
+FOR EACH ROW
+BEGIN
+	INSERT INTO Pedido(CodigoEnvio,Descripcion,FechaPedido,Estado)
+    VALUES (NEW.CodigoEnvio,curdate(),"En proceso");
+END //
+
+DELIMITER ;
