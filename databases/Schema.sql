@@ -80,19 +80,6 @@ CREATE TABLE IF NOT EXISTS Repartidor (
 );
 
 -- ============================
---           ENVÍO
--- ============================
-CREATE TABLE IF NOT EXISTS Envio (
-                       CodigoEnvio INT AUTO_INCREMENT PRIMARY KEY,
-                       CodigoCliente INT NOT NULL,
-                       CodigoRepartidor INT NOT NULL,
-                       FechaEnvio DATE,
-                       HoraEntrega TIME,
-                       FOREIGN KEY (CodigoCliente) REFERENCES Cliente(CodigoCliente),
-                       FOREIGN KEY (CodigoRepartidor) REFERENCES Repartidor(CodigoRepartidor)
-);
-
--- ============================
 --        RESTAURANTE
 -- ============================
 CREATE TABLE IF NOT EXISTS Restaurante (
@@ -104,6 +91,22 @@ CREATE TABLE IF NOT EXISTS Restaurante (
                             Latitud DECIMAL(10, 8),
                             Longitud DECIMAL(10, 8),
                             FOREIGN KEY (CodigoCiudad) REFERENCES Ciudades(CodigoCiudad)
+);
+
+-- ============================
+--           ENVÍO
+-- ============================
+CREATE TABLE IF NOT EXISTS Envio (
+                       CodigoEnvio INT AUTO_INCREMENT PRIMARY KEY,
+                       CodigoCliente INT NOT NULL,
+                       CodigoRepartidor INT NOT NULL,
+                       CodigoRestaurante INT NOT NULL,
+					   Descripcion VARCHAR(300),
+                       FechaEnvio DATE,
+                       HoraEntrega TIME,
+                       FOREIGN KEY (CodigoCliente) REFERENCES Cliente(CodigoCliente),
+                       FOREIGN KEY (CodigoRepartidor) REFERENCES Repartidor(CodigoRepartidor),
+                       FOREIGN KEY (CodigoRestaurante) REFERENCES Restaurante(CodigoRestaurante)
 );
 
 -- ============================
@@ -147,7 +150,6 @@ CREATE TABLE IF NOT EXISTS Pedido (
                         CodigoPedido INT AUTO_INCREMENT PRIMARY KEY,
                         CodigoEnvio INT NOT NULL,
                         CodigoRestaurante INT NOT NULL,
-                        Descripcion VARCHAR(300),
                         FechaPedido DATE,
                         Estado VARCHAR(50),
                         FOREIGN KEY (CodigoEnvio) REFERENCES Envio(CodigoEnvio),
