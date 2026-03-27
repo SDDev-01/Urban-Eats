@@ -1,0 +1,20 @@
+# IDEs
+.idea/
+.vscode/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Archivos temporales
+*.tmp
+*.swp
+
+# Dependencias (por si luego usas npm)
+node_modules/
+
+# Variables de entorno (por si más adelante usas APIs o backend)
+.env
