@@ -1,11 +1,12 @@
 DELIMITER //
 
+-- Al insertar en Usuario, crea automáticamente el Cliente
 CREATE TRIGGER crear_cliente_automaticamente
     AFTER INSERT ON Usuario
     FOR EACH ROW
 BEGIN
-    INSERT INTO Cliente (CodigoPersona)
-    VALUES (NEW.CodigoPersona);
+    INSERT INTO Cliente (CodigoUsuario)
+    VALUES (NEW.CodigoUsuario);
 END //
 
 DELIMITER ;
@@ -22,3 +23,4 @@ BEGIN
 END //
 
 DELIMITER ;
+ 

@@ -1,6 +1,6 @@
--- ==============
+-- ===========
 --  UrbanEats
--- ==============
+-- ===========
 CREATE DATABASE IF NOT EXISTS UrbanEats;
 USE UrbanEats;
 
@@ -25,10 +25,10 @@ CREATE TABLE IF NOT EXISTS Ciudades (
 );
 
 -- ============================
---  TABLA USUARIO
+--  TABLA USUARIO  (antes: Persona)
 -- ============================
 CREATE TABLE IF NOT EXISTS Usuario (
-                                       CodigoPersona     INT AUTO_INCREMENT PRIMARY KEY,
+                                       CodigoUsuario     INT AUTO_INCREMENT PRIMARY KEY,
                                        Nombres           VARCHAR(100),
                                        Apellidos         VARCHAR(100),
                                        Direccion         VARCHAR(200),
@@ -48,10 +48,10 @@ CREATE TABLE IF NOT EXISTS Rol (
 --  TABLA ROL_USUARIO (N:N)
 -- ============================
 CREATE TABLE IF NOT EXISTS Rol_Usuario (
-                                           CodigoPersona INT,
+                                           CodigoUsuario INT,
                                            CodigoRol     INT,
-                                           PRIMARY KEY (CodigoPersona, CodigoRol),
-                                           FOREIGN KEY (CodigoPersona) REFERENCES Usuario(CodigoPersona),
+                                           PRIMARY KEY (CodigoUsuario, CodigoRol),
+                                           FOREIGN KEY (CodigoUsuario) REFERENCES Usuario(CodigoUsuario),
                                            FOREIGN KEY (CodigoRol)     REFERENCES Rol(CodigoRol)
 );
 
@@ -64,8 +64,8 @@ CREATE TABLE IF NOT EXISTS InformacionBancaria (
                                                    Banco              VARCHAR(100),
                                                    TipoCuenta         ENUM('Ahorro', 'Corriente', 'Credito') NOT NULL,
                                                    TitularCuenta      VARCHAR(150),
-                                                   CodigoPersona      INT,
-                                                   FOREIGN KEY (CodigoPersona) REFERENCES Usuario(CodigoPersona)
+                                                   CodigoUsuario      INT,
+                                                   FOREIGN KEY (CodigoUsuario) REFERENCES Usuario(CodigoUsuario)
 );
 
 -- ============================
@@ -74,9 +74,9 @@ CREATE TABLE IF NOT EXISTS InformacionBancaria (
 -- ============================
 CREATE TABLE IF NOT EXISTS Cliente (
                                        CodigoCliente      INT AUTO_INCREMENT PRIMARY KEY,
-                                       CodigoPersona      INT NOT NULL,
+                                       CodigoUsuario      INT NOT NULL,
                                        CodigoInfoBancaria INT,
-                                       FOREIGN KEY (CodigoPersona)      REFERENCES Usuario(CodigoPersona),
+                                       FOREIGN KEY (CodigoUsuario)      REFERENCES Usuario(CodigoUsuario),
                                        FOREIGN KEY (CodigoInfoBancaria) REFERENCES InformacionBancaria(CodigoInfoBancaria)
 );
 
@@ -96,10 +96,10 @@ CREATE TABLE IF NOT EXISTS Vehiculo (
 -- ============================
 CREATE TABLE IF NOT EXISTS Repartidor (
                                           CodigoRepartidor   INT AUTO_INCREMENT PRIMARY KEY,
-                                          CodigoPersona      INT NOT NULL,
+                                          CodigoUsuario      INT NOT NULL,
                                           Placa              VARCHAR(20),
                                           CodigoInfoBancaria INT,
-                                          FOREIGN KEY (CodigoPersona)      REFERENCES Usuario(CodigoPersona),
+                                          FOREIGN KEY (CodigoUsuario)      REFERENCES Usuario(CodigoUsuario),
                                           FOREIGN KEY (Placa)              REFERENCES Vehiculo(Placa),
                                           FOREIGN KEY (CodigoInfoBancaria) REFERENCES InformacionBancaria(CodigoInfoBancaria)
 );
@@ -170,7 +170,7 @@ CREATE TABLE IF NOT EXISTS Plato_menu (
 
 -- ============================
 --  TABLA PEDIDO
---  ⚡ Se llena automáticamente via trigger crear_pedido_automaticamente
+--  Se llena automáticamente via trigger crear_pedido_automaticamente
 -- ============================
 CREATE TABLE IF NOT EXISTS Pedido (
                                       CodigoPedido      INT AUTO_INCREMENT PRIMARY KEY,
@@ -184,21 +184,19 @@ CREATE TABLE IF NOT EXISTS Pedido (
 
 -- ============================
 --  TABLA PAGO
---  CodigoPedido → reemplazado por CodigoEnvio
---  Flujo: Cliente paga al confirmar el Envio
 -- ============================
 CREATE TABLE IF NOT EXISTS Pago (
                                     CodigoPago         INT AUTO_INCREMENT PRIMARY KEY,
                                     CodigoCliente      INT NOT NULL,
                                     CodigoInfoBancaria INT NOT NULL,
-                                    CodigoEnvio        INT NOT NULL,
+                                    CodigoEnvio        INT NOT NULL,                          -- antes: CodigoPedido
                                     Monto              DECIMAL(10, 2),
                                     MetodoPago         ENUM('Tarjeta', 'Efectivo') NOT NULL,
                                     FechaPago          DATE,
                                     HoraPago           TIME,
                                     FOREIGN KEY (CodigoCliente)      REFERENCES Cliente(CodigoCliente),
                                     FOREIGN KEY (CodigoInfoBancaria) REFERENCES InformacionBancaria(CodigoInfoBancaria),
-                                    FOREIGN KEY (CodigoEnvio)        REFERENCES Envio(CodigoEnvio)
+                                    FOREIGN KEY (CodigoEnvio)        REFERENCES Envio(CodigoEnvio)  -- antes: Pedido
 );
 
 -- ============================

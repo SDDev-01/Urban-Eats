@@ -33,7 +33,7 @@ INSERT INTO Rol (CodigoRol, TipoRol) VALUES
 --  El trigger crear_cliente_automaticamente
 --     crea un registro en Cliente por cada fila.
 -- ============================
-INSERT INTO Usuario (CodigoPersona, Nombres, Apellidos, Direccion, Telefono, CorreoElectronico) VALUES
+INSERT INTO Usuario (CodigoUsuario, Nombres, Apellidos, Direccion, Telefono, CorreoElectronico) VALUES
                                                                                                     (1,  'Juan Carlos',    'Rodríguez Pérez',    'Av. Caracas 123, Bogotá',         '3001234567', 'juan.rodriguez@email.com'),
                                                                                                     (2,  'María Elena',    'González López',     'Calle 72 #10-34, Bogotá',         '3012345678', 'maria.gonzalez@email.com'),
                                                                                                     (3,  'Carlos Alberto', 'Martínez Sánchez',   'Cra 15 #93-45, Bogotá',           '3023456789', 'carlos.martinez@email.com'),
@@ -53,7 +53,7 @@ INSERT INTO Usuario (CodigoPersona, Nombres, Apellidos, Direccion, Telefono, Cor
 -- ============================
 --  ROL_USUARIO
 -- ============================
-INSERT INTO Rol_Usuario (CodigoPersona, CodigoRol) VALUES
+INSERT INTO Rol_Usuario (CodigoUsuario, CodigoRol) VALUES
                                                        (1,  1),(2,  1),(3,  1),(4,  1),(5,  1),   -- Clientes
                                                        (6,  2),(7,  2),(8,  2),(9,  2),(10, 2),   -- Repartidores
                                                        (11, 3),(12, 3),(13, 3),(14, 3),(15, 3);   -- Administradores
@@ -61,7 +61,7 @@ INSERT INTO Rol_Usuario (CodigoPersona, CodigoRol) VALUES
 -- ============================
 --  INFORMACIÓN BANCARIA
 -- ============================
-INSERT INTO InformacionBancaria (NumeroCuenta, Banco, TipoCuenta, TitularCuenta, CodigoPersona) VALUES
+INSERT INTO InformacionBancaria (NumeroCuenta, Banco, TipoCuenta, TitularCuenta, CodigoUsuario) VALUES
                                                                                                     ('1001234567', 'Bancolombia',  'Ahorro',    'Juan Carlos Rodríguez Pérez',    1),
                                                                                                     ('2001234567', 'Davivienda',   'Corriente', 'María Elena González López',     2),
                                                                                                     ('3001234567', 'Banco Bogotá', 'Ahorro',    'Carlos Alberto Martínez Sánchez',3),
@@ -78,11 +78,11 @@ INSERT INTO InformacionBancaria (NumeroCuenta, Banco, TipoCuenta, TitularCuenta,
 --  El trigger ya creó los registros.
 --  Solo asignamos CodigoInfoBancaria a los 5 clientes.
 -- ============================
-UPDATE Cliente SET CodigoInfoBancaria = 1 WHERE CodigoPersona = 1;
-UPDATE Cliente SET CodigoInfoBancaria = 2 WHERE CodigoPersona = 2;
-UPDATE Cliente SET CodigoInfoBancaria = 3 WHERE CodigoPersona = 3;
-UPDATE Cliente SET CodigoInfoBancaria = 4 WHERE CodigoPersona = 4;
-UPDATE Cliente SET CodigoInfoBancaria = 5 WHERE CodigoPersona = 5;
+UPDATE Cliente SET CodigoInfoBancaria = 1 WHERE CodigoUsuario = 1;
+UPDATE Cliente SET CodigoInfoBancaria = 2 WHERE CodigoUsuario = 2;
+UPDATE Cliente SET CodigoInfoBancaria = 3 WHERE CodigoUsuario = 3;
+UPDATE Cliente SET CodigoInfoBancaria = 4 WHERE CodigoUsuario = 4;
+UPDATE Cliente SET CodigoInfoBancaria = 5 WHERE CodigoUsuario = 5;
 
 -- ============================
 --  VEHICULO
@@ -102,7 +102,7 @@ INSERT INTO Vehiculo (Placa, Licencia, TipoVehiculo, SeguroVehiculo, SOAT) VALUE
 -- ============================
 --  REPARTIDOR
 -- ============================
-INSERT INTO Repartidor (CodigoRepartidor, CodigoPersona, Placa, CodigoInfoBancaria) VALUES
+INSERT INTO Repartidor (CodigoRepartidor, CodigoUsuario, Placa, CodigoInfoBancaria) VALUES
                                                                                         (1,  6,  'ABC123', 6),
                                                                                         (2,  7,  'DEF456', 7),
                                                                                         (3,  8,  'GHI789', 8),
@@ -167,7 +167,7 @@ INSERT INTO Plato_menu (CodigoMenu, CodigoPlato) VALUES
 
 -- ============================
 --  ENVIO
---  El trigger crear_pedido_automaticamente
+--   El trigger crear_pedido_automaticamente
 --     insertará automáticamente en Pedido tras cada fila.
 -- ============================
 INSERT INTO Envio (CodigoEnvio, CodigoCliente, CodigoRepartidor, CodigoRestaurante, Descripcion, FechaEnvio, HoraEntrega) VALUES
@@ -193,8 +193,7 @@ UPDATE Pedido SET Estado = 'Cancelado' WHERE CodigoEnvio = 10;
 
 -- ============================
 --  PAGO
---  Ahora referencia CodigoEnvio en vez de CodigoPedido.
---  El pago ocurre antes/junto al envío — no depende del Pedido.
+
 -- ============================
 INSERT INTO Pago (CodigoPago, CodigoCliente, CodigoInfoBancaria, CodigoEnvio, Monto, MetodoPago, FechaPago, HoraPago) VALUES
                                                                                                                           (1,  1, 1, 1,  28500.00, 'Tarjeta',  '2025-11-20', '12:15:00'),

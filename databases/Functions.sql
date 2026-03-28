@@ -1,33 +1,45 @@
+USE UrbanEats;
+
+-- ============================
+--  FUNCIÓN: ver_estado_pedido
+-- ============================
 DELIMITER //
 
-CREATE Function ver_estado_pedido(idPedido INT)
-RETURNS VARCHAR(50)
-DETERMINISTIC
+CREATE FUNCTION ver_estado_pedido(idPedido INT)
+    RETURNS VARCHAR(50)
+    DETERMINISTIC
+    READS SQL DATA
 BEGIN
-	DECLARE estadoPedido VARCHAR(50);
-	SELECT Estado INTO estadoPedido from Pedido WHERE CodigoPedido = idPedido;
+    DECLARE estadoPedido VARCHAR(50);
+    SELECT Estado INTO estadoPedido
+    FROM Pedido
+    WHERE CodigoPedido = idPedido;
     RETURN estadoPedido;
 END //
 
 DELIMITER ;
- DELIMITER //
 
-CREATE FUNCTION VerRepartidor(CodigoRepartidor INT)
-RETURNS VARCHAR(50)
-DETERMINISTIC
-READS SQL DATA
+-- ============================
+--  FUNCIÓN: VerRepartidor
+-- ============================
+DELIMITER //
+
+CREATE FUNCTION VerRepartidor(idRepartidor INT)
+    RETURNS VARCHAR(100)
+    DETERMINISTIC
+    READS SQL DATA
 BEGIN
-    DECLARE v_nombre VARCHAR(50);
+    DECLARE v_nombre VARCHAR(100);
 
-    SELECT Nombres 
-      INTO v_nombre 
-      FROM Persona 
-     WHERE CodigoRepartidor = CodigoPersona
-     LIMIT 1;
+    SELECT u.Nombres
+    INTO v_nombre
+    FROM Usuario u
+             JOIN Repartidor r ON r.CodigoUsuario = u.CodigoUsuario
+    WHERE r.CodigoRepartidor = idRepartidor
+    LIMIT 1;
 
-    -- Siempre debes devolver algo
     RETURN COALESCE(v_nombre, 'REPARTIDOR NO ENCONTRADO');
-
 END //
 
 DELIMITER ;
+ 
