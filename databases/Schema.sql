@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS Ciudades (
 );
 
 -- ============================
---  TABLA USUARIO  (antes: Persona)
+--  TABLA USUARIO
 -- ============================
 CREATE TABLE IF NOT EXISTS Usuario (
                                        CodigoUsuario     INT AUTO_INCREMENT PRIMARY KEY,
