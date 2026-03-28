@@ -55,8 +55,19 @@
       text-align: center;
       padding: 0.5rem 0;
       font-size: 0.85rem;
+      color: var(--verde);
+      text-decoration: underline;
     }
 
+    .mapa-link:hover {
+      color: #0a6b3c; /* tono más oscuro para el estado hover */
+      text-decoration: underline;
+    }
+
+    .mapa-link:focus-visible {
+      outline: 2px solid #0a6b3c;
+      outline-offset: 2px;
+    }
     .ruta-linea {
       stroke: var(--verde);
       stroke-width: 2.5;
