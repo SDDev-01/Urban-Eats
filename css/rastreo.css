@@ -42,7 +42,7 @@
 
     .mapa-header i { color: var(--verde); }
 
-    /* Mapa SVG animado */
+    /* Mapa embebido */
     .mapa-contenedor {
       height: 250px;
       background: linear-gradient(180deg, #e8f5f0 0%, #d1edd8 100%);
@@ -68,45 +68,6 @@
       outline: 2px solid #0a6b3c;
       outline-offset: 2px;
     }
-    .ruta-linea {
-      stroke: var(--verde);
-      stroke-width: 2.5;
-      stroke-dasharray: 6 3;
-      fill: none;
-      animation: dashMove 1.5s linear infinite;
-    }
-
-    @keyframes dashMove {
-      to { stroke-dashoffset: -18; }
-    }
-
-    .marcador-ubicacion {
-      position: absolute;
-      bottom: 20px;
-      right: 40px;
-      text-align: center;
-    }
-
-    .marcador-icono {
-      width: 40px; height: 40px;
-      background: var(--verde);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 1.1rem;
-      box-shadow: 0 3px 10px rgba(46,204,113,0.4);
-      animation: pulsar 2s ease-in-out infinite;
-    }
-
-    @keyframes pulsar {
-      0%, 100% { transform: scale(1); box-shadow: 0 3px 10px rgba(46,204,113,0.4); }
-      50% { transform: scale(1.08); box-shadow: 0 5px 20px rgba(46,204,113,0.5); }
-    }
-
-    .marcador-label { font-size: 0.75rem; font-weight: 600; color: var(--texto); margin-top: 0.3rem; }
-
     /* Repartidor card */
     .repartidor-card {
       background: white;
