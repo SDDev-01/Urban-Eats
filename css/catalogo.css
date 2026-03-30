@@ -83,13 +83,33 @@
       justify-content: center;
       border-radius: 0;
       transition: background 0.2s;
+      position: relative;
     }
+    
+    /* Imagen real del producto */
+    .producto-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    
+    .producto-card:hover .producto-img {
+      transform: scale(1.05);
+    }
+    
+    /* Emoji como fallback */
     .producto-emoji {
       font-size: 5rem;
       line-height: 1;
       transition: transform 0.3s ease;
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
     }
+    
     .producto-card:hover .producto-emoji {
       transform: scale(1.15);
     }
@@ -138,15 +158,19 @@
       grid-template-columns: 1fr 1fr;
       gap: 1.5rem;
     }
+    
+    /* Imagen real en el modal */
     .detalle-img {
       width: 100%;
-      height: 220px;
+      height: 280px;
       object-fit: cover;
       border-radius: var(--radio);
     }
+    
+    /* Fallback del modal */
     .detalle-img-fallback {
       width: 100%;
-      height: 220px;
+      height: 280px;
       background: linear-gradient(135deg, #d5f5e3, #a9dfbf);
       border-radius: var(--radio);
       display: flex;

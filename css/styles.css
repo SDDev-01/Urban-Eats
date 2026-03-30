@@ -46,14 +46,15 @@ img { max-width: 100%; display: block; }
   position: fixed;
   top: 0; left: 0; right: 0;
   height: var(--navbar-height);
-  background: var(--blanco);
-  border-bottom: 1px solid var(--borde);
+  /* Degradado de verde a verde oscuro */
+  background: linear-gradient(135deg, var(--verde) 0%, var(--verde-oscuro) 100%);
+  border-bottom: 1px solid var(--verde-oscuro);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
   z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
 }
 
 .navbar-logo {
@@ -62,10 +63,10 @@ img { max-width: 100%; display: block; }
   gap: 0.5rem;
   font-size: 1.2rem;
   font-weight: 700;
-  color: var(--texto);
+  color: white;
 }
 
-.navbar-logo i { color: var(--verde); font-size: 1.4rem; }
+.navbar-logo i { color: white; font-size: 1.4rem; }
 
 .navbar-nav {
   display: flex;
@@ -76,7 +77,7 @@ img { max-width: 100%; display: block; }
 .navbar-nav a {
   padding: 0.4rem 0.8rem;
   border-radius: var(--radio-sm);
-  color: var(--texto-gris);
+  color: rgba(255, 255, 255, 0.85);
   font-size: 0.875rem;
   font-weight: 500;
   transition: background 0.2s, color 0.2s;
@@ -85,8 +86,8 @@ img { max-width: 100%; display: block; }
   gap: 0.35rem;
 }
 
-.navbar-nav a:hover { background: var(--verde-muy-claro); color: var(--verde-oscuro); }
-.navbar-nav a.activo { background: var(--verde-muy-claro); color: var(--verde-oscuro); font-weight: 600; }
+.navbar-nav a:hover { background: rgba(255, 255, 255, 0.2); color: white; }
+.navbar-nav a.activo { background: rgba(255, 255, 255, 0.25); color: white; font-weight: 600; }
 
 .navbar-right {
   display: flex;
@@ -99,14 +100,15 @@ img { max-width: 100%; display: block; }
   align-items: center;
   gap: 0.4rem;
   font-size: 0.875rem;
-  color: var(--texto-gris);
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
 }
 
 .btn-carrito {
   position: relative;
-  background: var(--verde);
+  background: rgba(255, 255, 255, 0.2);
   color: white;
-  border: none;
+  border: 2px solid rgba(255, 255, 255, 0.3);
   padding: 0.5rem 1rem;
   border-radius: var(--radio-sm);
   cursor: pointer;
@@ -119,7 +121,7 @@ img { max-width: 100%; display: block; }
   text-decoration: none;
 }
 
-.btn-carrito:hover { background: var(--verde-oscuro); transform: translateY(-1px); }
+.btn-carrito:hover { background: rgba(255, 255, 255, 0.3); transform: translateY(-1px); }
 
 .carrito-badge {
   position: absolute;
@@ -136,20 +138,20 @@ img { max-width: 100%; display: block; }
 }
 
 .btn-salir {
-  background: none;
-  border: none;
-  color: var(--texto-gris);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
   cursor: pointer;
   font-size: 0.875rem;
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.4rem 0.6rem;
+  padding: 0.4rem 0.8rem;
   border-radius: var(--radio-sm);
   transition: background 0.2s, color 0.2s;
 }
 
-.btn-salir:hover { background: #fdecea; color: #e74c3c; }
+.btn-salir:hover { background: rgba(255, 255, 255, 0.25); }
 
 .pagina {
   padding-top: calc(var(--navbar-height) + 1.5rem);
@@ -437,3 +439,141 @@ footer {
   font-size: 1rem;
   justify-content: center;
 }
+
+/* ============================
+   BANNER/SLIDER DE COMIDA
+   ============================ */
+.food-banner {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  margin-top: var(--navbar-height);
+  background: var(--fondo);
+}
+
+.banner-slides {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  height: 100%;
+}
+
+.banner-slide {
+  min-width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.banner-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Overlay oscuro sobre las imágenes */
+.banner-slide::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.4));
+}
+
+/* Texto sobre el banner */
+.banner-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  z-index: 10;
+  width: 90%;
+  max-width: 700px;
+}
+
+.banner-text h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 0.8rem;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.banner-text p {
+  font-size: 1.1rem;
+  opacity: 0.95;
+  text-shadow: 0 1px 5px rgba(0,0,0,0.3);
+}
+
+/* Botones de navegación */
+.banner-nav {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 20;
+}
+
+.banner-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  border: 2px solid white;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.banner-dot.active {
+  background: white;
+  width: 30px;
+  border-radius: 6px;
+}
+
+/* Flechas de navegación */
+.banner-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+  font-size: 1.2rem;
+  transition: all 0.3s;
+  backdrop-filter: blur(5px);
+}
+
+.banner-arrow:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.banner-arrow-left { left: 20px; }
+.banner-arrow-right { right: 20px; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .food-banner { height: 300px; }
+  .banner-text h2 { font-size: 1.8rem; }
+  .banner-text p { font-size: 1rem; }
+  .banner-arrow { width: 38px; height: 38px; font-size: 1rem; }
+  .banner-arrow-left { left: 10px; }
+  .banner-arrow-right { right: 10px; }
+}
+
