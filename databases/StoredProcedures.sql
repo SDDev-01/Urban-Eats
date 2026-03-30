@@ -26,8 +26,8 @@ BEGIN
     END IF;
     
     IF EXISTS(
-		SELECT 1 FROM Pedido 
-		WHERE p.CodigoPedido = Codigo
+		SELECT 1 FROM Pedido p
+		WHERE p.CodigoPedido = CodigoPedido
         AND Estado = "En Proceso"
 	)THEN 
 		UPDATE Pedido p SET Estado = Mensaje 
