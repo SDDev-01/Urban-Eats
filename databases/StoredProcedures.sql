@@ -10,7 +10,7 @@ BEGIN
         JOIN Envio e ON p.CodigoEnvio = e.CodigoEnvio
         WHERE CodigoCliente = e.CodigoCliente;
 	ELSE
-		SELECT "No se encontro pedido alguno" AS "SIN RESULTADO";
+		SELECT 'No se encontro pedido alguno' AS 'SIN RESULTADO';
 	END IF;
 END//
 DELIMITER ;
@@ -20,21 +20,21 @@ CREATE PROCEDURE ActualizarPedido(IN CodigoPedido INT, Llegada boolean)
 BEGIN
 	DECLARE Mensaje Varchar(50);
 	IF(Llegada = TRUE) THEN
-		SET Mensaje = "Entregado";
+		SET Mensaje = 'Entregado';
     ELSE
-		SET Mensaje = "Cancelado";
+		SET Mensaje = 'Cancelado';
     END IF;
     
     IF EXISTS(
 		SELECT 1 FROM Pedido p
 		WHERE p.CodigoPedido = CodigoPedido
-        AND Estado = "En Proceso"
+        AND Estado = 'En Proceso'
 	)THEN 
 		UPDATE Pedido p SET Estado = Mensaje 
 		WHERE p.CodigoPedido = CodigoPedido;
-        SELECT "Pedido actualizado correctamente" AS Mensaje;
+        SELECT 'Pedido actualizado correctamente' AS Mensaje;
 	ELSE
-		SELECT "Este pedido ya ha sido modificado o no existe" AS Mensaje;
+		SELECT 'Este pedido ya ha sido modificado o no existe' AS Mensaje;
 	END IF;
             
 END//
