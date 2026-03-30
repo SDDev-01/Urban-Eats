@@ -106,6 +106,11 @@ document.getElementById('btn-verificar').addEventListener('click', () => {
   cliente.direccion = document.getElementById('c-direccion').value.trim();
   persistir();
   window.UE.mostrarToast('¡Datos del cliente guardados!');
+  
+  // Redirigir al perfil después de guardar
+  setTimeout(() => {
+    window.location.href = 'perfil.html';
+  }, 1000);
 });
 
 llenarFormulario();

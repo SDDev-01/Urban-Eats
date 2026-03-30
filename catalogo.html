@@ -25,7 +25,7 @@
       <li><a href="repartidor.html"><i class="fas fa-motorcycle"></i> Repartidor</a></li>
     </ul>
     <div class="navbar-right">
-      <a href="registro.html" class="navbar-usuario" style="text-decoration:none;">
+      <a href="perfil.html" class="navbar-usuario" style="text-decoration:none;">
         <i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span>
       </a>
       <a href="carrito.html" class="btn-carrito">
@@ -36,18 +36,57 @@
     </div>
   </nav>
 
-  <!-- HERO -->
-  <div style="padding-top: var(--navbar-height);">
-    <div class="hero">
-      <h1>Comida Saludable, Entrega Rápida</h1>
-      <p>Perfecta para trabajadores, estudiantes y personas activas 🌙</p>
-      <div class="hero-badges">
-        <span><i class="fas fa-clock"></i> Abierto 24/7</span>
-        <span><i class="fas fa-leaf"></i> 100% Saludable</span>
-        <span><i class="fas fa-seedling"></i> Ingredientes Frescos</span>
+  <!-- Banner/Slider de Comida -->
+  <section class="food-banner">
+    <div class="banner-slides" id="banner-slides">
+      <!-- Slide 1 -->
+      <div class="banner-slide">
+        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&h=400&fit=crop" alt="Comida saludable">
+        <div class="banner-text">
+          <h2>Comida Saludable 24/7</h2>
+          <p>Perfecta para trabajadores, estudiantes y personas activas</p>
+        </div>
+      </div>
+      <!-- Slide 2 -->
+      <div class="banner-slide">
+        <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&h=400&fit=crop" alt="Ensaladas frescas">
+        <div class="banner-text">
+          <h2>Ingredientes 100% Frescos</h2>
+          <p>Seleccionamos lo mejor para tu alimentación</p>
+        </div>
+      </div>
+      <!-- Slide 3 -->
+      <div class="banner-slide">
+        <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=1200&h=400&fit=crop" alt="Bowls nutritivos">
+        <div class="banner-text">
+          <h2>Entrega Rápida</h2>
+          <p>Tu comida en minutos, donde estés en Bogotá</p>
+        </div>
+      </div>
+      <!-- Slide 4 -->
+      <div class="banner-slide">
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1200&h=400&fit=crop" alt="Pizza saludable">
+        <div class="banner-text">
+          <h2>Variedad de Opciones</h2>
+          <p>Encuentra tu comida favorita sin culpa</p>
+        </div>
       </div>
     </div>
+    
+    <!-- Flechas de navegación -->
+    <button class="banner-arrow banner-arrow-left" id="banner-prev" aria-label="Anterior">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="banner-arrow banner-arrow-right" id="banner-next" aria-label="Siguiente">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+    
+    <!-- Indicadores (dots) -->
+    <div class="banner-nav" id="banner-nav"></div>
+  </section>
 
+  <!-- HERO -->
+  <div style="padding-top: var(--navbar-height);">
     <!-- FILTROS -->
     <div class="filtros-wrap">
       <button class="btn-filtro activo" data-categoria="todos">Todos</button>
@@ -96,6 +135,9 @@
   </footer>
 
   <div id="toast-container"></div>
+  
+  <script src="js/banner.js"></script>
+  
   <script src="js/app.js"></script>
   <script src="js/catalogo.js"></script>
 </body>

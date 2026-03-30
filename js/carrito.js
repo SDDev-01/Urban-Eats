@@ -32,9 +32,18 @@ function renderizarCarrito() {
   carrito.forEach(item => {
     const precioItem = item.precio * item.cantidad;
     subtotal += precioItem;
+    
+    // Usar imagen si existe, si no emoji
+    const imagenHTML = item.imagen 
+      ? `<img src="${item.imagen}" alt="${item.nombre}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+         <div class="item-emoji" style="display:none;">${item.emoji || '🍽️'}</div>`
+      : `<div class="item-emoji">${item.emoji || '🍽️'}</div>`;
+    
     html += `
       <div class="item-card" data-id="${item.id}">
-        <div class="item-emoji">${item.emoji || '🍽️'}</div>
+        <div style="width:80px;height:80px;display:flex;align-items:center;justify-content:center;background:${item.color || '#f5f5f5'};border-radius:8px;overflow:hidden;flex-shrink:0;">
+          ${imagenHTML}
+        </div>
         <div class="item-info">
           <h4>${item.nombre}</h4>
           <span class="precio-unit">$${item.precio.toLocaleString('es-CO')} c/u</span>
@@ -117,24 +126,23 @@ document.getElementById('btn-limpiar-carrito').addEventListener('click', () => {
   renderizarCarrito();
 });
 
-// Realizar pedido → redirige a rastreo
+// Realizar pedido → redirige a pago
 document.getElementById('btn-realizar-pedido').addEventListener('click', () => {
   const carrito = window.UE.obtenerCarrito();
   if (carrito.length === 0) {
     window.UE.mostrarToast('Agrega productos antes de realizar el pedido.', 'fa-exclamation-circle');
     return;
   }
-  // Guardar pedido simulado
+  // Guardar pedido simulado para pago
   const pedido = {
     id: 'ORD-' + Date.now(),
     items: carrito,
     fecha: new Date().toISOString(),
-    estado: 'preparando'
+    estado: 'pendiente'
   };
   localStorage.setItem('ue_pedido_actual', JSON.stringify(pedido));
-  window.UE.guardarCarrito([]);
-  window.UE.mostrarToast('¡Pedido realizado! Redirigiendo al seguimiento...');
-  setTimeout(() => { window.location.href = 'rastreo.html'; }, 1500);
+  window.UE.mostrarToast('¡Procediendo al pago!');
+  setTimeout(() => { window.location.href = 'pago.html'; }, 1000);
 });
 
 // Inicializar
