@@ -1,3 +1,5 @@
+/* El slider del banner está en js/banner.js */
+
 /* ============================
    URBAN EATS - Catálogo JS
    Usa imágenes reales con emoji
