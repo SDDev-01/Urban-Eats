@@ -174,16 +174,29 @@ if (formRegistro) {
     }
 
     if (valido) {
+      // Datos del usuario para login
       const usuario = {
         nombres: campos.nombres.value.trim(),
         apellidos: campos.apellidos.value.trim(),
         nombre: campos.nombres.value.trim() + ' ' + campos.apellidos.value.trim(),
         email: campos.email.value.trim(),
+        password: campos.password.value, // Guardamos también la contraseña
+      };
+      
+      // Datos del cliente (perfil completo)
+      const cliente = {
+        nombres: campos.nombres.value.trim(),
+        apellidos: campos.apellidos.value.trim(),
+        email: campos.email.value.trim(),
         telefono: campos.telefono.value.trim(),
         direccion: campos.direccion.value.trim(),
       };
+      
+      // Guardar en ambos lugares
       localStorage.setItem('ue_usuario', JSON.stringify(usuario));
+      localStorage.setItem('ue_cliente', JSON.stringify(cliente));
       localStorage.setItem('ue_sesion', 'activa');
+      
       mostrarToast('¡Cuenta creada exitosamente!');
       setTimeout(() => { window.location.href = 'catalogo.html'; }, 1400);
     }
