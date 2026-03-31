@@ -173,14 +173,20 @@ if (formRegistro) {
       valido = false;
     }
 
+    // Validar contraseña (mínimo 4 caracteres, igual que el login)
+    if (campos.password && campos.password.value.length < 4) {
+      const err = document.getElementById('error-password');
+      if (err) err.textContent = 'La contraseña debe tener al menos 4 caracteres.';
+      valido = false;
+    }
+
     if (valido) {
-      // Datos del usuario para login
+      // Datos del usuario para login (no se guarda la contraseña en texto plano)
       const usuario = {
         nombres: campos.nombres.value.trim(),
         apellidos: campos.apellidos.value.trim(),
         nombre: campos.nombres.value.trim() + ' ' + campos.apellidos.value.trim(),
         email: campos.email.value.trim(),
-        password: campos.password.value, // Guardamos también la contraseña
       };
       
       // Datos del cliente (perfil completo)
