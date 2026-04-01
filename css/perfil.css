@@ -135,3 +135,40 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Sección de logout */
+.perfil-logout {
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--fondo);
+}
+
+.btn-logout {
+  width: 100%;
+  max-width: 300px;
+  padding: 0.85rem 1.5rem;
+  background: white;
+  color: #e74c3c;
+  border: 2px solid #e74c3c;
+  border-radius: var(--radio-sm);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--fuente);
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-logout:hover {
+  background: #e74c3c;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+}
+
+.btn-logout i {
+  font-size: 1.1rem;
+}

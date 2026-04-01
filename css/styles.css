@@ -109,16 +109,17 @@ img { max-width: 100%; display: block; }
   background: rgba(255, 255, 255, 0.2);
   color: white;
   border: 2px solid rgba(255, 255, 255, 0.3);
-  padding: 0.5rem 1rem;
+  padding: 0.6rem;
   border-radius: var(--radio-sm);
   cursor: pointer;
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: 1.1rem;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  justify-content: center;
   transition: background 0.2s, transform 0.15s;
   text-decoration: none;
+  width: 42px;
+  height: 42px;
 }
 
 .btn-carrito:hover { background: rgba(255, 255, 255, 0.3); transform: translateY(-1px); }
