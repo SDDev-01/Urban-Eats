@@ -5,12 +5,20 @@
    Muestra todos los productos de todos los restaurantes
    ============================ */
 
-// Obtener todos los productos desde data-restaurantes.js
-const productos = obtenerProductos();
-
+let productos = [];
 let categoriaActiva      = 'todos';
 let productoSeleccionado = null;
 let cantidadModal        = 1;
+
+// Inicializar productos después de que data-restaurantes.js se haya cargado
+function inicializarCatalogo() {
+  productos = obtenerProductos();
+  if (!productos || productos.length === 0) {
+    console.error('No se pudieron cargar los productos');
+    return;
+  }
+  renderizarProductos(productos);
+}
 
 // ---- RENDERIZAR TARJETAS ----
 function renderizarProductos(lista) {
@@ -148,4 +156,9 @@ document.getElementById('btn-agregar-carrito').addEventListener('click', () => {
 });
 
 // ---- INICIAR ----
-renderizarProductos(productos);
+// Esperar a que el DOM y todos los scripts estén listos
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', inicializarCatalogo);
+} else {
+  inicializarCatalogo();
+}
