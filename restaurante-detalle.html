@@ -2,11 +2,11 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Catálogo – Urban Eats</title>
+  <title>Restaurante – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="css/catalogo.css">
+  <link rel="stylesheet" href="css/restaurante-detalle.css">
 </head>
 <body>
 
@@ -29,58 +29,20 @@
     </div>
   </nav>
 
-  <!-- Banner/Slider de Comida -->
-  <section class="food-banner">
-    <div class="banner-slides" id="banner-slides">
-      <!-- Slide 1 -->
-      <div class="banner-slide">
-        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&h=400&fit=crop" alt="Comida saludable">
-        <div class="banner-text">
-          <h2>Comida Saludable 24/7</h2>
-          <p>Perfecta para trabajadores, estudiantes y personas activas</p>
-        </div>
-      </div>
-      <!-- Slide 2 -->
-      <div class="banner-slide">
-        <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&h=400&fit=crop" alt="Ensaladas frescas">
-        <div class="banner-text">
-          <h2>Ingredientes 100% Frescos</h2>
-          <p>Seleccionamos lo mejor para tu alimentación</p>
-        </div>
-      </div>
-      <!-- Slide 3 -->
-      <div class="banner-slide">
-        <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=1200&h=400&fit=crop" alt="Bowls nutritivos">
-        <div class="banner-text">
-          <h2>Entrega Rápida</h2>
-          <p>Tu comida en minutos, donde estés en Bogotá</p>
-        </div>
-      </div>
-      <!-- Slide 4 -->
-      <div class="banner-slide">
-        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1200&h=400&fit=crop" alt="Pizza saludable">
-        <div class="banner-text">
-          <h2>Variedad de Opciones</h2>
-          <p>Encuentra tu comida favorita sin culpa</p>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Flechas de navegación -->
-    <button class="banner-arrow banner-arrow-left" id="banner-prev" aria-label="Anterior">
-      <i class="fas fa-chevron-left"></i>
-    </button>
-    <button class="banner-arrow banner-arrow-right" id="banner-next" aria-label="Siguiente">
-      <i class="fas fa-chevron-right"></i>
-    </button>
-    
-    <!-- Indicadores (dots) -->
-    <div class="banner-nav" id="banner-nav"></div>
-  </section>
-
-  <!-- HERO -->
   <div style="padding-top: var(--navbar-height);">
-    <!-- FILTROS -->
+    <!-- HEADER DEL RESTAURANTE -->
+    <div class="restaurante-hero" id="restaurante-hero">
+      <!-- Se genera dinámicamente con JS -->
+    </div>
+
+    <!-- BOTÓN VOLVER -->
+    <div class="volver-section">
+      <a href="restaurantes.html" class="btn-volver">
+        <i class="fas fa-arrow-left"></i> Volver a Restaurantes
+      </a>
+    </div>
+
+    <!-- FILTROS DE CATEGORÍAS -->
     <div class="filtros-wrap">
       <button class="btn-filtro activo" data-categoria="todos">Todos</button>
       <button class="btn-filtro" data-categoria="Bowls">Bowls</button>
@@ -90,8 +52,10 @@
       <button class="btn-filtro" data-categoria="Bebidas">Bebidas</button>
     </div>
 
-    <!-- GRID -->
-    <div class="productos-grid" id="productos-grid"></div>
+    <!-- GRID DE PRODUCTOS -->
+    <div class="productos-grid" id="productos-grid">
+      <!-- Se genera dinámicamente con JS -->
+    </div>
   </div>
 
   <!-- MODAL DETALLE PRODUCTO -->
@@ -129,9 +93,8 @@
 
   <div id="toast-container"></div>
   
-  <script src="js/banner.js"></script>
   <script src="js/data-restaurantes.js"></script>
   <script src="js/app.js"></script>
-  <script src="js/catalogo.js"></script>
+  <script src="js/restaurante-detalle.js"></script>
 </body>
 </html>
