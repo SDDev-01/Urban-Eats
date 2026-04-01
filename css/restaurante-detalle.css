@@ -1,0 +1,380 @@
+/* ============================
+   URBAN EATS - RESTAURANTE-DETALLE.CSS
+   Estilos para página de detalle de restaurante
+   ============================ */
+
+/* ---- HERO DEL RESTAURANTE ---- */
+.restaurante-hero {
+  background: linear-gradient(135deg, var(--verde) 0%, var(--verde-oscuro) 100%);
+  color: white;
+  padding: 3rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.restaurante-logo-grande {
+  font-size: 5rem;
+  background: rgba(255, 255, 255, 0.2);
+  width: 120px;
+  height: 120px;
+  border-radius: var(--radio);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.restaurante-info-hero {
+  flex: 1;
+}
+
+.restaurante-info-hero h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.restaurante-info-hero p {
+  font-size: 1.05rem;
+  opacity: 0.9;
+  margin-bottom: 1.2rem;
+}
+
+.restaurante-detalles {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  font-size: 0.95rem;
+}
+
+.restaurante-detalle-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.restaurante-detalle-item i {
+  font-size: 1.1rem;
+}
+
+/* ---- BOTÓN VOLVER ---- */
+.volver-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem 0;
+}
+
+.btn-volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--texto-gris);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.6rem 1rem;
+  border-radius: var(--radio-sm);
+  transition: all 0.2s;
+  background: white;
+  border: 1.5px solid var(--borde);
+}
+
+.btn-volver:hover {
+  color: var(--verde-oscuro);
+  border-color: var(--verde);
+  background: var(--verde-muy-claro);
+}
+
+/* ---- FILTROS ---- */
+.filtros-wrap {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 1.5rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.btn-filtro {
+  padding: 0.5rem 1.2rem;
+  border-radius: 30px;
+  border: 1.5px solid var(--borde);
+  background: white;
+  color: var(--texto-gris);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--fuente);
+}
+
+.btn-filtro:hover {
+  border-color: var(--verde);
+  color: var(--verde-oscuro);
+}
+
+.btn-filtro.activo {
+  background: var(--verde);
+  color: white;
+  border-color: var(--verde);
+  font-weight: 600;
+}
+
+/* ---- GRID DE PRODUCTOS ---- */
+.productos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 0 2rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.producto-card {
+  background: white;
+  border-radius: var(--radio);
+  overflow: hidden;
+  box-shadow: var(--sombra);
+  transition: box-shadow 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+
+.producto-card:hover {
+  box-shadow: var(--sombra-hover);
+  transform: translateY(-4px);
+}
+
+.producto-img-wrap {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.producto-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.producto-card:hover .producto-img {
+  transform: scale(1.05);
+}
+
+.producto-emoji {
+  font-size: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.producto-body {
+  padding: 1.1rem;
+}
+
+.producto-categoria {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--verde-oscuro);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.3rem;
+}
+
+.producto-nombre {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.producto-desc {
+  color: var(--texto-gris);
+  font-size: 0.85rem;
+  margin-bottom: 0.8rem;
+  line-height: 1.5;
+}
+
+.producto-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.producto-precio {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--verde-oscuro);
+}
+
+.btn-ver {
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radio-sm);
+  background: var(--fondo);
+  border: 1.5px solid var(--borde);
+  color: var(--texto-gris);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--fuente);
+  transition: all 0.2s;
+}
+
+.btn-ver:hover {
+  background: var(--verde);
+  color: white;
+  border-color: var(--verde);
+}
+
+/* ---- MODAL DETALLE (reutilizado de catálogo) ---- */
+.detalle-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.detalle-img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: var(--radio);
+}
+
+.detalle-img-fallback {
+  width: 100%;
+  height: 280px;
+  border-radius: var(--radio);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+}
+
+.detalle-info .categoria-tag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--verde-oscuro);
+  background: var(--verde-claro);
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 0.6rem;
+}
+
+.detalle-info h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.detalle-info p {
+  color: var(--texto-gris);
+  font-size: 0.875rem;
+  margin-bottom: 0.8rem;
+}
+
+.detalle-stats {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.stat-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: var(--fondo);
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.cantidad-control {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.cantidad-control label {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.btn-cantidad {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--borde);
+  background: white;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.btn-cantidad:hover {
+  border-color: var(--verde);
+  background: var(--verde-muy-claro);
+}
+
+#detalle-cantidad {
+  font-weight: 700;
+  font-size: 1.1rem;
+  min-width: 24px;
+  text-align: center;
+}
+
+.detalle-precio {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--verde-oscuro);
+  margin-bottom: 1rem;
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 768px) {
+  .restaurante-hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem 1.5rem;
+  }
+  
+  .restaurante-logo-grande {
+    font-size: 4rem;
+    width: 100px;
+    height: 100px;
+  }
+  
+  .restaurante-info-hero h1 {
+    font-size: 2rem;
+  }
+  
+  .restaurante-detalles {
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .detalle-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .productos-grid {
+    grid-template-columns: 1fr;
+    padding: 0 1rem 1rem;
+  }
+}

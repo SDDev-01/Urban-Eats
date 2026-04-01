@@ -5,7 +5,7 @@
 // ---- NAVBAR: marcar página activa ----
 (function marcarActivo() {
   const pagina = window.location.pathname.split('/').pop();
-  const links = document.querySelectorAll('.navbar-nav a');
+  const links = document.querySelectorAll('.navbar-link');
   links.forEach(link => {
     const href = link.getAttribute('href');
     if (href === pagina || (pagina === '' && href === 'index.html')) {

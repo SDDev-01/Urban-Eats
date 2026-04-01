@@ -136,6 +136,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 0.8rem;
     }
     .producto-precio { font-size: 1.1rem; font-weight: 700; color: var(--verde-oscuro); }
     .btn-ver {
@@ -151,6 +152,31 @@
       transition: all 0.2s;
     }
     .btn-ver:hover { background: var(--verde); color: white; border-color: var(--verde); }
+    
+    /* Info del restaurante en producto */
+    .producto-restaurante {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid var(--borde);
+      transition: all 0.2s;
+      color: var(--texto-gris);
+    }
+    
+    .producto-restaurante:hover {
+      color: var(--verde-oscuro);
+      transform: translateX(3px);
+    }
+    
+    .restaurante-logo-mini {
+      font-size: 1.3rem;
+      line-height: 1;
+    }
+    .restaurante-nombre-mini {
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
 
     /* ---- MODAL DETALLE ---- */
     .detalle-grid {

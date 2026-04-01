@@ -1,4 +1,113 @@
 /* ============================
+   MÉTODO DE PAGO PREFERIDO
+   ============================ */
+(function gestionarMetodoPago() {
+  // Clave en localStorage para el método preferido
+  const CLAVE = 'ue_metodo_pago';
+
+  // Leer preferencia guardada (por defecto: tarjeta)
+  const preferencia = localStorage.getItem(CLAVE) || 'tarjeta';
+
+  // Elementos del DOM
+  const btnTarjeta  = document.getElementById('perfil-met-tarjeta');
+  const btnEfectivo = document.getElementById('perfil-met-efectivo');
+  const secTarjeta  = document.getElementById('perfil-seccion-tarjeta');
+  const secEfectivo = document.getElementById('perfil-seccion-efectivo');
+  const btnGuardarTarjeta  = document.getElementById('perfil-btn-guardar-tarjeta');
+  const btnGuardarEfectivo = document.getElementById('perfil-btn-guardar-efectivo');
+
+  // Salir si alguno de los elementos necesarios no existe
+  if (!btnTarjeta || !btnEfectivo || !secTarjeta || !secEfectivo) return;
+
+  // Mostrar la sección según la preferencia guardada
+  function mostrarSeccion(metodo) {
+    if (metodo === 'tarjeta') {
+      secTarjeta.style.display  = '';
+      secEfectivo.style.display = 'none';
+      btnTarjeta.classList.add('activo');
+      btnEfectivo.classList.remove('activo');
+    } else {
+      secTarjeta.style.display  = 'none';
+      secEfectivo.style.display = '';
+      btnEfectivo.classList.add('activo');
+      btnTarjeta.classList.remove('activo');
+    }
+  }
+
+  // Aplicar preferencia al cargar la página
+  mostrarSeccion(preferencia);
+
+  // Cambiar sección al hacer clic en los botones de método
+  btnTarjeta.addEventListener('click', function () {
+    mostrarSeccion('tarjeta');
+  });
+
+  btnEfectivo.addEventListener('click', function () {
+    mostrarSeccion('efectivo');
+  });
+
+  // Guardar método "Tarjeta"
+  btnGuardarTarjeta.addEventListener('click', function () {
+    const numero  = document.getElementById('perfil-t-numero').value.trim();
+    const titular = document.getElementById('perfil-t-titular').value.trim();
+    const fecha   = document.getElementById('perfil-t-fecha').value.trim();
+    const cvv     = document.getElementById('perfil-t-cvv').value.trim();
+
+    // Limpiar errores previos
+    document.getElementById('perfil-err-t-num').textContent   = '';
+    document.getElementById('perfil-err-t-tit').textContent   = '';
+    document.getElementById('perfil-err-t-fecha').textContent = '';
+    document.getElementById('perfil-err-t-cvv').textContent   = '';
+
+    // Validación básica
+    let valido = true;
+    if (numero.replace(/\s/g, '').length < 13) {
+      document.getElementById('perfil-err-t-num').textContent = 'Ingresa un número de tarjeta válido';
+      valido = false;
+    }
+    if (!titular) {
+      document.getElementById('perfil-err-t-tit').textContent = 'Ingresa el nombre del titular';
+      valido = false;
+    }
+    if (!/^\d{2}\/\d{2}$/.test(fecha)) {
+      document.getElementById('perfil-err-t-fecha').textContent = 'Formato: MM/AA';
+      valido = false;
+    } else {
+      // Verificar que la tarjeta no esté vencida
+      const partes   = fecha.split('/');
+      const mesCard  = parseInt(partes[0], 10);
+      const anioCard = 2000 + parseInt(partes[1], 10);
+      const hoy      = new Date();
+      if (mesCard < 1 || mesCard > 12 || anioCard < hoy.getFullYear() ||
+          (anioCard === hoy.getFullYear() && mesCard < (hoy.getMonth() + 1))) {
+        document.getElementById('perfil-err-t-fecha').textContent = 'La tarjeta está vencida';
+        valido = false;
+      }
+    }
+    if (cvv.length < 3) {
+      document.getElementById('perfil-err-t-cvv').textContent = 'Ingresa el CVV';
+      valido = false;
+    }
+    if (!valido) return;
+
+    // Persistir preferencia (no guardamos datos sensibles de la tarjeta)
+    localStorage.setItem(CLAVE, 'tarjeta');
+
+    if (window.UE && window.UE.mostrarToast) {
+      window.UE.mostrarToast('Método de pago guardado', 'fa-check-circle');
+    }
+  });
+
+  // Guardar método "Efectivo"
+  btnGuardarEfectivo.addEventListener('click', function () {
+    localStorage.setItem(CLAVE, 'efectivo');
+    if (window.UE && window.UE.mostrarToast) {
+      window.UE.mostrarToast('Método de pago guardado', 'fa-check-circle');
+    }
+  });
+})();
+
+/* ============================
    CARGAR DATOS DEL PERFIL
    ============================ */
 (function cargarPerfil() {
