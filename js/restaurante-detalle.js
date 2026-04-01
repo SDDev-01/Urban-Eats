@@ -26,7 +26,7 @@ function cargarRestaurante() {
 
   restauranteActual = obtenerRestaurantePorId(id);
   if (!restauranteActual) {
-    window.UE.mostrarToast('Restaurante no encontrado', 'error');
+    window.UE.mostrarToast('Restaurante no encontrado', 'fa-exclamation-circle');
     window.location.href = 'restaurantes.html';
     return;
   }
