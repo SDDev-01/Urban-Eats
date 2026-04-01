@@ -3,37 +3,6 @@
    Estilos específicos de restaurantes.html
    ============================ */
 
-/* ---- NAVBAR LINKS ---- */
-.navbar-links {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  flex: 1;
-  padding-left: 2rem;
-}
-
-.navbar-link {
-  color: white;
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radio-sm);
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.navbar-link:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.navbar-link.activo {
-  background: rgba(255, 255, 255, 0.2);
-  font-weight: 600;
-}
-
 /* ---- HERO RESTAURANTES ---- */
 .hero-restaurantes {
   background: linear-gradient(135deg, var(--verde) 0%, var(--verde-oscuro) 100%);
@@ -189,20 +158,6 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .navbar-links {
-    padding-left: 1rem;
-    gap: 0.5rem;
-  }
-  
-  .navbar-link {
-    font-size: 0.8rem;
-    padding: 0.4rem 0.75rem;
-  }
-  
-  .navbar-link i {
-    display: none;
-  }
-  
   .hero-restaurantes h1 {
     font-size: 1.8rem;
   }
@@ -210,11 +165,5 @@
   .restaurantes-grid {
     grid-template-columns: 1fr;
     padding: 0 1rem 1rem;
-  }
-}
-
-@media (max-width: 600px) {
-  .navbar-links {
-    display: none;
   }
 }

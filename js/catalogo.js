@@ -52,10 +52,10 @@ function renderizarProductos(lista) {
           <span class="producto-precio">$${producto.precio.toLocaleString('es-CO')} COP</span>
           <button class="btn-ver" data-id="${producto.id}">Ver detalles</button>
         </div>
-        <div class="producto-restaurante">
+        <a href="restaurante-detalle.html?id=${producto.restauranteId}" class="producto-restaurante" style="text-decoration: none;">
           <span class="restaurante-logo-mini">${producto.restauranteLogo}</span>
           <span class="restaurante-nombre-mini">${producto.restauranteNombre}</span>
-        </div>
+        </a>
       </div>
     `;
     grid.appendChild(card);

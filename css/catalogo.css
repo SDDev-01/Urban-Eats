@@ -3,37 +3,6 @@
    Estilos específicos de catalogo.html
    ============================ */
 
-/* ---- NAVBAR LINKS ---- */
-    .navbar-links {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      flex: 1;
-      padding-left: 2rem;
-    }
-
-    .navbar-link {
-      color: white;
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-      padding: 0.5rem 1rem;
-      border-radius: var(--radio-sm);
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .navbar-link:hover {
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    .navbar-link.activo {
-      background: rgba(255, 255, 255, 0.2);
-      font-weight: 600;
-    }
-
 /* ---- HERO ---- */
     .hero {
       background: var(--verde);
@@ -191,14 +160,21 @@
       gap: 0.5rem;
       padding-top: 0.8rem;
       border-top: 1px solid var(--borde);
+      transition: all 0.2s;
+      color: var(--texto-gris);
     }
+    
+    .producto-restaurante:hover {
+      color: var(--verde-oscuro);
+      transform: translateX(3px);
+    }
+    
     .restaurante-logo-mini {
       font-size: 1.3rem;
       line-height: 1;
     }
     .restaurante-nombre-mini {
       font-size: 0.75rem;
-      color: var(--texto-gris);
       font-weight: 500;
     }
 
@@ -278,27 +254,7 @@
     .btn-cantidad:hover { border-color: var(--verde); background: var(--verde-muy-claro); }
     #detalle-cantidad { font-weight: 700; font-size: 1.1rem; min-width: 24px; text-align: center; }
     .detalle-precio { font-size: 1.4rem; font-weight: 800; color: var(--verde-oscuro); margin-bottom: 1rem; }
-    @media (max-width: 768px) {
-      .navbar-links {
-        padding-left: 1rem;
-        gap: 0.5rem;
-      }
-      
-      .navbar-link {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.75rem;
-      }
-      
-      .navbar-link i {
-        display: none;
-      }
-    }
-    
     @media (max-width: 600px) {
-      .navbar-links {
-        display: none;
-      }
-      
       .detalle-grid { grid-template-columns: 1fr; }
       .hero h1 { font-size: 1.8rem; }
     }
