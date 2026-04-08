@@ -16,8 +16,57 @@
   const btnGuardarTarjeta  = document.getElementById('perfil-btn-guardar-tarjeta');
   const btnGuardarEfectivo = document.getElementById('perfil-btn-guardar-efectivo');
 
+  // Inputs de la tarjeta
+  const inputNumero  = document.getElementById('perfil-t-numero');
+  const inputTitular = document.getElementById('perfil-t-titular');
+  const inputFecha   = document.getElementById('perfil-t-fecha');
+
+  // Preview de la tarjeta
+  const previewNumero  = document.getElementById('perfil-preview-numero');
+  const previewTitular = document.getElementById('perfil-preview-titular');
+  const previewFecha   = document.getElementById('perfil-preview-fecha');
+
   // Salir si alguno de los elementos necesarios no existe
   if (!btnTarjeta || !btnEfectivo || !secTarjeta || !secEfectivo) return;
+
+  // Formatear número de tarjeta con espacios cada 4 dígitos
+  if (inputNumero) {
+    inputNumero.addEventListener('input', function(e) {
+      let val = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
+      let formatted = val.match(/.{1,4}/g)?.join(' ') || '';
+      e.target.value = formatted;
+      
+      // Actualizar preview
+      if (previewNumero) {
+        previewNumero.textContent = formatted || '•••• •••• •••• ••••';
+      }
+    });
+  }
+
+  // Actualizar titular en preview
+  if (inputTitular) {
+    inputTitular.addEventListener('input', function(e) {
+      if (previewTitular) {
+        previewTitular.textContent = e.target.value.toUpperCase() || 'NOMBRE TITULAR';
+      }
+    });
+  }
+
+  // Formatear fecha MM/AA
+  if (inputFecha) {
+    inputFecha.addEventListener('input', function(e) {
+      let val = e.target.value.replace(/\D/g, '');
+      if (val.length >= 2) {
+        val = val.substring(0, 2) + '/' + val.substring(2, 4);
+      }
+      e.target.value = val;
+      
+      // Actualizar preview
+      if (previewFecha) {
+        previewFecha.textContent = val || 'MM/AA';
+      }
+    });
+  }
 
   // Mostrar la sección según la preferencia guardada
   function mostrarSeccion(metodo) {
