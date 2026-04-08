@@ -113,6 +113,8 @@
   // Guardar CVV al cambiar
   if (inputCvv) {
     inputCvv.addEventListener('input', function() {
+      // Solo permitir números
+      this.value = this.value.replace(/\D/g, '');
       guardarDatosTarjeta();
     });
   }

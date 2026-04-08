@@ -140,6 +140,8 @@ inputFecha.addEventListener('input', () => {
 
 // Guardar CVV al cambiar
 inputCvv.addEventListener('input', () => {
+  // Solo permitir números
+  inputCvv.value = inputCvv.value.replace(/\D/g, '');
   guardarDatosTarjeta();
 });
 
