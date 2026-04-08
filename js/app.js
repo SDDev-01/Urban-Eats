@@ -173,6 +173,14 @@ if (formRegistro) {
       valido = false;
     }
 
+    // Validar teléfono (exactamente 10 dígitos, solo números)
+    const telefono = campos.telefono.value.trim();
+    if (campos.telefono && (!/^\d{10}$/.test(telefono))) {
+      const err = document.getElementById('error-telefono');
+      if (err) err.textContent = 'El teléfono debe tener exactamente 10 dígitos.';
+      valido = false;
+    }
+
     // Validar contraseña (mínimo 4 caracteres, igual que el login)
     if (campos.password && campos.password.value.length < 4) {
       const err = document.getElementById('error-password');
@@ -207,6 +215,19 @@ if (formRegistro) {
       setTimeout(() => { window.location.href = 'catalogo.html'; }, 1400);
     }
   });
+
+  // Validar que el teléfono solo acepte números en tiempo real
+  const telefonoInput = document.getElementById('reg-telefono');
+  if (telefonoInput) {
+    telefonoInput.addEventListener('input', function(e) {
+      // Eliminar todo lo que no sea número
+      this.value = this.value.replace(/\D/g, '');
+      // Limitar a 10 dígitos
+      if (this.value.length > 10) {
+        this.value = this.value.substring(0, 10);
+      }
+    });
+  }
 }
 
 // ---- VALIDACIÓN GENÉRICA ----

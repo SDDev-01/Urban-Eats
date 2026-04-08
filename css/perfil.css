@@ -172,3 +172,9 @@
 .btn-logout i {
   font-size: 1.1rem;
 }
+
+/* Secciones de método de pago en perfil */
+#perfil-seccion-tarjeta,
+#perfil-seccion-efectivo {
+  margin-top: 1.5rem;
+}

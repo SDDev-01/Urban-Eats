@@ -66,10 +66,50 @@ document.querySelectorAll('.metodo-btn').forEach(btn => {
   });
 });
 
+// ---- CARGAR DATOS DE TARJETA GUARDADOS ----
+(function cargarDatosTarjeta() {
+  const datosTarjeta = JSON.parse(localStorage.getItem('ue_datos_tarjeta') || 'null');
+  
+  if (datosTarjeta) {
+    const inputNumero  = document.getElementById('t-numero');
+    const inputTitular = document.getElementById('t-titular');
+    const inputFecha   = document.getElementById('t-fecha');
+    const inputCvv     = document.getElementById('t-cvv');
+    
+    if (datosTarjeta.numero) {
+      inputNumero.value = datosTarjeta.numero;
+      document.getElementById('preview-numero').textContent = datosTarjeta.numero;
+    }
+    if (datosTarjeta.titular) {
+      inputTitular.value = datosTarjeta.titular;
+      document.getElementById('preview-titular').textContent = datosTarjeta.titular.toUpperCase();
+    }
+    if (datosTarjeta.fecha) {
+      inputFecha.value = datosTarjeta.fecha;
+      document.getElementById('preview-fecha').textContent = datosTarjeta.fecha;
+    }
+    if (datosTarjeta.cvv) {
+      inputCvv.value = datosTarjeta.cvv;
+    }
+  }
+})();
+
 // ---- PREVIEW DE TARJETA ----
 const inputNumero  = document.getElementById('t-numero');
 const inputTitular = document.getElementById('t-titular');
 const inputFecha   = document.getElementById('t-fecha');
+const inputCvv     = document.getElementById('t-cvv');
+
+// Función para guardar datos en localStorage
+function guardarDatosTarjeta() {
+  const datosTarjeta = {
+    numero: inputNumero.value,
+    titular: inputTitular.value,
+    fecha: inputFecha.value,
+    cvv: inputCvv.value
+  };
+  localStorage.setItem('ue_datos_tarjeta', JSON.stringify(datosTarjeta));
+}
 
 // Formatear número de tarjeta (grupos de 4)
 inputNumero.addEventListener('input', () => {
@@ -77,12 +117,14 @@ inputNumero.addEventListener('input', () => {
   inputNumero.value = val.replace(/(.{4})/g, '$1 ').trim();
   const preview = val.padEnd(16, '•').replace(/(.{4})/g, '$1 ').trim();
   document.getElementById('preview-numero').textContent = preview;
+  guardarDatosTarjeta();
 });
 
 // Titular en mayúsculas en preview
 inputTitular.addEventListener('input', () => {
   const val = inputTitular.value.toUpperCase() || 'NOMBRE TITULAR';
   document.getElementById('preview-titular').textContent = val;
+  guardarDatosTarjeta();
 });
 
 // Formatear fecha MM/AA
@@ -93,6 +135,14 @@ inputFecha.addEventListener('input', () => {
   }
   inputFecha.value = val;
   document.getElementById('preview-fecha').textContent = val || 'MM/AA';
+  guardarDatosTarjeta();
+});
+
+// Guardar CVV al cambiar
+inputCvv.addEventListener('input', () => {
+  // Solo permitir números
+  inputCvv.value = inputCvv.value.replace(/\D/g, '');
+  guardarDatosTarjeta();
 });
 
 // ---- VALIDACIÓN TARJETA ----
