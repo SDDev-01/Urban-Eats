@@ -71,7 +71,8 @@
   // Formatear número de tarjeta con espacios cada 4 dígitos
   if (inputNumero) {
     inputNumero.addEventListener('input', function(e) {
-      let val = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
+      // Limitar a 16 dígitos numéricos (igual que pago.js)
+      let val = e.target.value.replace(/\D/g, '').substring(0, 16);
       let formatted = val.match(/.{1,4}/g)?.join(' ') || '';
       e.target.value = formatted;
       
@@ -161,8 +162,9 @@
 
     // Validación básica
     let valido = true;
-    if (numero.replace(/\s/g, '').length < 13) {
-      document.getElementById('perfil-err-t-num').textContent = 'Ingresa un número de tarjeta válido';
+    const numDigitos = numero.replace(/\s/g, '');
+    if (!/^\d+$/.test(numDigitos) || numDigitos.length < 13 || numDigitos.length > 16) {
+      document.getElementById('perfil-err-t-num').textContent = 'Ingresa un número de tarjeta válido (13–16 dígitos)';
       valido = false;
     }
     if (!titular) {
