@@ -4,6 +4,7 @@
 (function gestionarMetodoPago() {
   // Clave en localStorage para el método preferido
   const CLAVE = 'ue_metodo_pago';
+  const CLAVE_DATOS = 'ue_datos_tarjeta';
 
   // Leer preferencia guardada (por defecto: tarjeta)
   const preferencia = localStorage.getItem(CLAVE) || 'tarjeta';
@@ -20,6 +21,7 @@
   const inputNumero  = document.getElementById('perfil-t-numero');
   const inputTitular = document.getElementById('perfil-t-titular');
   const inputFecha   = document.getElementById('perfil-t-fecha');
+  const inputCvv     = document.getElementById('perfil-t-cvv');
 
   // Preview de la tarjeta
   const previewNumero  = document.getElementById('perfil-preview-numero');
@@ -28,6 +30,43 @@
 
   // Salir si alguno de los elementos necesarios no existe
   if (!btnTarjeta || !btnEfectivo || !secTarjeta || !secEfectivo) return;
+
+  // Cargar datos de tarjeta guardados
+  function cargarDatosTarjeta() {
+    const datosTarjeta = JSON.parse(localStorage.getItem(CLAVE_DATOS) || 'null');
+    
+    if (datosTarjeta) {
+      if (datosTarjeta.numero) {
+        inputNumero.value = datosTarjeta.numero;
+        if (previewNumero) previewNumero.textContent = datosTarjeta.numero;
+      }
+      if (datosTarjeta.titular) {
+        inputTitular.value = datosTarjeta.titular;
+        if (previewTitular) previewTitular.textContent = datosTarjeta.titular.toUpperCase();
+      }
+      if (datosTarjeta.fecha) {
+        inputFecha.value = datosTarjeta.fecha;
+        if (previewFecha) previewFecha.textContent = datosTarjeta.fecha;
+      }
+      if (datosTarjeta.cvv) {
+        inputCvv.value = datosTarjeta.cvv;
+      }
+    }
+  }
+
+  // Guardar datos de tarjeta en localStorage
+  function guardarDatosTarjeta() {
+    const datosTarjeta = {
+      numero: inputNumero.value,
+      titular: inputTitular.value,
+      fecha: inputFecha.value,
+      cvv: inputCvv.value
+    };
+    localStorage.setItem(CLAVE_DATOS, JSON.stringify(datosTarjeta));
+  }
+
+  // Cargar datos al inicio
+  cargarDatosTarjeta();
 
   // Formatear número de tarjeta con espacios cada 4 dígitos
   if (inputNumero) {
@@ -40,6 +79,7 @@
       if (previewNumero) {
         previewNumero.textContent = formatted || '•••• •••• •••• ••••';
       }
+      guardarDatosTarjeta();
     });
   }
 
@@ -49,6 +89,7 @@
       if (previewTitular) {
         previewTitular.textContent = e.target.value.toUpperCase() || 'NOMBRE TITULAR';
       }
+      guardarDatosTarjeta();
     });
   }
 
@@ -65,6 +106,14 @@
       if (previewFecha) {
         previewFecha.textContent = val || 'MM/AA';
       }
+      guardarDatosTarjeta();
+    });
+  }
+
+  // Guardar CVV al cambiar
+  if (inputCvv) {
+    inputCvv.addEventListener('input', function() {
+      guardarDatosTarjeta();
     });
   }
 
@@ -97,10 +146,10 @@
 
   // Guardar método "Tarjeta"
   btnGuardarTarjeta.addEventListener('click', function () {
-    const numero  = document.getElementById('perfil-t-numero').value.trim();
-    const titular = document.getElementById('perfil-t-titular').value.trim();
-    const fecha   = document.getElementById('perfil-t-fecha').value.trim();
-    const cvv     = document.getElementById('perfil-t-cvv').value.trim();
+    const numero  = inputNumero.value.trim();
+    const titular = inputTitular.value.trim();
+    const fecha   = inputFecha.value.trim();
+    const cvv     = inputCvv.value.trim();
 
     // Limpiar errores previos
     document.getElementById('perfil-err-t-num').textContent   = '';
@@ -139,7 +188,10 @@
     }
     if (!valido) return;
 
-    // Persistir preferencia (no guardamos datos sensibles de la tarjeta)
+    // Guardar datos de la tarjeta
+    guardarDatosTarjeta();
+    
+    // Persistir preferencia
     localStorage.setItem(CLAVE, 'tarjeta');
 
     if (window.UE && window.UE.mostrarToast) {
