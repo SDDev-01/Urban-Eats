@@ -217,14 +217,8 @@ INSERT INTO Opiniones (CodigoComentario, CodigoPlato, CodigoCliente, CodigoRepar
                                                                                                            (10, 10, 5, 10, 'El capuccino llegó frío, esperaba mejor temperatura.',          '2025-11-24');
 -- ============================
 --  USUARIO - Asignar CodigoInfoBancaria después de crear InformacionBancaria
+--  Se usa JOIN con CodigoUsuario para que no dependa del AUTO_INCREMENT.
 -- ============================
-UPDATE Usuario SET CodigoInfoBancaria = 1 WHERE CodigoUsuario = 1;
-UPDATE Usuario SET CodigoInfoBancaria = 2 WHERE CodigoUsuario = 2;
-UPDATE Usuario SET CodigoInfoBancaria = 3 WHERE CodigoUsuario = 3;
-UPDATE Usuario SET CodigoInfoBancaria = 4 WHERE CodigoUsuario = 4;
-UPDATE Usuario SET CodigoInfoBancaria = 5 WHERE CodigoUsuario = 5;
-UPDATE Usuario SET CodigoInfoBancaria = 6 WHERE CodigoUsuario = 6;
-UPDATE Usuario SET CodigoInfoBancaria = 7 WHERE CodigoUsuario = 7;
-UPDATE Usuario SET CodigoInfoBancaria = 8 WHERE CodigoUsuario = 8;
-UPDATE Usuario SET CodigoInfoBancaria = 9 WHERE CodigoUsuario = 9;
-UPDATE Usuario SET CodigoInfoBancaria = 10 WHERE CodigoUsuario = 10;
+UPDATE Usuario u
+    JOIN InformacionBancaria ib ON ib.CodigoUsuario = u.CodigoUsuario
+SET u.CodigoInfoBancaria = ib.CodigoInfoBancaria;

@@ -34,8 +34,7 @@ CREATE TABLE IF NOT EXISTS Usuario (
                                        Direccion          VARCHAR(200),
                                        Telefono           VARCHAR(50),
                                        CorreoElectronico  VARCHAR(150),
-                                       CodigoInfoBancaria INT DEFAULT NULL,
-                                       FOREIGN KEY (CodigoInfoBancaria) REFERENCES InformacionBancaria(CodigoInfoBancaria)
+                                       CodigoInfoBancaria INT DEFAULT NULL
 );
 
 -- ============================
@@ -209,3 +208,12 @@ CREATE TABLE IF NOT EXISTS Opiniones (
                                          FOREIGN KEY (CodigoCliente)    REFERENCES Cliente(CodigoCliente),
                                          FOREIGN KEY (CodigoRepartidor) REFERENCES Repartidor(CodigoRepartidor)
 );
+
+-- ============================
+--  LLAVE FORÁNEA DIFERIDA
+--  Se agrega después de crear InformacionBancaria para
+--  romper la dependencia circular entre Usuario e InformacionBancaria.
+-- ============================
+ALTER TABLE Usuario
+    ADD CONSTRAINT fk_usuario_info_bancaria
+        FOREIGN KEY (CodigoInfoBancaria) REFERENCES InformacionBancaria(CodigoInfoBancaria);
