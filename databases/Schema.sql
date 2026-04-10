@@ -28,12 +28,13 @@ CREATE TABLE IF NOT EXISTS Ciudades (
 --  TABLA USUARIO
 -- ============================
 CREATE TABLE IF NOT EXISTS Usuario (
-                                       CodigoUsuario     INT AUTO_INCREMENT PRIMARY KEY,
-                                       Nombres           VARCHAR(100),
-                                       Apellidos         VARCHAR(100),
-                                       Direccion         VARCHAR(200),
-                                       Telefono          VARCHAR(50),
-                                       CorreoElectronico VARCHAR(150)
+                                       CodigoUsuario      INT AUTO_INCREMENT PRIMARY KEY,
+                                       Nombres            VARCHAR(100),
+                                       Apellidos          VARCHAR(100),
+                                       Direccion          VARCHAR(200),
+                                       Telefono           VARCHAR(50),
+                                       CorreoElectronico  VARCHAR(150),
+                                       CodigoInfoBancaria INT DEFAULT NULL
 );
 
 -- ============================
@@ -75,9 +76,7 @@ CREATE TABLE IF NOT EXISTS InformacionBancaria (
 CREATE TABLE IF NOT EXISTS Cliente (
                                        CodigoCliente      INT AUTO_INCREMENT PRIMARY KEY,
                                        CodigoUsuario      INT NOT NULL,
-                                       CodigoInfoBancaria INT,
-                                       FOREIGN KEY (CodigoUsuario)      REFERENCES Usuario(CodigoUsuario),
-                                       FOREIGN KEY (CodigoInfoBancaria) REFERENCES InformacionBancaria(CodigoInfoBancaria)
+                                       FOREIGN KEY (CodigoUsuario)      REFERENCES Usuario(CodigoUsuario)
 );
 
 -- ============================
@@ -98,10 +97,8 @@ CREATE TABLE IF NOT EXISTS Repartidor (
                                           CodigoRepartidor   INT AUTO_INCREMENT PRIMARY KEY,
                                           CodigoUsuario      INT NOT NULL,
                                           Placa              VARCHAR(20),
-                                          CodigoInfoBancaria INT,
                                           FOREIGN KEY (CodigoUsuario)      REFERENCES Usuario(CodigoUsuario),
-                                          FOREIGN KEY (Placa)              REFERENCES Vehiculo(Placa),
-                                          FOREIGN KEY (CodigoInfoBancaria) REFERENCES InformacionBancaria(CodigoInfoBancaria)
+                                          FOREIGN KEY (Placa)              REFERENCES Vehiculo(Placa)
 );
 
 -- ============================
@@ -188,14 +185,12 @@ CREATE TABLE IF NOT EXISTS Pedido (
 CREATE TABLE IF NOT EXISTS Pago (
                                     CodigoPago         INT AUTO_INCREMENT PRIMARY KEY,
                                     CodigoCliente      INT NOT NULL,
-                                    CodigoInfoBancaria INT NOT NULL,
                                     CodigoEnvio        INT NOT NULL,                          -- antes: CodigoPedido
                                     Monto              DECIMAL(10, 2),
                                     MetodoPago         ENUM('Tarjeta', 'Efectivo') NOT NULL,
                                     FechaPago          DATE,
                                     HoraPago           TIME,
                                     FOREIGN KEY (CodigoCliente)      REFERENCES Cliente(CodigoCliente),
-                                    FOREIGN KEY (CodigoInfoBancaria) REFERENCES InformacionBancaria(CodigoInfoBancaria),
                                     FOREIGN KEY (CodigoEnvio)        REFERENCES Envio(CodigoEnvio)  -- antes: Pedido
 );
 
@@ -213,3 +208,12 @@ CREATE TABLE IF NOT EXISTS Opiniones (
                                          FOREIGN KEY (CodigoCliente)    REFERENCES Cliente(CodigoCliente),
                                          FOREIGN KEY (CodigoRepartidor) REFERENCES Repartidor(CodigoRepartidor)
 );
+
+-- ============================
+--  LLAVE FORÁNEA DIFERIDA
+--  Se agrega después de crear InformacionBancaria para
+--  romper la dependencia circular entre Usuario e InformacionBancaria.
+-- ============================
+ALTER TABLE Usuario
+    ADD CONSTRAINT fk_usuario_info_bancaria
+        FOREIGN KEY (CodigoInfoBancaria) REFERENCES InformacionBancaria(CodigoInfoBancaria);
