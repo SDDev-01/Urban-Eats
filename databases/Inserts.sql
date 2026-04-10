@@ -33,22 +33,22 @@ INSERT INTO Rol (CodigoRol, TipoRol) VALUES
 --  El trigger crear_cliente_automaticamente
 --     crea un registro en Cliente por cada fila.
 -- ============================
-INSERT INTO Usuario (CodigoUsuario, Nombres, Apellidos, Direccion, Telefono, CorreoElectronico) VALUES
-                                                                                                    (1,  'Juan Carlos',    'Rodríguez Pérez',    'Av. Caracas 123, Bogotá',         '3001234567', 'juan.rodriguez@email.com'),
-                                                                                                    (2,  'María Elena',    'González López',     'Calle 72 #10-34, Bogotá',         '3012345678', 'maria.gonzalez@email.com'),
-                                                                                                    (3,  'Carlos Alberto', 'Martínez Sánchez',   'Cra 15 #93-45, Bogotá',           '3023456789', 'carlos.martinez@email.com'),
-                                                                                                    (4,  'Ana Patricia',   'Fernández Torres',   'Av. Suba 67-21, Bogotá',          '3034567890', 'ana.fernandez@email.com'),
-                                                                                                    (5,  'Luis Fernando',  'Ramírez Castro',     'Calle 80 #45-67, Bogotá',         '3045678901', 'luis.ramirez@email.com'),
-                                                                                                    (6,  'Sofía Isabel',   'Herrera Mendoza',    'Cra 7 #45-12, Bogotá',            '3056789012', 'sofia.herrera@email.com'),
-                                                                                                    (7,  'Diego Armando',  'Vargas Silva',       'Av. Boyacá 120-33, Bogotá',       '3067890123', 'diego.vargas@email.com'),
-                                                                                                    (8,  'Valentina',      'Cruz Morales',       'Calle 100 #15-20, Bogotá',        '3078901234', 'valentina.cruz@email.com'),
-                                                                                                    (9,  'Andrés Felipe',  'Reyes Aguilar',      'Cra 11 #82-19, Bogotá',           '3089012345', 'andres.reyes@email.com'),
-                                                                                                    (10, 'Camila Andrea',  'Gómez Paredes',      'Av. El Dorado 68-40, Bogotá',     '3090123456', 'camila.gomez@email.com'),
-                                                                                                    (11, 'Lucía',          'Paredes Soto',       'Calle 134 #19-50, Bogotá',        '3101111111', 'lucia.paredes@email.com'),
-                                                                                                    (12, 'Renato',         'Campos Vera',        'Cra 9 #116-10, Bogotá',           '3112222222', 'renato.campos@email.com'),
-                                                                                                    (13, 'Daniela',        'Fuentes Ríos',       'Calle 170 #7-55, Bogotá',         '3123333333', 'daniela.fuentes@email.com'),
-                                                                                                    (14, 'Mateo',          'Quispe Bravo',       'Av. Ciudad de Cali 26-90, Bogotá','3134444444', 'mateo.quispe@email.com'),
-                                                                                                    (15, 'Isabella',       'Torres Mena',        'Cra 68 #40-21, Bogotá',           '3145555555', 'isabella.torres@email.com');
+INSERT INTO Usuario (CodigoUsuario, Nombres, Apellidos, Direccion, Telefono, CorreoElectronico, CodigoInfoBancaria) VALUES
+                                                                                                    (1,  'Juan Carlos',    'Rodríguez Pérez',    'Av. Caracas 123, Bogotá',         '3001234567', 'juan.rodriguez@email.com', NULL),
+                                                                                                    (2,  'María Elena',    'González López',     'Calle 72 #10-34, Bogotá',         '3012345678', 'maria.gonzalez@email.com', NULL),
+                                                                                                    (3,  'Carlos Alberto', 'Martínez Sánchez',   'Cra 15 #93-45, Bogotá',           '3023456789', 'carlos.martinez@email.com', NULL),
+                                                                                                    (4,  'Ana Patricia',   'Fernández Torres',   'Av. Suba 67-21, Bogotá',          '3034567890', 'ana.fernandez@email.com', NULL),
+                                                                                                    (5,  'Luis Fernando',  'Ramírez Castro',     'Calle 80 #45-67, Bogotá',         '3045678901', 'luis.ramirez@email.com', NULL),
+                                                                                                    (6,  'Sofía Isabel',   'Herrera Mendoza',    'Cra 7 #45-12, Bogotá',            '3056789012', 'sofia.herrera@email.com', NULL),
+                                                                                                    (7,  'Diego Armando',  'Vargas Silva',       'Av. Boyacá 120-33, Bogotá',       '3067890123', 'diego.vargas@email.com', NULL),
+                                                                                                    (8,  'Valentina',      'Cruz Morales',       'Calle 100 #15-20, Bogotá',        '3078901234', 'valentina.cruz@email.com', NULL),
+                                                                                                    (9,  'Andrés Felipe',  'Reyes Aguilar',      'Cra 11 #82-19, Bogotá',           '3089012345', 'andres.reyes@email.com', NULL),
+                                                                                                    (10, 'Camila Andrea',  'Gómez Paredes',      'Av. El Dorado 68-40, Bogotá',     '3090123456', 'camila.gomez@email.com', NULL),
+                                                                                                    (11, 'Lucía',          'Paredes Soto',       'Calle 134 #19-50, Bogotá',        '3101111111', 'lucia.paredes@email.com', NULL),
+                                                                                                    (12, 'Renato',         'Campos Vera',        'Cra 9 #116-10, Bogotá',           '3112222222', 'renato.campos@email.com', NULL),
+                                                                                                    (13, 'Daniela',        'Fuentes Ríos',       'Calle 170 #7-55, Bogotá',         '3123333333', 'daniela.fuentes@email.com', NULL),
+                                                                                                    (14, 'Mateo',          'Quispe Bravo',       'Av. Ciudad de Cali 26-90, Bogotá','3134444444', 'mateo.quispe@email.com', NULL),
+                                                                                                    (15, 'Isabella',       'Torres Mena',        'Cra 68 #40-21, Bogotá',           '3145555555', 'isabella.torres@email.com', NULL);
 
 -- ============================
 --  ROL_USUARIO
@@ -75,14 +75,8 @@ INSERT INTO InformacionBancaria (NumeroCuenta, Banco, TipoCuenta, TitularCuenta,
 
 -- ============================
 --  CLIENTE
---  El trigger ya creó los registros.
---  Solo asignamos CodigoInfoBancaria a los 5 clientes.
+--  El trigger ya creó los registros automáticamente.
 -- ============================
-UPDATE Cliente SET CodigoInfoBancaria = 1 WHERE CodigoUsuario = 1;
-UPDATE Cliente SET CodigoInfoBancaria = 2 WHERE CodigoUsuario = 2;
-UPDATE Cliente SET CodigoInfoBancaria = 3 WHERE CodigoUsuario = 3;
-UPDATE Cliente SET CodigoInfoBancaria = 4 WHERE CodigoUsuario = 4;
-UPDATE Cliente SET CodigoInfoBancaria = 5 WHERE CodigoUsuario = 5;
 
 -- ============================
 --  VEHICULO
@@ -102,17 +96,17 @@ INSERT INTO Vehiculo (Placa, Licencia, TipoVehiculo, SeguroVehiculo, SOAT) VALUE
 -- ============================
 --  REPARTIDOR
 -- ============================
-INSERT INTO Repartidor (CodigoRepartidor, CodigoUsuario, Placa, CodigoInfoBancaria) VALUES
-                                                                                        (1,  6,  'ABC123', 6),
-                                                                                        (2,  7,  'DEF456', 7),
-                                                                                        (3,  8,  'GHI789', 8),
-                                                                                        (4,  9,  'JKL012', 9),
-                                                                                        (5,  10, 'MNO345', 10),
-                                                                                        (6,  6,  'PQR678', 6),
-                                                                                        (7,  7,  'STU901', 7),
-                                                                                        (8,  8,  'VWX234', 8),
-                                                                                        (9,  9,  'YZA567', 9),
-                                                                                        (10, 10, 'BCD890', 10);
+INSERT INTO Repartidor (CodigoRepartidor, CodigoUsuario, Placa) VALUES
+                                                                       (1,  6,  'ABC123'),
+                                                                       (2,  7,  'DEF456'),
+                                                                       (3,  8,  'GHI789'),
+                                                                       (4,  9,  'JKL012'),
+                                                                       (5,  10, 'MNO345'),
+                                                                       (6,  6,  'PQR678'),
+                                                                       (7,  7,  'STU901'),
+                                                                       (8,  8,  'VWX234'),
+                                                                       (9,  9,  'YZA567'),
+                                                                       (10, 10, 'BCD890');
 
 -- ============================
 --  RESTAURANTE
@@ -195,17 +189,17 @@ UPDATE Pedido SET Estado = 'Cancelado' WHERE CodigoEnvio = 10;
 --  PAGO
 
 -- ============================
-INSERT INTO Pago (CodigoPago, CodigoCliente, CodigoInfoBancaria, CodigoEnvio, Monto, MetodoPago, FechaPago, HoraPago) VALUES
-                                                                                                                          (1,  1, 1, 1,  28500.00, 'Tarjeta',  '2025-11-20', '12:15:00'),
-                                                                                                                          (2,  2, 2, 2,  45000.00, 'Efectivo', '2025-11-20', '13:00:00'),
-                                                                                                                          (3,  3, 3, 3,  64000.00, 'Tarjeta',  '2025-11-21', '11:30:00'),
-                                                                                                                          (4,  4, 4, 4,  25900.00, 'Efectivo', '2025-11-21', '18:45:00'),
-                                                                                                                          (5,  5, 5, 5,  38000.00, 'Tarjeta',  '2025-11-22', '14:20:00'),
-                                                                                                                          (6,  1, 1, 6,  44000.00, 'Efectivo', '2025-11-22', '19:10:00'),
-                                                                                                                          (7,  2, 2, 7,  84000.00, 'Tarjeta',  '2025-11-23', '15:35:00'),
-                                                                                                                          (8,  3, 3, 8,  44000.00, 'Efectivo', '2025-11-23', '17:00:00'),
-                                                                                                                          (9,  4, 4, 9,  55000.00, 'Tarjeta',  '2025-11-24', '13:15:00'),
-                                                                                                                          (10, 5, 5, 10, 25000.00, 'Efectivo', '2025-11-24', '20:45:00');
+INSERT INTO Pago (CodigoPago, CodigoCliente, CodigoEnvio, Monto, MetodoPago, FechaPago, HoraPago) VALUES
+                                                                                                  (1,  1, 1,  28500.00, 'Tarjeta',  '2025-11-20', '12:15:00'),
+                                                                                                  (2,  2, 2,  45000.00, 'Efectivo', '2025-11-20', '13:00:00'),
+                                                                                                  (3,  3, 3,  64000.00, 'Tarjeta',  '2025-11-21', '11:30:00'),
+                                                                                                  (4,  4, 4,  25900.00, 'Efectivo', '2025-11-21', '18:45:00'),
+                                                                                                  (5,  5, 5,  38000.00, 'Tarjeta',  '2025-11-22', '14:20:00'),
+                                                                                                  (6,  1, 6,  44000.00, 'Efectivo', '2025-11-22', '19:10:00'),
+                                                                                                  (7,  2, 7,  84000.00, 'Tarjeta',  '2025-11-23', '15:35:00'),
+                                                                                                  (8,  3, 8,  44000.00, 'Efectivo', '2025-11-23', '17:00:00'),
+                                                                                                  (9,  4, 9,  55000.00, 'Tarjeta',  '2025-11-24', '13:15:00'),
+                                                                                                  (10, 5, 10, 25000.00, 'Efectivo', '2025-11-24', '20:45:00');
 
 -- ============================
 --  OPINIONES
@@ -221,3 +215,16 @@ INSERT INTO Opiniones (CodigoComentario, CodigoPlato, CodigoCliente, CodigoRepar
                                                                                                            (8,  8,  3, 8,  'Los tacos estaban buenos pero llegaron un poco fríos.',         '2025-11-23'),
                                                                                                            (9,  9,  4, 9,  'El churrasco espectacular, el mejor que he probado en Bogotá.', '2025-11-24'),
                                                                                                            (10, 10, 5, 10, 'El capuccino llegó frío, esperaba mejor temperatura.',          '2025-11-24');
+-- ============================
+--  USUARIO - Asignar CodigoInfoBancaria después de crear InformacionBancaria
+-- ============================
+UPDATE Usuario SET CodigoInfoBancaria = 1 WHERE CodigoUsuario = 1;
+UPDATE Usuario SET CodigoInfoBancaria = 2 WHERE CodigoUsuario = 2;
+UPDATE Usuario SET CodigoInfoBancaria = 3 WHERE CodigoUsuario = 3;
+UPDATE Usuario SET CodigoInfoBancaria = 4 WHERE CodigoUsuario = 4;
+UPDATE Usuario SET CodigoInfoBancaria = 5 WHERE CodigoUsuario = 5;
+UPDATE Usuario SET CodigoInfoBancaria = 6 WHERE CodigoUsuario = 6;
+UPDATE Usuario SET CodigoInfoBancaria = 7 WHERE CodigoUsuario = 7;
+UPDATE Usuario SET CodigoInfoBancaria = 8 WHERE CodigoUsuario = 8;
+UPDATE Usuario SET CodigoInfoBancaria = 9 WHERE CodigoUsuario = 9;
+UPDATE Usuario SET CodigoInfoBancaria = 10 WHERE CodigoUsuario = 10;
