@@ -5,23 +5,23 @@ CREATE DATABASE IF NOT EXISTS UrbanEats;
 USE UrbanEats;
 
 -- ============================
---  TABLA DEPARTAMENTOS
+--  TABLA DEPARTAMENTO
 -- ============================
-CREATE TABLE IF NOT EXISTS Departamentos (
+CREATE TABLE IF NOT EXISTS Departamento (
                                              CodigoDepartamento INT PRIMARY KEY,
                                              Nombre             VARCHAR(255)
 );
 
 -- ============================
---  TABLA CIUDADES
+--  TABLA CIUDAD
 -- ============================
-CREATE TABLE IF NOT EXISTS Ciudades (
+CREATE TABLE IF NOT EXISTS Ciudad (
                                         CodigoCiudad       INT PRIMARY KEY,
-                                        CodigoDepartamento INT,
+                                        CodigoDepartamento INT NOT NULL,
                                         Nombre             VARCHAR(255),
                                         Latitud            DECIMAL(10, 8),
                                         Longitud           DECIMAL(10, 8),
-                                        FOREIGN KEY (CodigoDepartamento) REFERENCES Departamentos(CodigoDepartamento)
+                                        FOREIGN KEY (CodigoDepartamento) REFERENCES Departamento(CodigoDepartamento)
 );
 
 -- ============================
@@ -33,8 +33,7 @@ CREATE TABLE IF NOT EXISTS Usuario (
                                        Apellidos          VARCHAR(100),
                                        Direccion          VARCHAR(200),
                                        Telefono           VARCHAR(50),
-                                       CorreoElectronico  VARCHAR(150),
-                                       CodigoInfoBancaria INT DEFAULT NULL
+                                       CorreoElectronico  VARCHAR(150)
 );
 
 -- ============================
@@ -42,7 +41,8 @@ CREATE TABLE IF NOT EXISTS Usuario (
 -- ============================
 CREATE TABLE IF NOT EXISTS Rol (
                                    CodigoRol INT AUTO_INCREMENT PRIMARY KEY,
-                                   TipoRol   ENUM('Cliente', 'Repartidor', 'Administrador') NOT NULL
+                                   NombreRol VARCHAR(15),
+                                   DescripcionRol VARCHAR(50)
 );
 
 -- ============================
@@ -56,18 +56,7 @@ CREATE TABLE IF NOT EXISTS Rol_Usuario (
                                            FOREIGN KEY (CodigoRol)     REFERENCES Rol(CodigoRol)
 );
 
--- ============================
---  TABLA INFORMACIÓN BANCARIA
--- ============================
-CREATE TABLE IF NOT EXISTS InformacionBancaria (
-                                                   CodigoInfoBancaria INT AUTO_INCREMENT PRIMARY KEY,
-                                                   NumeroCuenta       VARCHAR(50),
-                                                   Banco              VARCHAR(100),
-                                                   TipoCuenta         ENUM('Ahorro', 'Corriente', 'Credito') NOT NULL,
-                                                   TitularCuenta      VARCHAR(150),
-                                                   CodigoUsuario      INT,
-                                                   FOREIGN KEY (CodigoUsuario) REFERENCES Usuario(CodigoUsuario)
-);
+
 
 -- ============================
 --  TABLA CLIENTE
@@ -80,39 +69,49 @@ CREATE TABLE IF NOT EXISTS Cliente (
 );
 
 -- ============================
---  TABLA VEHICULO
--- ============================
-CREATE TABLE IF NOT EXISTS Vehiculo (
-                                        Placa          VARCHAR(20) PRIMARY KEY,
-                                        Licencia       VARCHAR(50),
-                                        TipoVehiculo   ENUM('Moto', 'Carro', 'Bicicleta') NOT NULL,
-                                        SeguroVehiculo VARCHAR(100),
-                                        SOAT           VARCHAR(100)
-);
-
--- ============================
 --  TABLA REPARTIDOR
 -- ============================
 CREATE TABLE IF NOT EXISTS Repartidor (
                                           CodigoRepartidor   INT AUTO_INCREMENT PRIMARY KEY,
                                           CodigoUsuario      INT NOT NULL,
-                                          Placa              VARCHAR(20),
-                                          FOREIGN KEY (CodigoUsuario)      REFERENCES Usuario(CodigoUsuario),
-                                          FOREIGN KEY (Placa)              REFERENCES Vehiculo(Placa)
+                                          FOREIGN KEY (CodigoUsuario)      REFERENCES Usuario(CodigoUsuario)
 );
+
+-- ============================
+--  TABLA VEHICULO
+-- ============================
+CREATE TABLE IF NOT EXISTS Vehiculo (
+                                        Placa          VARCHAR(20) PRIMARY KEY,
+                                        CodigoRepartidor INT,
+                                        Licencia       VARCHAR(50),
+                                        TipoVehiculo   ENUM('Moto', 'Carro', 'Bicicleta') NOT NULL,
+                                        SeguroVehiculo VARCHAR(100),
+                                        SOAT           VARCHAR(100),
+                                        FOREIGN KEY (CodigoRepartidor)	REFERENCES Repartidor(CodigoRepartidor)
+);
+
+-- ============================
+--  TABLA GERENTE
+-- ============================
+CREATE TABLE IF NOT EXISTS Gerente (
+									CodigoGerente INT AUTO_INCREMENT PRIMARY KEY,
+                                    CodigoUsuario INT NOT NULL,
+                                    FOREIGN KEY (CodigoUsuario) REFERENCES Usuario(CodigoUsuario)
+);
+
 
 -- ============================
 --  TABLA RESTAURANTE
 -- ============================
 CREATE TABLE IF NOT EXISTS Restaurante (
                                            CodigoRestaurante INT AUTO_INCREMENT PRIMARY KEY,
-                                           CodigoCiudad      INT,
+                                           CodigoCiudad      INT NOT NULL,
                                            Nombre            VARCHAR(150),
                                            Ubicacion         VARCHAR(200),
                                            Horario           VARCHAR(100),
                                            Latitud           DECIMAL(10, 8),
                                            Longitud          DECIMAL(10, 8),
-                                           FOREIGN KEY (CodigoCiudad) REFERENCES Ciudades(CodigoCiudad)
+                                           FOREIGN KEY (CodigoCiudad) REFERENCES Ciudad(CodigoCiudad)
 );
 
 -- ============================
@@ -129,6 +128,20 @@ CREATE TABLE IF NOT EXISTS Envio (
                                      FOREIGN KEY (CodigoCliente)     REFERENCES Cliente(CodigoCliente),
                                      FOREIGN KEY (CodigoRepartidor)  REFERENCES Repartidor(CodigoRepartidor),
                                      FOREIGN KEY (CodigoRestaurante) REFERENCES Restaurante(CodigoRestaurante)
+);
+
+-- ============================
+--  TABLA PEDIDO
+--  Se llena automáticamente via trigger crear_pedido_automaticamente
+-- ============================
+CREATE TABLE IF NOT EXISTS Pedido (
+                                      CodigoPedido      INT AUTO_INCREMENT PRIMARY KEY,
+                                      CodigoEnvio       INT NOT NULL UNIQUE,
+                                      CodigoRestaurante INT NOT NULL,
+                                      FechaPedido       DATE,
+                                      Estado            ENUM('En Proceso', 'Entregado', 'Cancelado') NOT NULL,
+                                      FOREIGN KEY (CodigoEnvio)       REFERENCES Envio(CodigoEnvio),
+                                      FOREIGN KEY (CodigoRestaurante) REFERENCES Restaurante(CodigoRestaurante)
 );
 
 -- ============================
@@ -150,9 +163,19 @@ CREATE TABLE IF NOT EXISTS Plato (
                                      Descripcion    VARCHAR(300),
                                      Precio         DECIMAL(10, 2),
                                      TipoComida     VARCHAR(100),
-                                     Alergenos      VARCHAR(200),
                                      Disponibilidad VARCHAR(50)
 );
+
+-- ============================
+--  TABLA ALERGENO
+-- ============================
+CREATE TABLE IF NOT EXISTS Alergeno(
+									CodigoAlergeno INT AUTO_INCREMENT PRIMARY KEY,
+                                    CodigoPlato INT,
+                                    Nombre VARCHAR(50),
+                                    FOREIGN KEY (CodigoPlato) REFERENCES Plato(CodigoPlato)
+);
+
 
 -- ============================
 --  RELACIÓN MENU - PLATO (N:N)
@@ -165,19 +188,7 @@ CREATE TABLE IF NOT EXISTS Plato_menu (
                                           FOREIGN KEY (CodigoPlato) REFERENCES Plato(CodigoPlato)
 );
 
--- ============================
---  TABLA PEDIDO
---  Se llena automáticamente via trigger crear_pedido_automaticamente
--- ============================
-CREATE TABLE IF NOT EXISTS Pedido (
-                                      CodigoPedido      INT AUTO_INCREMENT PRIMARY KEY,
-                                      CodigoEnvio       INT NOT NULL,
-                                      CodigoRestaurante INT NOT NULL,
-                                      FechaPedido       DATE,
-                                      Estado            ENUM('En Proceso', 'Entregado', 'Cancelado') NOT NULL,
-                                      FOREIGN KEY (CodigoEnvio)       REFERENCES Envio(CodigoEnvio),
-                                      FOREIGN KEY (CodigoRestaurante) REFERENCES Restaurante(CodigoRestaurante)
-);
+
 
 -- ============================
 --  TABLA PAGO
@@ -185,19 +196,32 @@ CREATE TABLE IF NOT EXISTS Pedido (
 CREATE TABLE IF NOT EXISTS Pago (
                                     CodigoPago         INT AUTO_INCREMENT PRIMARY KEY,
                                     CodigoCliente      INT NOT NULL,
-                                    CodigoEnvio        INT NOT NULL,                          -- antes: CodigoPedido
+                                    CodigoEnvio        INT NOT NULL,
                                     Monto              DECIMAL(10, 2),
-                                    MetodoPago         ENUM('Tarjeta', 'Efectivo') NOT NULL,
                                     FechaPago          DATE,
                                     HoraPago           TIME,
+                                    EstadoPago         ENUM('Aceptado', 'Rechazado'),
                                     FOREIGN KEY (CodigoCliente)      REFERENCES Cliente(CodigoCliente),
-                                    FOREIGN KEY (CodigoEnvio)        REFERENCES Envio(CodigoEnvio)  -- antes: Pedido
+                                    FOREIGN KEY (CodigoEnvio)        REFERENCES Envio(CodigoEnvio)  
 );
 
 -- ============================
---  TABLA OPINIONES
+--  TABLA Transaccion
 -- ============================
-CREATE TABLE IF NOT EXISTS Opiniones (
+CREATE TABLE IF NOT EXISTS Transaccion(
+										TransaccionID VARCHAR(50) PRIMARY KEY,
+                                        CodigoPago INT NOT NULL UNIQUE,
+                                        MetodoPago VARCHAR(50),
+                                        BancoNombre VARCHAR(50),
+                                        CUS VARCHAR(50),
+                                        CodigoRespuesta VARCHAR(50),
+                                        FOREIGN KEY (CodigoPago) REFERENCES Pago(CodigoPago)
+);
+ 
+-- ============================
+--  TABLA OPINION
+-- ============================
+CREATE TABLE IF NOT EXISTS Opinion (
                                          CodigoComentario INT AUTO_INCREMENT PRIMARY KEY,
                                          CodigoPlato      INT,
                                          CodigoCliente    INT,
@@ -208,12 +232,3 @@ CREATE TABLE IF NOT EXISTS Opiniones (
                                          FOREIGN KEY (CodigoCliente)    REFERENCES Cliente(CodigoCliente),
                                          FOREIGN KEY (CodigoRepartidor) REFERENCES Repartidor(CodigoRepartidor)
 );
-
--- ============================
---  LLAVE FORÁNEA DIFERIDA
---  Se agrega después de crear InformacionBancaria para
---  romper la dependencia circular entre Usuario e InformacionBancaria.
--- ============================
-ALTER TABLE Usuario
-    ADD CONSTRAINT fk_usuario_info_bancaria
-        FOREIGN KEY (CodigoInfoBancaria) REFERENCES InformacionBancaria(CodigoInfoBancaria);
