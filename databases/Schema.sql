@@ -201,7 +201,7 @@ CREATE TABLE IF NOT EXISTS Pago (
                                     Monto              DECIMAL(10, 2),
                                     FechaPago          DATE,
                                     HoraPago           TIME,
-                                    EstadoPago         ENUM("Aceptado", "Rechazado"),
+                                    EstadoPago         ENUM('Aceptado', 'Rechazado'),
                                     FOREIGN KEY (CodigoCliente)      REFERENCES Cliente(CodigoCliente),
                                     FOREIGN KEY (CodigoEnvio)        REFERENCES Envio(CodigoEnvio)  
 );
