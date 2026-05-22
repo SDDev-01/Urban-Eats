@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS Gerente (
 -- ============================
 CREATE TABLE IF NOT EXISTS Restaurante (
                                            CodigoRestaurante INT AUTO_INCREMENT PRIMARY KEY,
-                                           CodigoCiudad      INT NOT NULL UNIQUE,
+                                           CodigoCiudad      INT NOT NULL,
                                            Nombre            VARCHAR(150),
                                            Ubicacion         VARCHAR(200),
                                            Horario           VARCHAR(100),
