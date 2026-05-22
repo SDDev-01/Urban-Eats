@@ -106,17 +106,17 @@ INSERT INTO Menu (CodigoMenu, Categoria, CodigoRestaurante) VALUES
 -- ============================
 -- PLATO
 -- ============================
-INSERT INTO Plato (CodigoPlato, Nombre, Descripcion, Precio, TipoComida, Alergenos, Disponibilidad) VALUES
-(1,  'Pollo asado 1/4',  'Porción de pollo asado con papa', 18000.00, 'Pollo',  NULL, 'Disponible'),
-(2,  'Limonada natural', 'Limonada con hielo',               6000.00, 'Bebida', NULL, 'Disponible'),
-(3,  'Pizza margarita',  'Queso mozzarella y albahaca',     28000.00, 'Pizza',  NULL, 'Disponible'),
-(4,  'Lasagna boloñesa', 'Lasagna tradicional',             32000.00, 'Pasta',  NULL, 'Disponible'),
-(5,  'Roll california',  'Cangrejo, aguacate y pepino',     26000.00, 'Sushi',  NULL, 'Disponible'),
-(6,  'Gyozas',           'Empanaditas japonesas',           20000.00, 'Entrada',NULL, 'Disponible'),
-(7,  'Arepa con queso',  'Arepa rellena con queso',         10000.00, 'Arepa',  NULL, 'Disponible'),
-(8,  'Gaseosa',          'Bebida gaseosa 350ml',             5000.00, 'Bebida', NULL, 'Disponible'),
-(9,  'Churrasco',        'Carne a la parrilla con ensalada',35000.00, 'Carne',  NULL, 'Disponible'),
-(10, 'Cerveza',          'Cerveza nacional',                 7000.00, 'Bebida', NULL, 'Disponible');
+INSERT INTO Plato (CodigoPlato, Nombre, Descripcion, Precio, TipoComida, Disponibilidad) VALUES
+(1,  'Pollo asado 1/4',  'Porción de pollo asado con papa', 18000.00, 'Pollo',  'Disponible'),
+(2,  'Limonada natural', 'Limonada con hielo',               6000.00, 'Bebida', 'Disponible'),
+(3,  'Pizza margarita',  'Queso mozzarella y albahaca',     28000.00, 'Pizza',  'Disponible'),
+(4,  'Lasagna boloñesa', 'Lasagna tradicional',             32000.00, 'Pasta',  'Disponible'),
+(5,  'Roll california',  'Cangrejo, aguacate y pepino',     26000.00, 'Sushi',  'Disponible'),
+(6,  'Gyozas',           'Empanaditas japonesas',           20000.00, 'Entrada','Disponible'),
+(7,  'Arepa con queso',  'Arepa rellena con queso',         10000.00, 'Arepa',  'Disponible'),
+(8,  'Gaseosa',          'Bebida gaseosa 350ml',             5000.00, 'Bebida', 'Disponible'),
+(9,  'Churrasco',        'Carne a la parrilla con ensalada',35000.00, 'Carne',  'Disponible'),
+(10, 'Cerveza',          'Cerveza nacional',                 7000.00, 'Bebida', 'Disponible');
 
 -- ============================
 -- ALERGENO (tabla)

@@ -163,7 +163,6 @@ CREATE TABLE IF NOT EXISTS Plato (
                                      Descripcion    VARCHAR(300),
                                      Precio         DECIMAL(10, 2),
                                      TipoComida     VARCHAR(100),
-                                     Alergenos      VARCHAR(200),
                                      Disponibilidad VARCHAR(50)
 );
 
@@ -233,4 +232,3 @@ CREATE TABLE IF NOT EXISTS Opinion (
                                          FOREIGN KEY (CodigoCliente)    REFERENCES Cliente(CodigoCliente),
                                          FOREIGN KEY (CodigoRepartidor) REFERENCES Repartidor(CodigoRepartidor)
 );
-
