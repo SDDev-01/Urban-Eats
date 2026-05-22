@@ -146,14 +146,14 @@ INSERT INTO Plato_menu (CodigoMenu, CodigoPlato) VALUES
 -- ============================
 -- ENVIO
 -- (Trigger crea Pedido automáticamente)
+-- Se consulta CodigoCliente por CodigoUsuario para no depender del AUTO_INCREMENT.
 -- ============================
--- Asumimos: Cliente.CodigoCliente quedó alineado con Usuario.CodigoUsuario (carga en limpio).
-INSERT INTO Envio (CodigoEnvio, CodigoCliente, CodigoRepartidor, CodigoRestaurante, Descripcion, FechaEnvio, HoraEntrega) VALUES
-(1,  1,  1, 1, 'Pedido de pollo y limonada',   '2026-05-20', '13:20:00'),
-(2,  2,  2, 2, 'Pedido de pizza margarita',    '2026-05-20', '20:10:00'),
-(3,  3,  3, 3, 'Pedido de sushi california',   '2026-05-21', '19:45:00'),
-(4,  4,  4, 4, 'Pedido de arepa con queso',    '2026-05-21', '09:15:00'),
-(5,  5,  5, 5, 'Pedido de churrasco',          '2026-05-22', '14:05:00');
+INSERT INTO Envio (CodigoEnvio, CodigoCliente, CodigoRepartidor, CodigoRestaurante, Descripcion, FechaEnvio, HoraEntrega)
+SELECT 1, CodigoCliente, 1, 1, 'Pedido de pollo y limonada',   '2026-05-20', '13:20:00' FROM Cliente WHERE CodigoUsuario = 1 UNION ALL
+SELECT 2, CodigoCliente, 2, 2, 'Pedido de pizza margarita',    '2026-05-20', '20:10:00' FROM Cliente WHERE CodigoUsuario = 2 UNION ALL
+SELECT 3, CodigoCliente, 3, 3, 'Pedido de sushi california',   '2026-05-21', '19:45:00' FROM Cliente WHERE CodigoUsuario = 3 UNION ALL
+SELECT 4, CodigoCliente, 4, 4, 'Pedido de arepa con queso',    '2026-05-21', '09:15:00' FROM Cliente WHERE CodigoUsuario = 4 UNION ALL
+SELECT 5, CodigoCliente, 5, 5, 'Pedido de churrasco',          '2026-05-22', '14:05:00' FROM Cliente WHERE CodigoUsuario = 5;
 
 -- ============================
 -- PAGO
