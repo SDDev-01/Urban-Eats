@@ -26,8 +26,8 @@ INSERT INTO Ciudad (CodigoCiudad, CodigoDepartamento, Nombre, Latitud, Longitud)
 INSERT INTO Rol (CodigoRol, NombreRol, DescripcionRol) VALUES
 (1, 'Cliente', 'Usuario que realiza pedidos'),
 (2, 'Repartidor', 'Usuario que entrega pedidos'),
-(3, 'Gerente', 'Usuario Administrador de Restaurantes'),
-(4, 'Tecnico', 'Usuario con permisos de gestión');
+(3, 'Tecnico', 'Usuario con permisos de gestión'),
+(4, 'Gerente', 'Usuario Administrador de Restaurantes');
 
 -- ============================
 -- USUARIO
