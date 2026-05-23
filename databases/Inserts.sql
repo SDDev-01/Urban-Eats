@@ -54,9 +54,10 @@ INSERT INTO Usuario (CodigoUsuario, Nombres, Apellidos, Direccion, Telefono, Cor
 -- ROL_USUARIO
 -- ============================
 INSERT INTO Rol_Usuario (CodigoUsuario, CodigoRol) VALUES
-(1, 1), (2, 1), (3, 1), (4, 1), (5, 1),
-(6, 2), (7, 2), (8, 2), (9, 2), (10, 2),
-(11, 3), (12, 3), (13, 3), (14, 3), (15, 3);
+(1, 1), (2, 1), (3, 1), (4, 1), (5, 1),       -- Clientes
+(6, 2), (7, 2), (8, 2), (9, 2), (10, 2),      -- Repartidores
+(11, 4), (12, 4), (13, 4),                    -- Gerentes
+(14, 3), (15, 3);                             -- Técnicos 
 
 -- ============================
 -- REPARTIDOR
