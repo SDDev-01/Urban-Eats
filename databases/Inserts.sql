@@ -26,7 +26,8 @@ INSERT INTO Ciudad (CodigoCiudad, CodigoDepartamento, Nombre, Latitud, Longitud)
 INSERT INTO Rol (CodigoRol, NombreRol, DescripcionRol) VALUES
 (1, 'Cliente', 'Usuario que realiza pedidos'),
 (2, 'Repartidor', 'Usuario que entrega pedidos'),
-(3, 'Administrador', 'Usuario con permisos de gestión');
+(3, 'Gerente', 'Usuario Administrador de Restaurantes'),
+(4, 'Tecnico', 'Usuario con permisos de gestión');
 
 -- ============================
 -- USUARIO
@@ -77,18 +78,19 @@ INSERT INTO Vehiculo (Placa, CodigoRepartidor, Licencia, TipoVehiculo, SeguroVeh
 -- GERENTE
 -- ============================
 INSERT INTO Gerente (CodigoGerente, CodigoUsuario) VALUES
-(1, 11), (2, 12), (3, 13);
+(1, 11),
+(2, 12),
+(3, 13);
 
 -- ============================
--- RESTAURANTE (1 por ciudad, porque CodigoCiudad es UNIQUE)
+-- RESTAURANTE
 -- ============================
-INSERT INTO Restaurante (CodigoRestaurante, CodigoCiudad, Nombre, Ubicacion, Horario, Latitud, Longitud) VALUES
-(1, 1, 'Pollería El Rico Sabor', 'Av. Caracas 123, Bogotá', '10:00-22:00', 4.71150000, -74.07250000),
-(2, 2, 'Pizzería Don Giuseppe', 'Calle 93 #11-20, Medellín', '12:00-23:00', 6.24400000, -75.58100000),
-(3, 3, 'Sushi Pacífico', 'Cra 4 #10-20, Cali', '11:00-22:30', 3.45190000, -76.53180000),
-(4, 4, 'Arepas La Costeña', 'Calle 72 #45-10, Barranquilla', '08:00-21:00', 10.96870000, -74.78110000),
-(5, 5, 'Parrilla Santandereana', 'Av. 27 #36-50, Bucaramanga', '11:30-22:00', 7.11950000, -73.12250000);
-
+INSERT INTO Restaurante (CodigoRestaurante, CodigoCiudad, CodigoGerente, Nombre, Ubicacion, Horario, Latitud, Longitud) VALUES
+(1, 1, 1, 'Pollería El Rico Sabor', 'Av. Caracas 123, Bogotá', '10:00-22:00', 4.71150000, -74.07250000),
+(2, 2, 2, 'Pizzería Don Giuseppe', 'Calle 93 #11-20, Medellín', '12:00-23:00', 6.24400000, -75.58100000),
+(3, 3, 3, 'Sushi Pacífico', 'Cra 4 #10-20, Cali', '11:00-22:30', 3.45190000, -76.53180000),
+(4, 4, 1, 'Arepas La Costeña', 'Calle 72 #45-10, Barranquilla', '08:00-21:00', 10.96870000, -74.78110000),
+(5, 5, 2, 'Parrilla Santandereana', 'Av. 27 #36-50, Bucaramanga', '11:30-22:00', 7.11950000, -73.12250000);
 -- ============================
 -- MENU
 -- ============================
