@@ -491,7 +491,7 @@ TRIGGER `urbaneats`.`crear_cliente_automaticamente`
 AFTER INSERT ON `urbaneats`.`usuario`
 FOR EACH ROW
 BEGIN
-    INSERT INTO Cliente (CodigoUsuario)
+    INSERT INTO cliente (CodigoUsuario)
     VALUES (NEW.CodigoUsuario);
 END$$
 
