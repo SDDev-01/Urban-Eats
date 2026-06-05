@@ -12,7 +12,7 @@ Si es la primera vez que van a trabajar en el proyecto:
 
 ```bash
 cd Documents/
-git clone https://github.com/SDDev-01/Urban-Eats
+git clone https://github.com/SDDev-01/Urban-Eats.git
 ```
 
 👉 Esto descargará el proyecto en la carpeta Documents
