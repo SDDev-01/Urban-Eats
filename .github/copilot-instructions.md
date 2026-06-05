@@ -41,7 +41,7 @@ The project is organized around **5 core management modules** (see use case diag
 
 3. **Gestión de Repartidor** - Delivery driver management
    - Driver profile, payment preferences, delivery assignment
-   - Técnico (antes Administrador): assign drivers, Client: rate drivers
+   - Técnico (antes Administrador): assign drivers, Cliente: rate drivers
    - Files: `repartidor.html`, `repartidor.js`, `repartidor.css`
 
 4. **Gestión de Pago** - Payment management
