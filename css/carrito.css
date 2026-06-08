@@ -21,7 +21,7 @@
     }
     .item-emoji {
       width: 72px; height: 72px; border-radius: var(--radio-sm);
-      background: linear-gradient(135deg, #d5f5e3, #a9dfbf);
+      background: linear-gradient(135deg, var(--secundario-claro), var(--terciario-claro));
       display: flex; align-items: center; justify-content: center;
       font-size: 2rem; flex-shrink: 0;
     }
@@ -36,15 +36,15 @@
       display: flex; align-items: center; justify-content: center;
       transition: all 0.2s; font-family: var(--fuente);
     }
-    .btn-cant:hover { border-color: var(--verde); background: var(--verde-muy-claro); }
+    .btn-cant:hover { border-color: var(--principal); background: var(--principal-claro); }
     .cant-num { font-weight: 700; font-size: 1rem; min-width: 20px; text-align: center; }
-    .item-precio { font-size: 1.05rem; font-weight: 700; color: var(--verde-oscuro); min-width: 90px; text-align: right; }
+    .item-precio { font-size: 1.05rem; font-weight: 700; color: var(--terciario); min-width: 90px; text-align: right; }
     .btn-eliminar {
-      background: none; border: none; color: #e74c3c;
+      background: none; border: none; color: var(--principal);
       cursor: pointer; padding: 0.4rem; border-radius: var(--radio-sm);
       transition: background 0.2s; font-size: 1rem;
     }
-    .btn-eliminar:hover { background: #fdecea; }
+    .btn-eliminar:hover { background: var(--principal-claro); }
 
     .resumen-card {
       background: white; border-radius: var(--radio); box-shadow: var(--sombra);
@@ -55,24 +55,24 @@
     .resumen-fila .label { color: var(--texto-gris); }
     .resumen-separador { border: none; border-top: 1px solid var(--borde); margin: 1rem 0; }
     .resumen-total { display: flex; justify-content: space-between; font-weight: 800; font-size: 1.05rem; margin-bottom: 1.2rem; }
-    .resumen-total .monto { color: var(--verde-oscuro); }
+    .resumen-total .monto { color: var(--terciario); }
     .btn-pedido {
       width: 100%; padding: 0.9rem;
-      background: var(--verde); color: white;
+      background: var(--terciario); color: white;
       border: none; border-radius: var(--radio-sm);
       font-size: 1rem; font-weight: 700; cursor: pointer;
       font-family: var(--fuente);
       transition: background 0.2s, transform 0.15s; margin-bottom: 0.6rem;
     }
-    .btn-pedido:hover { background: var(--verde-oscuro); transform: translateY(-2px); }
+    .btn-pedido:hover { background: #d94f2d; transform: translateY(-2px); }
     .btn-limpiar {
       width: 100%; padding: 0.6rem; background: none;
       border: none; color: var(--texto-gris); font-size: 0.875rem;
       cursor: pointer; font-family: var(--fuente); transition: color 0.2s;
     }
-    .btn-limpiar:hover { color: #e74c3c; }
+    .btn-limpiar:hover { color: var(--principal); }
     .entrega-info {
-      margin-top: 1rem; background: var(--verde-muy-claro);
+      margin-top: 1rem; background: var(--secundario-claro);
       border-radius: var(--radio-sm); padding: 0.9rem 1rem; font-size: 0.85rem;
     }
     .entrega-info strong { display: block; margin-bottom: 0.2rem; }

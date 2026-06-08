@@ -28,7 +28,7 @@
       margin-bottom: 0.25rem;
     }
 
-    .form-page-header h2 i { color: var(--verde); }
+    .form-page-header h2 i { color: var(--principal); }
 
     .form-page-header p {
       color: var(--texto-gris);
@@ -57,11 +57,11 @@
 
     /* Botón verificar */
     .btn-verificar-btn {
-      background: #fff8e1;
-      color: #f39c12;
-      border: 1.5px solid #f9c84a;
+      background: var(--secundario-claro);
+      color: var(--principal);
+      border: 1.5px solid var(--secundario);
     }
-    .btn-verificar-btn:hover { background: #f39c12; color: white; border-color: #f39c12; }
+    .btn-verificar-btn:hover { background: var(--terciario); color: white; border-color: var(--terciario); }
 
     /* Mensaje verificación */
     .msg-verificacion {
@@ -74,8 +74,8 @@
       align-items: center;
       gap: 0.5rem;
     }
-    .msg-exito { background: #eafaf1; color: #1e8449; border: 1.5px solid #a9dfbf; }
-    .msg-error { background: #fdecea; color: #c0392b; border: 1.5px solid #f5b7b1; }
+    .msg-exito { background: var(--terciario-claro); color: var(--principal); border: 1.5px solid var(--terciario); }
+    .msg-error { background: var(--principal-claro); color: var(--principal); border: 1.5px solid var(--principal); }
 
     /* Chips del menú */
     .menu-chips-wrap {
@@ -90,8 +90,8 @@
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
-      background: var(--verde-claro);
-      color: var(--verde-oscuro);
+      background: var(--secundario-claro);
+      color: var(--principal);
       border-radius: 20px;
       padding: 0.25rem 0.8rem;
       font-size: 0.82rem;
@@ -102,7 +102,7 @@
       background: none;
       border: none;
       cursor: pointer;
-      color: var(--verde-oscuro);
+      color: var(--principal);
       font-size: 0.72rem;
       padding: 0;
       display: inline-flex;
@@ -110,7 +110,7 @@
       transition: color 0.15s;
     }
 
-    .menu-chip button:hover { color: #e74c3c; }
+    .menu-chip button:hover { color: var(--principal); }
 
     /* Fila para agregar al menú (solo en modo edición) */
     .menu-add-row {
@@ -131,8 +131,8 @@
     }
 
     .menu-add-row input:focus {
-      border-color: var(--verde);
-      box-shadow: 0 0 0 3px rgba(46,204,113,0.15);
+      border-color: var(--principal);
+      box-shadow: 0 0 0 3px rgba(164,40,40,0.15);
     }
 
     .sin-items {

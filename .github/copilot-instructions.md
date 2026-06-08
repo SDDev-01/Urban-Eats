@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Urban Eats is a **student academic project** for SENA Colombia - a web-based food delivery platform built with vanilla HTML, CSS, and JavaScript. The application allows customers to browse restaurants, place orders, and track deliveries in Colombia (localized with Colombian pesos).
+Urban Eats is a **student academic project** for SENA Colombia - a web-based food delivery and logistics platform built with vanilla HTML, CSS, and JavaScript. It connects restaurants, customers, and delivery drivers in **Bogotá** (localized with Colombian pesos). Urban Eats is a connection/logistics platform: it does **not** prepare food or directly employ couriers.
 
 **Important**: This is a learning project for a 4-person student team. Code must be **simple and explainable** - the team presents and defends their code every 3 months in "sustentaciones". Prioritize readability and understanding over clever solutions.
 
@@ -10,6 +10,15 @@ Urban Eats is a **student academic project** for SENA Colombia - a web-based foo
 - Using localStorage for data persistence (no backend yet)
 - Database exists as SQL files in `/databases/` but is **not connected** to the application
 - Database integration planned for a future learning phase
+
+## Key Clarifications (Wiki)
+- **Not a real business**: academic-only scope.
+- **Not a social network**: only reviews after an order is **Entregado**.
+- **Traditional restaurant focus** (no niche-only positioning).
+- **24/7 operation** with emphasis on night monitoring (12:00 a.m. – 5:00 a.m.).
+- **Target usage**: Bogotá, mobile-friendly (Android 9+ / iOS 13+, 4G/Wi‑Fi).
+- **Roles**: Cliente, Gerente/Restaurante, Repartidor y Técnico (antes Administrador).
+- **Multi-rol**: un mismo usuario puede tener más de un rol.
 
 ## ⚠️ CRITICAL: Documentation-Driven Development
 
@@ -21,17 +30,18 @@ The project is organized around **5 core management modules** (see use case diag
 
 1. **Gestión de Cliente** - Customer management
    - Create user, update information, shopping cart
-   - Admin: validate/eliminate clients
-   - Files: `cliente.html`, `cliente.js`, `cliente.css`
+   - Técnico (antes Administrador): validate/eliminate clients
+   - Files: `cliente.html`, `cliente.js`, `cliente.css`, `perfil.html`, `perfil.js`, `perfil.css`
 
 2. **Gestión de Restaurante** - Restaurant management  
    - Browse restaurants, view menus, reviews
-   - Admin: create restaurants, manage menus
-   - Files: `restaurante.html`, `restaurante.js`, `restaurante.css`, `catalogo.html`, `catalogo.js`, `catalogo.css`
+   - Técnico (antes Administrador): create restaurants, manage menus
+   - Files: `restaurante.html`, `restaurante.js`, `restaurante.css`, `restaurantes.html`, `restaurantes.js`, `restaurantes.css`,
+     `restaurante-detalle.html`, `restaurante-detalle.js`, `restaurante-detalle.css`, `catalogo.html`, `catalogo.js`, `catalogo.css`
 
 3. **Gestión de Repartidor** - Delivery driver management
    - Driver profile, payment preferences, delivery assignment
-   - Admin: assign drivers, Client: rate drivers
+   - Técnico (antes Administrador): assign drivers, Cliente: rate drivers
    - Files: `repartidor.html`, `repartidor.js`, `repartidor.css`
 
 4. **Gestión de Pago** - Payment management
@@ -41,23 +51,36 @@ The project is organized around **5 core management modules** (see use case diag
 5. **Gestión de Pedidos** - Order management (CENTRAL MODULE)
    - Create/modify/cancel orders, track delivery
    - Connects Cliente → Restaurante → Repartidor → Pago
-   - Files: `carrito.html`, `carrito.js`, `carrito.css`, `rastreo.html`, `rastreo.js`, `rastreo.css`
+   - Files: `carrito.html`, `carrito.js`, `carrito.css`, `rastreo.html`, `rastreo.js`, `rastreo.css`, `mapa.html`, `mapa.css`
 
 ### Documentation Structure
 
 When working on features, **reference these diagrams**:
 
-- **Use Case Diagrams** (`/docs/Diagrama de casos de usos/`): Defines what each actor (Cliente, Repartidor, Administrador) can do in each module
+- **Use Case Diagrams** (`/docs/Diagrama de casos de usos/`): Defines what each actor (Cliente, Repartidor, Técnico (antes Administrador)) can do in each module
 - **Class Diagram** (`/docs/Diagrama de Clases/`): Shows the object model (Cliente, Restaurante, Pedido, Pago, etc.)
 - **Component Diagram** (`/docs/Diagrama de Componentes/`): Shows how the 5 modules interconnect
+- **Deployment Diagram** (`/docs/Diagrama de despliegue/`): Shows how components are deployed
+- **Package Diagram** (`/docs/Diagrama de paquetes/`): Organizes the system into packages
+- **Process Diagram** (`/docs/Diagrama de procesos/`): High-level process flows
 - **Activity Diagrams** (`/docs/Diagrama de actividades/`): Workflow for each module
 - **Sequence Diagrams** (`/docs/Diagrama de secuencia/`): Interaction flows
 - **Wireframes** (`/docs/Wireframes/`): UI design reference
-- **Database Model** (`/docs/bases de datos/`): Entity-relationship and relational models
+- **Project Documentation** (`/docs/Documentación/`): Arquitectura, visión y análisis del proyecto
+- **Database Model** (`/docs/Bases de datos/`): Entity-relationship and relational models
 - **User Stories** (`/docs/Historias de usuario/`): Feature requirements
 - **Data Dictionary** (`/docs/diccionario de datos/`): Field definitions
 
 **Before implementing a feature**: Check if it exists in use cases, wireframes, or user stories. Follow the documented design.
+
+## Business Rules (Resumen)
+- **Pago antes del pedido**: si la pasarela rechaza, el pedido no se envía al restaurante.
+- **Estados del pedido**: Solicitado → En Preparación → Listo para Envío → En Camino → Entregado / Cancelado.
+- **Autonomía del restaurante**: puede **Aceptar/Rechazar** pedidos; sin stock no se habilita agregar al carrito.
+- **Monto mínimo**: validar antes de pasar a pago.
+- **Asignación de repartidores**: pueden **Aceptar/Rechazar**; si rechazan, se reasigna automáticamente.
+- **GPS**: rastreo en tiempo real con margen de error máximo de **20 metros** (simulado por ahora).
+- **Prioridad**: repartidores propios del restaurante tienen preferencia sobre externos.
 
 ## Architecture
 
@@ -68,43 +91,49 @@ The application follows a **multi-page architecture** where each HTML file repre
 - **login.html / registro.html**: Authentication pages
 - **cliente.html**: Customer profile management
 - **restaurante.html**: Restaurant profile management
+- **perfil.html**: Customer profile and payment preference
+- **restaurantes.html**: Restaurant listing
+- **restaurante-detalle.html**: Restaurant detail and menu
 - **catalogo.html**: Browse restaurants and menu items
 - **carrito.html**: Shopping cart and order management
 - **pago.html**: Payment processing page
 - **repartidor.html**: Delivery driver interface
 - **rastreo.html**: Order tracking page
 - **mapa.html**: Map view for delivery tracking
+- **404.html / 500.html**: Error pages
 
 ### JavaScript Modules
 Each page has a corresponding JS file in `/js/` that follows a **functional module pattern**:
 
 - **app.js**: Global utilities (navbar state, user display, cart badge)
-- Page-specific modules (cliente.js, restaurante.js, carrito.js, etc.) handle their own state
+- **banner.js**: Slider del banner compartido por `index.html` y `catalogo.html`
+- **data-restaurantes.js**: Datos de restaurantes/productos y carga inicial en localStorage
+- Page-specific modules (cliente.js, restaurante.js, restaurantes.js, restaurante-detalle.js, carrito.js, perfil.js, etc.) handle their own state
 
 ### State Management
 All application state is stored in **localStorage** with prefixed keys:
 
 - `ue_cliente`: Customer profile data
 - `ue_restaurante`: Restaurant profile data
+- `ue_repartidor`: Delivery driver profile data
 - `ue_usuario`: User authentication data
 - `ue_carrito`: Shopping cart items
 - `ue_pedido_actual`: Current order being processed
 - `ue_sesion`: Session flag
+- `ue_restaurantes`: Catálogo de restaurantes (datos de prueba)
+- `ue_productos`: Catálogo de productos (datos de prueba)
+- `ue_metodo_pago`: Método de pago preferido
+- `ue_datos_tarjeta`: Datos de tarjeta guardados
 
 **Pattern**: Each module defines a default object, loads from localStorage, and provides a `persistir()` function to save changes.
 
 ### Styling Architecture
 CSS follows a **CSS Custom Properties (variables) + component pattern**:
 
-- **styles.css**: Global variables (colors, spacing, typography) and shared components (navbar, buttons, forms)
+- **styles.css**: Global variables (spacing, typography, shadows) and shared components (navbar, buttons, forms)
 - Page-specific CSS files extend global styles for page-specific layouts
+- **error-style.css**: Estilos para páginas 404/500
 - **Reference**: `/docs/Wireframes/` for UI design
-
-**Key CSS Variables** (defined in `:root`):
-- `--verde`: Primary brand color (#2ecc71) - healthy food theme
-- `--navbar-height`: Fixed navbar height (64px)
-- `--fuente`: System font stack
-- `--sombra`, `--radio`: Design tokens for shadows and border radius
 
 ## Database Schema
 
@@ -117,7 +146,7 @@ The MySQL schema is defined in `/databases/`:
 - **Joins.sql**: Common query examples
 
 **Key Tables**:
-- `Usuario` → `Rol_Usuario` → `Rol` (users can have multiple roles: Cliente, Repartidor, Administrador)
+- `Usuario` → `Rol_Usuario` → `Rol` (users can have multiple roles: Cliente, Repartidor, Técnico (antes Administrador))
 - `Cliente` → `Pedido` → `DetallePedido` (order structure)
 - `Restaurante` → `Producto` (restaurant menu items)
 - `Departamentos` → `Ciudades` (Colombian geographic data)

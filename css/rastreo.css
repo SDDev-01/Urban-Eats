@@ -40,12 +40,12 @@
       font-size: 0.9rem;
     }
 
-    .mapa-header i { color: var(--verde); }
+    .mapa-header i { color: var(--principal); }
 
     /* Mapa embebido */
     .mapa-contenedor {
       height: 250px;
-      background: linear-gradient(180deg, #e8f5f0 0%, #d1edd8 100%);
+      background: linear-gradient(180deg, var(--secundario-claro) 0%, var(--terciario-claro) 100%);
       position: relative;
       overflow: hidden;
     }
@@ -55,17 +55,17 @@
       text-align: center;
       padding: 0.5rem 0;
       font-size: 0.85rem;
-      color: var(--verde);
+      color: var(--principal);
       text-decoration: underline;
     }
 
     .mapa-link:hover {
-      color: #0a6b3c; /* tono más oscuro para el estado hover */
+      color: var(--terciario);
       text-decoration: underline;
     }
 
     .mapa-link:focus-visible {
-      outline: 2px solid #0a6b3c;
+      outline: 2px solid var(--terciario);
       outline-offset: 2px;
     }
     /* Repartidor card */
@@ -82,7 +82,7 @@
     .repartidor-avatar {
       width: 48px; height: 48px;
       border-radius: 50%;
-      background: var(--verde);
+      background: var(--principal);
       color: white;
       display: flex;
       align-items: center;
@@ -97,8 +97,8 @@
     .repartidor-info span { color: var(--texto-gris); font-size: 0.85rem; }
 
     .btn-llamar {
-      background: var(--verde-claro);
-      color: var(--verde-oscuro);
+      background: var(--secundario-claro);
+      color: var(--principal);
       border: none;
       padding: 0.6rem 1rem;
       border-radius: var(--radio-sm);
@@ -112,12 +112,12 @@
       transition: background 0.2s;
     }
 
-    .btn-llamar:hover { background: var(--verde); color: white; }
+    .btn-llamar:hover { background: var(--terciario); color: white; }
 
     /* Columna derecha */
     /* Temporizador */
     .timer-card {
-      background: var(--verde);
+      background: linear-gradient(135deg, var(--principal), var(--terciario));
       border-radius: var(--radio);
       padding: 2rem 1.5rem;
       text-align: center;
@@ -143,13 +143,13 @@
       align-items: flex-start;
       gap: 0.75rem;
       padding: 0.9rem 1rem;
-      background: #fff8ee;
+      background: var(--secundario-claro);
       border-radius: var(--radio-sm);
       margin-bottom: 1.2rem;
     }
 
-    .alerta-estado i { color: #e67e22; font-size: 1.1rem; margin-top: 0.1rem; }
-    .alerta-estado h4 { font-size: 0.95rem; font-weight: 700; color: #c0392b; margin-bottom: 0.15rem; }
+    .alerta-estado i { color: var(--terciario); font-size: 1.1rem; margin-top: 0.1rem; }
+    .alerta-estado h4 { font-size: 0.95rem; font-weight: 700; color: var(--principal); margin-bottom: 0.15rem; }
     .alerta-estado p { font-size: 0.85rem; color: var(--texto-gris); }
 
     /* Pasos */
@@ -172,8 +172,8 @@
       font-weight: 700;
     }
 
-    .paso-icono.completado { background: var(--verde); color: white; }
-    .paso-icono.activo { background: var(--verde); color: white; }
+    .paso-icono.completado { background: var(--terciario); color: white; }
+    .paso-icono.activo { background: var(--principal); color: white; }
     .paso-icono.pendiente { background: #f0f0f0; color: var(--texto-gris); }
 
     .paso-info h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.1rem; }
@@ -182,7 +182,7 @@
 
     .paso-linea {
       width: 2px; height: 16px;
-      background: var(--verde-claro);
+      background: var(--secundario-claro);
       margin-left: 15px;
     }
 
@@ -203,7 +203,7 @@
       margin-top: 0.75rem; padding-top: 0.75rem;
       border-top: 1px solid var(--borde);
     }
-    .resumen-total-rastreo .monto { color: var(--verde-oscuro); }
+    .resumen-total-rastreo .monto { color: var(--terciario); }
 
     @media (max-width: 800px) {
       .rastreo-layout { grid-template-columns: 1fr; }

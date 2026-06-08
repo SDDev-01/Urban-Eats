@@ -5,7 +5,7 @@
 
 /* ---- HERO RESTAURANTES ---- */
 .hero-restaurantes {
-  background: linear-gradient(135deg, var(--verde) 0%, var(--verde-oscuro) 100%);
+  background: linear-gradient(135deg, var(--principal) 0%, var(--terciario) 100%);
   color: white;
   text-align: center;
   padding: 3rem 2rem 2.5rem;
@@ -74,7 +74,7 @@
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
-  background: var(--verde);
+  background: var(--secundario);
   color: white;
   font-size: 0.7rem;
   font-weight: 600;
@@ -97,7 +97,7 @@
   font-size: 1.4rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  color: var(--texto-oscuro);
+  color: var(--texto);
 }
 
 .restaurante-descripcion {
@@ -125,7 +125,7 @@
 }
 
 .restaurante-info-item i {
-  color: var(--verde);
+  color: var(--principal);
   font-size: 1rem;
   width: 18px;
   text-align: center;
@@ -135,7 +135,7 @@
 .btn-ver-menu {
   width: 100%;
   padding: 0.75rem 1.2rem;
-  background: var(--verde);
+  background: var(--terciario);
   color: white;
   border: none;
   border-radius: var(--radio-sm);
@@ -151,9 +151,9 @@
 }
 
 .btn-ver-menu:hover {
-  background: var(--verde-oscuro);
+  background: #d94f2d;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+  box-shadow: 0 4px 12px rgba(247, 100, 59, 0.3);
 }
 
 /* Responsive */
