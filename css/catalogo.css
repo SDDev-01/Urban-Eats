@@ -5,7 +5,7 @@
 
 /* ---- HERO ---- */
     .hero {
-      background: var(--verde);
+      background: linear-gradient(135deg, var(--principal) 0%, var(--terciario) 100%);
       color: white;
       text-align: center;
       padding: 3.5rem 2rem 2.5rem;
@@ -43,11 +43,11 @@
       transition: all 0.2s;
       font-family: var(--fuente);
     }
-    .btn-filtro:hover { border-color: var(--verde); color: var(--verde-oscuro); }
+    .btn-filtro:hover { border-color: var(--principal); color: var(--principal); }
     .btn-filtro.activo {
-      background: var(--verde);
+      background: var(--terciario);
       color: white;
-      border-color: var(--verde);
+      border-color: var(--terciario);
       font-weight: 600;
     }
 
@@ -125,7 +125,7 @@
     .producto-categoria {
       font-size: 0.75rem;
       font-weight: 600;
-      color: var(--verde-oscuro);
+      color: var(--principal);
       text-transform: uppercase;
       letter-spacing: 0.05em;
       margin-bottom: 0.3rem;
@@ -138,7 +138,7 @@
       align-items: center;
       margin-bottom: 0.8rem;
     }
-    .producto-precio { font-size: 1.1rem; font-weight: 700; color: var(--verde-oscuro); }
+    .producto-precio { font-size: 1.1rem; font-weight: 700; color: var(--terciario); }
     .btn-ver {
       padding: 0.4rem 0.9rem;
       border-radius: var(--radio-sm);
@@ -151,7 +151,7 @@
       font-family: var(--fuente);
       transition: all 0.2s;
     }
-    .btn-ver:hover { background: var(--verde); color: white; border-color: var(--verde); }
+    .btn-ver:hover { background: var(--terciario); color: white; border-color: var(--terciario); }
     
     /* Info del restaurante en producto */
     .producto-restaurante {
@@ -165,7 +165,7 @@
     }
     
     .producto-restaurante:hover {
-      color: var(--verde-oscuro);
+      color: var(--principal);
       transform: translateX(3px);
     }
     
@@ -197,7 +197,7 @@
     .detalle-img-fallback {
       width: 100%;
       height: 280px;
-      background: linear-gradient(135deg, #d5f5e3, #a9dfbf);
+      background: linear-gradient(135deg, var(--secundario-claro), var(--terciario-claro));
       border-radius: var(--radio);
       display: flex;
       align-items: center;
@@ -207,8 +207,8 @@
     .detalle-info .categoria-tag {
       font-size: 0.75rem;
       font-weight: 600;
-      color: var(--verde-oscuro);
-      background: var(--verde-claro);
+      color: var(--principal);
+      background: var(--secundario-claro);
       padding: 0.2rem 0.6rem;
       border-radius: 20px;
       display: inline-block;
@@ -251,9 +251,9 @@
       justify-content: center;
       transition: all 0.2s;
     }
-    .btn-cantidad:hover { border-color: var(--verde); background: var(--verde-muy-claro); }
+    .btn-cantidad:hover { border-color: var(--principal); background: var(--principal-claro); }
     #detalle-cantidad { font-weight: 700; font-size: 1.1rem; min-width: 24px; text-align: center; }
-    .detalle-precio { font-size: 1.4rem; font-weight: 800; color: var(--verde-oscuro); margin-bottom: 1rem; }
+    .detalle-precio { font-size: 1.4rem; font-weight: 800; color: var(--terciario); margin-bottom: 1rem; }
     @media (max-width: 600px) {
       .detalle-grid { grid-template-columns: 1fr; }
       .hero h1 { font-size: 1.8rem; }

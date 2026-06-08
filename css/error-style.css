@@ -1,3 +1,11 @@
+ :root {
+     --principal: #a42828;
+     --secundario: #fec10b;
+     --terciario: #f7643b;
+     --fondo: #f3f1e2;
+     --texto: #111417;
+     --texto-gris: #4f555a;
+ }
 
   * {
             margin: 0;
@@ -7,8 +15,8 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #ffffff;
-            color: #333;
+            background-color: var(--fondo);
+            color: var(--texto);
             height: 100vh;
             display: flex;
             align-items: center;
@@ -24,7 +32,7 @@
         .circle {
             width: 220px;
             height: 220px;
-            background-color: #f8f9fa;
+            background-color: #fff8e1;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -35,7 +43,7 @@
         .sad-face {
             width: 120px;
             height: 120px;
-            border: 8px solid #3b9f40 ;  /* Rojo para indicar error grave */
+            border: 8px solid var(--principal);
             border-radius: 50%;
             position: relative;
         }
@@ -46,7 +54,7 @@
             position: absolute;
             width: 12px;
             height: 12px;
-            background-color: #3b9f40 ;
+            background-color: var(--principal);
             border-radius: 50%;
             top: 35px;
         }
@@ -58,7 +66,7 @@
             position: absolute;
             width: 40px;
             height: 25px;
-            border: 8px solid #3b9f40 ;
+            border: 8px solid var(--principal);
             border-top: 0;
             border-radius: 0 0 50% 50%;
             bottom: 30px;
@@ -69,7 +77,7 @@
         .error-number {
             font-size: 120px;
             font-weight: bold;
-            color: #3b9f40 ;
+            color: var(--principal);
             line-height: 1;
             margin-bottom: 10px;
         }
@@ -78,18 +86,18 @@
             font-size: 26px;
             font-weight: 600;
             margin-bottom: 15px;
-            color: #333;
+            color: var(--texto);
         }
 
         .error-message {
             font-size: 16px;
-            color: #666;
+            color: var(--texto-gris);
             margin-bottom: 30px;
             line-height: 1.6;
         }
 
         .back-link {
-            color: #0066ff;
+            color: var(--terciario);
             text-decoration: none;
             font-size: 16px;
             font-weight: 500;
@@ -103,7 +111,7 @@
             display: inline-block;
             margin-top: 15px;
             padding: 12px 25px;
-            background-color: #02f90f;
+            background-color: var(--terciario);
             color: white;
             text-decoration: none;
             border-radius: 6px;
@@ -111,5 +119,5 @@
         }
 
         .retry-btn:hover {
-            background-color: #02f90f;
+            background-color: #d94f2d;
         }

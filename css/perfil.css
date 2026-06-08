@@ -15,14 +15,14 @@
 .perfil-avatar {
   width: 100px;
   height: 100px;
-  background: var(--verde-claro);
+  background: var(--secundario-claro);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 1rem;
   font-size: 3rem;
-  color: var(--verde-oscuro);
+  color: var(--principal);
 }
 
 .perfil-nombre {
@@ -55,7 +55,7 @@
 }
 
 .perfil-card h3 i {
-  color: var(--verde);
+  color: var(--principal);
 }
 
 .perfil-info-grid {
@@ -107,8 +107,8 @@
 }
 
 .opcion-card:hover {
-  border-color: var(--verde);
-  background: var(--verde-muy-claro);
+  border-color: var(--principal);
+  background: var(--principal-claro);
   transform: translateY(-3px);
   box-shadow: var(--sombra);
 }
@@ -148,8 +148,8 @@
   max-width: 300px;
   padding: 0.85rem 1.5rem;
   background: white;
-  color: #e74c3c;
-  border: 2px solid #e74c3c;
+  color: var(--principal);
+  border: 2px solid var(--principal);
   border-radius: var(--radio-sm);
   font-size: 1rem;
   font-weight: 700;
@@ -163,10 +163,10 @@
 }
 
 .btn-logout:hover {
-  background: #e74c3c;
+  background: var(--principal);
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+  box-shadow: 0 4px 12px rgba(164, 40, 40, 0.3);
 }
 
 .btn-logout i {

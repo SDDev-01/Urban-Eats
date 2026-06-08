@@ -30,7 +30,7 @@
     }
 
     .form-page-header h2 i {
-      color: var(--verde);
+      color: var(--principal);
     }
 
     .form-page-header p {
@@ -63,14 +63,14 @@
 
     /* Botón verificar */
     .btn-verificar-btn {
-      background: #fff8e1;
-      color: #f39c12;
-      border: 1.5px solid #f9c84a;
+      background: var(--secundario-claro);
+      color: var(--principal);
+      border: 1.5px solid var(--secundario);
     }
     .btn-verificar-btn:hover {
-      background: #f39c12;
+      background: var(--terciario);
       color: white;
-      border-color: #f39c12;
+      border-color: var(--terciario);
     }
 
     /* Mensaje de verificación */
@@ -86,12 +86,12 @@
       gap: 0.5rem;
     }
     .msg-exito {
-      background: #eafaf1;
-      color: #1e8449;
-      border: 1.5px solid #a9dfbf;
+      background: var(--terciario-claro);
+      color: var(--principal);
+      border: 1.5px solid var(--terciario);
     }
     .msg-error {
-      background: #fdecea;
-      color: #c0392b;
-      border: 1.5px solid #f5b7b1;
+      background: var(--principal-claro);
+      color: var(--principal);
+      border: 1.5px solid var(--principal);
     }
