@@ -2,9 +2,8 @@
 .navbar-pub {
   position: fixed; top: 0; left: 0; right: 0;
   height: var(--navbar-height);
-  /* Degradado igual que el navbar normal */
-  background: linear-gradient(135deg, var(--verde) 0%, var(--verde-oscuro) 100%);
-  border-bottom: 1px solid var(--verde-oscuro);
+  background: linear-gradient(135deg, var(--principal) 0%, var(--terciario) 100%);
+  border-bottom: 1px solid var(--principal-oscuro);
   display: flex; align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
@@ -13,10 +12,6 @@
 }
 
 .navbar-pub .navbar-logo {
-  color: white;
-}
-
-.navbar-pub .navbar-logo i {
   color: white;
 }
 
@@ -46,8 +41,8 @@
 }
 
 .navbar-pub .btn-register {
-  background: white;
-  color: var(--verde-oscuro);
+  background: var(--secundario);
+  color: var(--texto);
 }
 
 .navbar-pub .btn-register:hover {
@@ -58,7 +53,7 @@
 /* Hero */
 .landing-hero {
   padding-top: var(--navbar-height);
-  background: var(--verde);
+  background: linear-gradient(135deg, var(--principal) 0%, var(--terciario) 100%);
   color: white;
   padding-bottom: 5rem;
   text-align: center;
@@ -86,7 +81,7 @@
 .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
 .btn-hero-primario {
-  padding: 0.9rem 2rem; background: white; color: var(--verde-oscuro);
+  padding: 0.9rem 2rem; background: white; color: var(--principal);
   border: none; border-radius: var(--radio-sm); font-size: 1rem;
   font-weight: 700; cursor: pointer; font-family: var(--fuente);
   transition: transform 0.15s, box-shadow 0.2s;
@@ -104,7 +99,7 @@
 /* Features */
 .features {
   padding: 4rem 2rem;
-  background: white;
+  background: var(--fondo);
 }
 
 .features h2 { text-align: center; font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
@@ -127,26 +122,26 @@
 }
 
 .feature-card:hover {
-  border-color: var(--verde);
+  border-color: var(--principal);
   box-shadow: var(--sombra-hover);
   transform: translateY(-3px);
 }
 
 .feature-icon {
   width: 60px; height: 60px;
-  background: var(--verde-claro);
+  background: var(--secundario-claro);
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 1rem;
 }
 
-.feature-icon i { color: var(--verde-oscuro); font-size: 1.4rem; }
+.feature-icon i { color: var(--principal); font-size: 1.4rem; }
 .feature-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
 .feature-card p { color: var(--texto-gris); font-size: 0.875rem; line-height: 1.6; }
 
 /* Stats */
 .stats-section {
-  background: var(--verde);
+  background: linear-gradient(135deg, var(--terciario) 0%, var(--principal) 100%);
   color: white;
   padding: 3.5rem 2rem;
 }

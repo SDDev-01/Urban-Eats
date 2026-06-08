@@ -5,7 +5,7 @@
 
 /* ---- HERO DEL RESTAURANTE ---- */
 .restaurante-hero {
-  background: linear-gradient(135deg, var(--verde) 0%, var(--verde-oscuro) 100%);
+  background: linear-gradient(135deg, var(--principal) 0%, var(--terciario) 100%);
   color: white;
   padding: 3rem 2rem;
   display: flex;
@@ -83,9 +83,9 @@
 }
 
 .btn-volver:hover {
-  color: var(--verde-oscuro);
-  border-color: var(--verde);
-  background: var(--verde-muy-claro);
+  color: var(--principal);
+  border-color: var(--secundario);
+  background: var(--secundario-claro);
 }
 
 /* ---- FILTROS ---- */
@@ -113,14 +113,14 @@
 }
 
 .btn-filtro:hover {
-  border-color: var(--verde);
-  color: var(--verde-oscuro);
+  border-color: var(--principal);
+  color: var(--principal);
 }
 
 .btn-filtro.activo {
-  background: var(--verde);
+  background: var(--terciario);
   color: white;
-  border-color: var(--verde);
+  border-color: var(--terciario);
   font-weight: 600;
 }
 
@@ -185,7 +185,7 @@
 .producto-categoria {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--verde-oscuro);
+  color: var(--principal);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.3rem;
@@ -213,7 +213,7 @@
 .producto-precio {
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--verde-oscuro);
+  color: var(--terciario);
 }
 
 .btn-ver {
@@ -230,9 +230,9 @@
 }
 
 .btn-ver:hover {
-  background: var(--verde);
+  background: var(--terciario);
   color: white;
-  border-color: var(--verde);
+  border-color: var(--terciario);
 }
 
 /* ---- MODAL DETALLE (reutilizado de catálogo) ---- */
@@ -257,13 +257,14 @@
   align-items: center;
   justify-content: center;
   font-size: 4rem;
+  background: linear-gradient(135deg, var(--secundario-claro), var(--terciario-claro));
 }
 
 .detalle-info .categoria-tag {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--verde-oscuro);
-  background: var(--verde-claro);
+  color: var(--principal);
+  background: var(--secundario-claro);
   padding: 0.2rem 0.6rem;
   border-radius: 20px;
   display: inline-block;
@@ -326,8 +327,8 @@
 }
 
 .btn-cantidad:hover {
-  border-color: var(--verde);
-  background: var(--verde-muy-claro);
+  border-color: var(--principal);
+  background: var(--principal-claro);
 }
 
 #detalle-cantidad {
@@ -340,7 +341,7 @@
 .detalle-precio {
   font-size: 1.4rem;
   font-weight: 800;
-  color: var(--verde-oscuro);
+  color: var(--terciario);
   margin-bottom: 1rem;
 }
 
