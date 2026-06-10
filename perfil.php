@@ -1,0 +1,200 @@
+<?php
+require 'auth_check.php';
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mi Perfil – Urban Eats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/pago.css">
+  <link rel="stylesheet" href="css/perfil.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="catalogo.html" class="navbar-logo">
+      <img src="images/Logo.png" alt="Urban Eats">
+      <span>Urban Eats</span>
+    </a>
+    <div class="navbar-links">
+      <a href="restaurantes.html" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
+    </div>
+    <div class="navbar-right">
+      <a href="perfil.html" class="navbar-usuario" style="text-decoration:none;">
+        <i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span>
+      </a>
+      <a href="carrito.html" class="btn-carrito" aria-label="Ver carrito">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="carrito-badge" id="carrito-badge">0</span>
+      </a>
+    </div>
+  </nav>
+
+  <div class="pagina">
+    <div class="perfil-container">
+      
+      <!-- Cabecera del perfil -->
+      <div class="perfil-header">
+        <div class="perfil-avatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <h1 class="perfil-nombre" id="perfil-nombre">Usuario</h1>
+        <p class="perfil-tipo">Cliente de Urban Eats</p>
+      </div>
+
+      <!-- Información personal -->
+      <div class="perfil-card">
+        <h3><i class="fas fa-id-card"></i> Información Personal</h3>
+        <div class="perfil-info-grid">
+          <div class="perfil-info-item">
+            <span class="perfil-info-label">Nombres</span>
+            <span class="perfil-info-value" id="info-nombres">-</span>
+          </div>
+          <div class="perfil-info-item">
+            <span class="perfil-info-label">Apellidos</span>
+            <span class="perfil-info-value" id="info-apellidos">-</span>
+          </div>
+          <div class="perfil-info-item">
+            <span class="perfil-info-label">Email</span>
+            <span class="perfil-info-value" id="info-email">-</span>
+          </div>
+          <div class="perfil-info-item">
+            <span class="perfil-info-label">Teléfono</span>
+            <span class="perfil-info-value" id="info-telefono">-</span>
+          </div>
+          <div class="perfil-info-item full">
+            <span class="perfil-info-label">Dirección</span>
+            <span class="perfil-info-value" id="info-direccion">-</span>
+          </div>
+        </div>
+        <div style="margin-top: 1.5rem;">
+          <button class="btn btn-verde btn-grande" onclick="window.location.href='cliente.html'">
+            <i class="fas fa-edit"></i> Editar Información
+          </button>
+        </div>
+      </div>
+
+      <!-- Otras opciones -->
+      <div class="perfil-card">
+        <h3><i class="fas fa-rocket"></i> ¿Quieres hacer más?</h3>
+        <div class="opciones-grid">
+          <a href="repartidor.html" class="opcion-card">
+            <div class="opcion-icon"><i class="fas fa-motorcycle" style="color: #3498db;"></i></div>
+            <div class="opcion-titulo">Sé Repartidor</div>
+            <div class="opcion-desc">Gana dinero entregando pedidos</div>
+          </a>
+          <a href="restaurante.html" class="opcion-card">
+            <div class="opcion-icon"><i class="fas fa-store" style="color: #e67e22;"></i></div>
+            <div class="opcion-titulo">Registra tu Restaurante</div>
+            <div class="opcion-desc">Vende tu comida saludable</div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Método de pago preferido -->
+      <div class="perfil-card">
+        <h3><i class="fas fa-wallet"></i> Método de Pago Preferido</h3>
+        
+        <!-- Métodos -->
+        <div class="metodos-pago-perfil">
+          <button class="metodo-btn-perfil activo" data-metodo="tarjeta" id="perfil-met-tarjeta">
+            <i class="fas fa-credit-card"></i> Tarjeta
+          </button>
+          <button class="metodo-btn-perfil" data-metodo="efectivo" id="perfil-met-efectivo">
+            <i class="fas fa-money-bill-wave"></i> Efectivo
+          </button>
+        </div>
+
+        <!-- Formulario tarjeta -->
+        <div id="perfil-seccion-tarjeta">
+          <!-- Tarjeta visual -->
+          <div class="tarjeta-visual-perfil" id="perfil-tarjeta-preview">
+            <div class="tarjeta-chip"></div>
+            <div class="tarjeta-numero" id="perfil-preview-numero">•••• •••• •••• ••••</div>
+            <div class="tarjeta-footer">
+              <div>
+                <div class="label">Titular</div>
+                <div id="perfil-preview-titular">NOMBRE TITULAR</div>
+              </div>
+              <div>
+                <div class="label">Vence</div>
+                <div id="perfil-preview-fecha">MM/AA</div>
+              </div>
+            </div>
+          </div>
+
+          <form id="perfil-form-tarjeta" novalidate>
+            <div class="campo">
+              <label for="perfil-t-numero">Número de tarjeta</label>
+              <div class="campo-icono">
+                <i class="fas fa-credit-card"></i>
+                <input type="text" id="perfil-t-numero" placeholder="1234 5678 9012 3456" maxlength="19">
+              </div>
+              <span class="error" id="perfil-err-t-num"></span>
+            </div>
+
+            <div class="campo">
+              <label for="perfil-t-titular">Nombre del titular</label>
+              <input type="text" id="perfil-t-titular" placeholder="Como aparece en la tarjeta" style="text-transform:uppercase;">
+              <span class="error" id="perfil-err-t-tit"></span>
+            </div>
+
+            <div class="form-grid">
+              <div class="campo">
+                <label for="perfil-t-fecha">Fecha de vencimiento</label>
+                <input type="text" id="perfil-t-fecha" placeholder="MM/AA" maxlength="5">
+                <span class="error" id="perfil-err-t-fecha"></span>
+              </div>
+              <div class="campo">
+                <label for="perfil-t-cvv">CVV</label>
+                <div class="campo-icono">
+                  <i class="fas fa-lock"></i>
+                  <input type="password" id="perfil-t-cvv" placeholder="•••" maxlength="4" pattern="[0-9]*" inputmode="numeric">
+                </div>
+                <span class="error" id="perfil-err-t-cvv"></span>
+              </div>
+            </div>
+
+            <button type="button" class="btn btn-verde btn-grande" id="perfil-btn-guardar-tarjeta" style="margin-top: 1rem;">
+              <i class="fas fa-save"></i> Guardar Método de Pago
+            </button>
+          </form>
+        </div>
+
+        <!-- Efectivo -->
+        <div id="perfil-seccion-efectivo" style="display:none;">
+          <div style="text-align:center; padding:2rem 1.5rem;">
+            <div style="font-size:3.5rem; margin-bottom:1rem;">💵</div>
+            <p style="color:var(--texto-gris); font-size:0.95rem; margin-bottom: 1.5rem;">
+              Pagarás en efectivo al recibir tus pedidos.<br>
+              <strong style="color:var(--texto);">Recuerda tener el dinero exacto.</strong>
+            </p>
+            <button type="button" class="btn btn-verde btn-grande" id="perfil-btn-guardar-efectivo">
+              <i class="fas fa-save"></i> Guardar Método de Pago
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cerrar sesión -->
+      <div class="perfil-card perfil-logout">
+       <a href="logout.php" class="btn-logout" style="text-decoration: none;">
+          <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Urban Eats – Proyecto Formativo SENA. Comida saludable para todos.</p>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script src="js/perfil.js"></script>
+</body>
+</html>

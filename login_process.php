@@ -1,0 +1,3 @@
+<?php
+die("ESTOY LEYENDO EL ARCHIVO CORRECTO");
+?>
