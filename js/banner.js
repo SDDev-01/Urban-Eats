@@ -24,7 +24,7 @@
     dot.addEventListener('click', function () { goToSlide(this.dataset.index); });
     dot.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
+        //e.preventDefault();
         goToSlide(this.dataset.index);
       }
     });

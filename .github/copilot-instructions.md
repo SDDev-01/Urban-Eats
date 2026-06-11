@@ -31,7 +31,7 @@ The project is organized around **5 core management modules** (see use case diag
 1. **Gestión de Cliente** - Customer management
    - Create user, update information, shopping cart
    - Técnico (antes Administrador): validate/eliminate clients
-   - Files: `cliente.html`, `cliente.js`, `cliente.css`, `perfil.html`, `perfil.js`, `perfil.css`
+   - Files: `cliente.html`, `cliente.js`, `cliente.css`, `perfil.php`, `perfil.js`, `perfil.css`
 
 2. **Gestión de Restaurante** - Restaurant management  
    - Browse restaurants, view menus, reviews
@@ -88,10 +88,10 @@ When working on features, **reference these diagrams**:
 The application follows a **multi-page architecture** where each HTML file represents a distinct user role or workflow:
 
 - **index.html**: Landing page for unauthenticated users
-- **login.html / registro.html**: Authentication pages
+- **login.php / registro.html**: Authentication pages
 - **cliente.html**: Customer profile management
 - **restaurante.html**: Restaurant profile management
-- **perfil.html**: Customer profile and payment preference
+- **perfil.php**: Customer profile and payment preference
 - **restaurantes.html**: Restaurant listing
 - **restaurante-detalle.html**: Restaurant detail and menu
 - **catalogo.html**: Browse restaurants and menu items
