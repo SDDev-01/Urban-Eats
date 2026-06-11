@@ -30,25 +30,84 @@ INSERT INTO Rol (CodigoRol, NombreRol, DescripcionRol) VALUES
 (4, 'Gerente', 'Usuario Administrador de Restaurantes');
 
 -- ============================
--- USUARIO
--- (Trigger crea Cliente automáticamente por cada Usuario)
+-- USUARIO (¡Normalizado!)
 -- ============================
-INSERT INTO Usuario (CodigoUsuario, Nombres, Apellidos, Direccion, Telefono, CorreoElectronico) VALUES
-(1, 'Juan Carlos', 'Rodríguez Pérez', 'Av. Caracas 123, Bogotá', '3001234567', 'juan.rodriguez@email.com'),
-(2, 'María Elena', 'González López', 'Calle 72 #10-34, Bogotá', '3012345678', 'maria.gonzalez@email.com'),
-(3, 'Carlos Alberto', 'Martínez Sánchez', 'Cra 15 #93-45, Bogotá', '3023456789', 'carlos.martinez@email.com'),
-(4, 'Ana Patricia', 'Fernández Torres', 'Av. Suba 67-21, Bogotá', '3034567890', 'ana.fernandez@email.com'),
-(5, 'Luis Fernando', 'Ramírez Castro', 'Calle 80 #45-67, Bogotá', '3045678901', 'luis.ramirez@email.com'),
-(6, 'Sofía Isabel', 'Herrera Mendoza', 'Cra 7 #45-12, Bogotá', '3056789012', 'sofia.herrera@email.com'),
-(7, 'Diego Armando', 'Vargas Silva', 'Av. Boyacá 120-33, Bogotá', '3067890123', 'diego.vargas@email.com'),
-(8, 'Valentina', 'Cruz Morales', 'Calle 100 #15-20, Bogotá', '3078901234', 'valentina.cruz@email.com'),
-(9, 'Andrés Felipe', 'Reyes Aguilar', 'Cra 11 #82-19, Bogotá', '3089012345', 'andres.reyes@email.com'),
-(10, 'Camila Andrea', 'Gómez Paredes', 'Av. El Dorado 68-40, Bogotá', '3090123456', 'camila.gomez@email.com'),
-(11, 'Lucía', 'Paredes Soto', 'Calle 134 #19-50, Bogotá', '3101111111', 'lucia.paredes@email.com'),
-(12, 'Renato', 'Campos Vera', 'Cra 9 #116-10, Bogotá', '3112222222', 'renato.campos@email.com'),
-(13, 'Daniela', 'Fuentes Ríos', 'Calle 170 #7-55, Bogotá', '3123333333', 'daniela.fuentes@email.com'),
-(14, 'Mateo', 'Quispe Bravo', 'Av. Ciudad de Cali 26-90, Bogotá', '3134444444', 'mateo.quispe@email.com'),
-(15, 'Isabella', 'Torres Mena', 'Cra 68 #40-21, Bogotá', '3145555555', 'isabella.torres@email.com');
+INSERT INTO Usuario (CodigoUsuario, Nombres, Apellidos) VALUES
+(1, 'Juan Carlos', 'Rodríguez Pérez'),
+(2, 'María Elena', 'González López'),
+(3, 'Carlos Alberto', 'Martínez Sánchez'),
+(4, 'Ana Patricia', 'Fernández Torres'),
+(5, 'Luis Fernando', 'Ramírez Castro'),
+(6, 'Sofía Isabel', 'Herrera Mendoza'),
+(7, 'Diego Armando', 'Vargas Silva'),
+(8, 'Valentina', 'Cruz Morales'),
+(9, 'Andrés Felipe', 'Reyes Aguilar'),
+(10, 'Camila Andrea', 'Gómez Paredes'),
+(11, 'Lucía', 'Paredes Soto'),
+(12, 'Renato', 'Campos Vera'),
+(13, 'Daniela', 'Fuentes Ríos'),
+(14, 'Mateo', 'Quispe Bravo'),
+(15, 'Isabella', 'Torres Mena');
+
+-- ============================
+-- DIRECCION (Nueva tabla normalizada)
+-- ============================
+INSERT INTO Direccion (CodigoDireccion, Direccion, usuario_CodigoUsuario) VALUES
+(1, 'Av. Caracas 123, Bogotá', 1),
+(2, 'Calle 72 #10-34, Bogotá', 2),
+(3, 'Cra 15 #93-45, Bogotá', 3),
+(4, 'Av. Suba 67-21, Bogotá', 4),
+(5, 'Calle 80 #45-67, Bogotá', 5),
+(6, 'Cra 7 #45-12, Bogotá', 6),
+(7, 'Av. Boyacá 120-33, Bogotá', 7),
+(8, 'Calle 100 #15-20, Bogotá', 8),
+(9, 'Cra 11 #82-19, Bogotá', 9),
+(10, 'Av. El Dorado 68-40, Bogotá', 10),
+(11, 'Calle 134 #19-50, Bogotá', 11),
+(12, 'Cra 9 #116-10, Bogotá', 12),
+(13, 'Calle 170 #7-55, Bogotá', 13),
+(14, 'Av. Ciudad de Cali 26-90, Bogotá', 14),
+(15, 'Cra 68 #40-21, Bogotá', 15);
+
+-- ============================
+-- TELEFONO (Nueva tabla normalizada)
+-- ============================
+INSERT INTO Telefono (CodigoTelefono, Telefono, usuario_CodigoUsuario) VALUES
+(1, '3001234567', 1),
+(2, '3012345678', 2),
+(3, '3023456789', 3),
+(4, '3034567890', 4),
+(5, '3045678901', 5),
+(6, '3056789012', 6),
+(7, '3067890123', 7),
+(8, '3078901234', 8),
+(9, '3089012345', 9),
+(10, '3090123456', 10),
+(11, '3101111111', 11),
+(12, '3112222222', 12),
+(13, '3123333333', 13),
+(14, '3134444444', 14),
+(15, '3145555555', 15);
+
+-- ============================
+-- CORREO (Nueva tabla normalizada)
+-- ============================
+INSERT INTO Correo (CodigoCorreo, Correo, usuario_CodigoUsuario) VALUES
+(1, 'juan.rodriguez@email.com', 1),
+(2, 'maria.gonzalez@email.com', 2),
+(3, 'carlos.martinez@email.com', 3),
+(4, 'ana.fernandez@email.com', 4),
+(5, 'luis.ramirez@email.com', 5),
+(6, 'sofia.herrera@email.com', 6),
+(7, 'diego.vargas@email.com', 7),
+(8, 'valentina.cruz@email.com', 8),
+(9, 'andres.reyes@email.com', 9),
+(10, 'camila.gomez@email.com', 10),
+(11, 'lucia.paredes@email.com', 11),
+(12, 'renato.campos@email.com', 12),
+(13, 'daniela.fuentes@email.com', 13),
+(14, 'mateo.quispe@email.com', 14),
+(15, 'isabella.torres@email.com', 15);
 
 -- ============================
 -- ROL_USUARIO
@@ -92,6 +151,7 @@ INSERT INTO Restaurante (CodigoRestaurante, CodigoCiudad, CodigoGerente, Nombre,
 (3, 3, 3, 'Sushi Pacífico', 'Cra 4 #10-20, Cali', '11:00-22:30', 3.45190000, -76.53180000),
 (4, 4, 1, 'Arepas La Costeña', 'Calle 72 #45-10, Barranquilla', '08:00-21:00', 10.96870000, -74.78110000),
 (5, 5, 2, 'Parrilla Santandereana', 'Av. 27 #36-50, Bucaramanga', '11:30-22:00', 7.11950000, -73.12250000);
+
 -- ============================
 -- MENU
 -- ============================
@@ -112,18 +172,18 @@ INSERT INTO Menu (CodigoMenu, Categoria, CodigoRestaurante) VALUES
 -- ============================
 INSERT INTO Plato (CodigoPlato, Nombre, Descripcion, Precio, TipoComida, Disponibilidad) VALUES
 (1,  'Pollo asado 1/4',  'Porción de pollo asado con papa', 18000.00, 'Pollo',  'Disponible'),
-(2,  'Limonada natural', 'Limonada con hielo',               6000.00, 'Bebida', 'Disponible'),
+(2,  'Limonada natural', 'Limonada con hielo',                6000.00, 'Bebida', 'Disponible'),
 (3,  'Pizza margarita',  'Queso mozzarella y albahaca',     28000.00, 'Pizza',  'Disponible'),
-(4,  'Lasagna boloñesa', 'Lasagna tradicional',             32000.00, 'Pasta',  'Disponible'),
+(4,  'Lasagna boloñesa', 'Lasagna tradicional',              32000.00, 'Pasta',  'Disponible'),
 (5,  'Roll california',  'Cangrejo, aguacate y pepino',     26000.00, 'Sushi',  'Disponible'),
 (6,  'Gyozas',           'Empanaditas japonesas',           20000.00, 'Entrada','Disponible'),
 (7,  'Arepa con queso',  'Arepa rellena con queso',         10000.00, 'Arepa',  'Disponible'),
-(8,  'Gaseosa',          'Bebida gaseosa 350ml',             5000.00, 'Bebida', 'Disponible'),
+(8,  'Gaseosa',          'Bebida gaseosa 350ml',              5000.00, 'Bebida', 'Disponible'),
 (9,  'Churrasco',        'Carne a la parrilla con ensalada',35000.00, 'Carne',  'Disponible'),
-(10, 'Cerveza',          'Cerveza nacional',                 7000.00, 'Bebida', 'Disponible');
+(10, 'Cerveza',          'Cerveza nacional',                  7000.00, 'Bebida', 'Disponible');
 
 -- ============================
--- ALERGENO (tabla)
+-- ALERGENO
 -- ============================
 INSERT INTO Alergeno (CodigoAlergeno, CodigoPlato, Nombre) VALUES
 (1, 3, 'Gluten'),
@@ -149,7 +209,6 @@ INSERT INTO Plato_menu (CodigoMenu, CodigoPlato) VALUES
 -- ============================
 -- ENVIO
 -- (Trigger crea Pedido automáticamente)
--- Se consulta CodigoCliente por CodigoUsuario para no depender del AUTO_INCREMENT.
 -- ============================
 INSERT INTO Envio (CodigoEnvio, CodigoCliente, CodigoRepartidor, CodigoRestaurante, Descripcion, FechaEnvio, HoraEntrega)
 SELECT 1, CodigoCliente, 1, 1, 'Pedido de pollo y limonada',   '2026-05-20', '13:20:00' FROM Cliente WHERE CodigoUsuario = 1 UNION ALL
@@ -169,7 +228,7 @@ INSERT INTO Pago (CodigoPago, CodigoCliente, CodigoEnvio, Monto, FechaPago, Hora
 (5, 5, 5, 35000.00, '2026-05-22', '13:30:00', 'Aceptado');
 
 -- ============================
--- TRANSACCION (1:1 con Pago por UNIQUE(CodigoPago))
+-- TRANSACCION
 -- ============================
 INSERT INTO Transaccion (TransaccionID, CodigoPago, MetodoPago, BancoNombre, CUS, CodigoRespuesta) VALUES
 ('TX-0001', 1, 'Tarjeta',   'Bancolombia', 'CUS-1001', '00'),
@@ -184,8 +243,8 @@ INSERT INTO Transaccion (TransaccionID, CodigoPago, MetodoPago, BancoNombre, CUS
 INSERT INTO Opinion (CodigoComentario, CodigoPlato, CodigoCliente, CodigoRepartidor, Opinion, Fecha) VALUES
 (1, 1, 1, 1, 'Muy buen sabor y llegó caliente.', '2026-05-20'),
 (2, 3, 2, 2, 'La pizza estaba excelente.',       '2026-05-20'),
-(3, 5, 3, 3, 'El sushi muy fresco.',             '2026-05-21'),
-(4, 7, 4, 4, 'Rica pero un poco fría.',          '2026-05-21'),
+(3, 5, 3, 3, 'El sushi muy fresco.',              '2026-05-21'),
+(4, 7, 4, 4, 'Rica pero un poco fría.',           '2026-05-21'),
 (5, 9, 5, 5, 'Carne en su punto. Recomendado.',  '2026-05-22');
 
 -- ============================
