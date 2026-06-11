@@ -7,14 +7,14 @@ const RESTAURANTE_DEFAULT = {
   horario: '',
   menu: []
 };
-
+/* 
 let restaurante = JSON.parse(localStorage.getItem('ue_restaurante') || 'null') ||
   { ...RESTAURANTE_DEFAULT, menu: [...RESTAURANTE_DEFAULT.menu] };
 let menuTemp = [...restaurante.menu];
 
 function persistir() {
   localStorage.setItem('ue_restaurante', JSON.stringify(restaurante));
-}
+} */
 
 function renderizarChips() {
   const wrap = document.getElementById('menu-chips');
