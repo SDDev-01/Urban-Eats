@@ -77,7 +77,7 @@ function agregarItem() {
 
 document.getElementById('btn-add-item').addEventListener('click', agregarItem);
 document.getElementById('input-menu').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') { e.preventDefault(); agregarItem(); }
+  if (e.key === 'Enter') { //e.preventDefault(); agregarItem(); }
 });
 
 function validarTodo() {

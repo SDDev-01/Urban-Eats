@@ -94,7 +94,7 @@ actualizarBadgeCarrito();
 const formLogin = document.getElementById('form-login');
 if (formLogin) {
   formLogin.addEventListener('submit', (e) => {
-    e.preventDefault();
+    //e.preventDefault();
     const email = document.getElementById('email-login');
     const password = document.getElementById('password-login');
     const errEmail = document.getElementById('error-email-login');
@@ -142,7 +142,7 @@ if (formLogin) {
 const formRegistro = document.getElementById('form-registro');
 if (formRegistro) {
   formRegistro.addEventListener('submit', (e) => {
-    e.preventDefault();
+    //e.preventDefault();
 
     const campos = {
       nombres: document.getElementById('reg-nombres'),

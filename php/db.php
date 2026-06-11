@@ -1,8 +1,10 @@
 <?php
 $host = "localhost";
 $user = "root";
-$pass = "";
-$db   = "urbaneats";
+//puse contra en mi pc por eso me toca ponerla aca pero toca eliminarla en el sena
+//$pass = "";
+$pass = "15975303";
+$db   = "UrbanEats";
 
 $conexion = mysqli_connect($host, $user, $pass, $db);
 
