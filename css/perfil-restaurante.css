@@ -146,7 +146,7 @@
   background: none;
   border: none;
   border-bottom: 3px solid transparent;
-  font-family: var(--fuente);
+  font-family: var(--fuente-texto);
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--texto-gris);
@@ -347,7 +347,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
-  font-family: var(--fuente);
+  font-family: var(--fuente-texto);
 }
 
 .filtro-btn:hover {
@@ -454,7 +454,7 @@
   padding: 0.85rem 1rem;
   border-radius: var(--radio-sm);
   border: none;
-  font-family: var(--fuente);
+  font-family: var(--fuente-texto);
   font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;

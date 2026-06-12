@@ -62,7 +62,7 @@ body {
       font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
-      font-family: var(--fuente);
+      font-family: var(--fuente-texto);
       transition: background 0.2s, transform 0.15s;
       margin-top: 0.5rem;
     }

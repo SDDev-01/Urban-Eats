@@ -61,7 +61,7 @@
       background: var(--terciario); color: white;
       border: none; border-radius: var(--radio-sm);
       font-size: 1rem; font-weight: 700; cursor: pointer;
-      font-family: var(--fuente);
+      font-family: var(--fuente-texto);
       transition: background 0.2s, transform 0.15s; margin-bottom: 0.6rem;
     }
     .btn-pedido:hover { background: #d94f2d; transform: translateY(-2px); }
