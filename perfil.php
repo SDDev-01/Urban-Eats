@@ -1,3 +1,6 @@
+<?php
+require 'php/auth_check.php';
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -21,7 +24,7 @@
       <a href="restaurantes.html" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
     </div>
     <div class="navbar-right">
-      <a href="perfil.html" class="navbar-usuario" style="text-decoration:none;">
+      <a href="perfil.php" class="navbar-usuario" style="text-decoration:none;">
         <i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span>
       </a>
       <a href="carrito.html" class="btn-carrito" aria-label="Ver carrito">
@@ -179,9 +182,9 @@
 
       <!-- Cerrar sesión -->
       <div class="perfil-card perfil-logout">
-        <button class="btn-logout" id="btn-salir">
+        <a href="php/logout.php" class="btn-logout" style="text-decoration: none;">
           <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-        </button>
+        </a>
       </div>
 
     </div>

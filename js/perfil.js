@@ -54,7 +54,8 @@
     }
   }
 
-  // Guardar datos de tarjeta en localStorage
+/*   // Guardar datos de tarjeta en localStorage
+// esto es peligroso no?
   function guardarDatosTarjeta() {
     const datosTarjeta = {
       numero: inputNumero.value,
@@ -63,7 +64,7 @@
       cvv: inputCvv.value
     };
     localStorage.setItem(CLAVE_DATOS, JSON.stringify(datosTarjeta));
-  }
+  } */
 
   // Cargar datos al inicio
   cargarDatosTarjeta();
@@ -195,28 +196,28 @@
     // Guardar datos de la tarjeta
     guardarDatosTarjeta();
     
-    // Persistir preferencia
+/*     // Persistir preferencia
     localStorage.setItem(CLAVE, 'tarjeta');
-
+ */
     if (window.UE && window.UE.mostrarToast) {
       window.UE.mostrarToast('Método de pago guardado', 'fa-check-circle');
     }
   });
 
-  // Guardar método "Efectivo"
+/*   // Guardar método "Efectivo"
   btnGuardarEfectivo.addEventListener('click', function () {
     localStorage.setItem(CLAVE, 'efectivo');
     if (window.UE && window.UE.mostrarToast) {
       window.UE.mostrarToast('Método de pago guardado', 'fa-check-circle');
     }
-  });
+  }); */
 })();
 
 /* ============================
    CARGAR DATOS DEL PERFIL
    ============================ */
 (function cargarPerfil() {
-  const cliente = JSON.parse(localStorage.getItem('ue_cliente') || 'null');
+/*   const cliente = JSON.parse(localStorage.getItem('ue_cliente') || 'null'); */
   
   if (!cliente || !cliente.nombres) {
     // Si no hay datos del cliente, mostrar valores por defecto

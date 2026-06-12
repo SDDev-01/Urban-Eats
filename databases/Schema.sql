@@ -27,6 +27,7 @@ USE `mydb` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `urbaneats`.`usuario` (
   `CodigoUsuario` INT(11) NOT NULL AUTO_INCREMENT,
+  `Password` VARCHAR(255) NOT NULL,
   `Nombres` VARCHAR(100) NULL DEFAULT NULL,
   `Apellidos` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`CodigoUsuario`))

@@ -10,7 +10,7 @@ const REPARTIDOR_DEFAULT = {
   licencia: '', soat: '', seguro: ''
 };
 
-let repartidor = JSON.parse(localStorage.getItem('ue_repartidor') || 'null') || { ...REPARTIDOR_DEFAULT };
+/* let repartidor = JSON.parse(localStorage.getItem('ue_repartidor') || 'null') || { ...REPARTIDOR_DEFAULT }; */
 
 function persistir() {
   localStorage.setItem('ue_repartidor', JSON.stringify(repartidor));
