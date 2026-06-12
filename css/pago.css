@@ -32,7 +32,7 @@
 
     .pago-seccion h3 i { color: var(--principal); }
 
-    /* Tarjeta visual (compartida con perfil.html) */
+    /* Tarjeta visual (compartida con perfil.php) */
     .tarjeta-visual,
     .tarjeta-visual-perfil {
       background: linear-gradient(135deg, var(--principal), var(--terciario));
@@ -137,7 +137,7 @@
       font-weight: 500;
     }
 
-    /* Métodos de pago (compartidos con perfil.html) */
+    /* Métodos de pago (compartidos con perfil.php) */
     .metodos-pago,
     .metodos-pago-perfil {
       display: flex;

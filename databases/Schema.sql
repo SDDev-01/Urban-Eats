@@ -5,48 +5,37 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
-
--- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
--- -----------------------------------------------------
--- Schema urbaneats
--- -----------------------------------------------------
-
--- -----------------------------------------------------
 -- Schema urbaneats
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `urbaneats` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
-USE `mydb` ;
+USE `urbaneats` ;
 
 -- -----------------------------------------------------
 -- Table `urbaneats`.`usuario`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `urbaneats`.`usuario` (
   `CodigoUsuario` INT(11) NOT NULL AUTO_INCREMENT,
+  `Correo` VARCHAR(50) NOT NULL UNIQUE,
+  `Password` VARCHAR(255) NOT NULL,
   `Nombres` VARCHAR(100) NULL DEFAULT NULL,
   `Apellidos` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`CodigoUsuario`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 16
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Telefono`
+-- Table `urbaneats`.`Telefono`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Telefono` (
+CREATE TABLE IF NOT EXISTS `urbaneats`.`telefono` (
   `CodigoTelefono` INT NOT NULL AUTO_INCREMENT,
   `Telefono` VARCHAR(45) NOT NULL,
-  `usuario_CodigoUsuario` INT(11) NOT NULL,
+  `CodigoUsuario` INT(11) NOT NULL,
   PRIMARY KEY (`CodigoTelefono`),
-  INDEX `fk_Telefono_usuario_idx` (`usuario_CodigoUsuario` ASC) VISIBLE,
+  INDEX `fk_Telefono_usuario_idx` (`CodigoUsuario` ASC),
   CONSTRAINT `fk_Telefono_usuario`
-    FOREIGN KEY (`usuario_CodigoUsuario`)
+    FOREIGN KEY (`CodigoUsuario`)
     REFERENCES `urbaneats`.`usuario` (`CodigoUsuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -54,39 +43,20 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Direccion`
+-- Table `urbaneats`.`Direccion`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Direccion` (
+CREATE TABLE IF NOT EXISTS `urbaneats`.`direccion` (
   `CodigoDireccion` INT NOT NULL AUTO_INCREMENT,
   `Direccion` VARCHAR(45) NOT NULL,
-  `usuario_CodigoUsuario` INT(11) NOT NULL,
+  `CodigoUsuario` INT(11) NOT NULL,
   PRIMARY KEY (`CodigoDireccion`),
-  INDEX `fk_Direccion_usuario1_idx` (`usuario_CodigoUsuario` ASC) VISIBLE,
+  INDEX `fk_Direccion_usuario1_idx` (`CodigoUsuario` ASC),
   CONSTRAINT `fk_Direccion_usuario1`
-    FOREIGN KEY (`usuario_CodigoUsuario`)
+    FOREIGN KEY (`CodigoUsuario`)
     REFERENCES `urbaneats`.`usuario` (`CodigoUsuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`Correo`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Correo` (
-  `CodigoCorreo` INT NOT NULL AUTO_INCREMENT,
-  `Correo` VARCHAR(45) NOT NULL,
-  `usuario_CodigoUsuario` INT(11) NOT NULL,
-  PRIMARY KEY (`CodigoCorreo`),
-  INDEX `fk_Correo_usuario1_idx` (`usuario_CodigoUsuario` ASC) VISIBLE,
-  CONSTRAINT `fk_Correo_usuario1`
-    FOREIGN KEY (`usuario_CodigoUsuario`)
-    REFERENCES `urbaneats`.`usuario` (`CodigoUsuario`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-USE `urbaneats` ;
 
 -- -----------------------------------------------------
 -- Table `urbaneats`.`plato`
@@ -100,7 +70,6 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`plato` (
   `Disponibilidad` VARCHAR(50) NULL DEFAULT NULL,
   PRIMARY KEY (`CodigoPlato`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 11
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
 
@@ -113,12 +82,11 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`alergeno` (
   `CodigoPlato` INT(11) NULL DEFAULT NULL,
   `Nombre` VARCHAR(50) NULL DEFAULT NULL,
   PRIMARY KEY (`CodigoAlergeno`),
-  INDEX `CodigoPlato` (`CodigoPlato` ASC) VISIBLE,
+  INDEX `CodigoPlato` (`CodigoPlato` ASC),
   CONSTRAINT `alergeno_ibfk_1`
     FOREIGN KEY (`CodigoPlato`)
     REFERENCES `urbaneats`.`plato` (`CodigoPlato`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 10
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
 
@@ -145,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`ciudad` (
   `Latitud` DECIMAL(10,8) NULL DEFAULT NULL,
   `Longitud` DECIMAL(10,8) NULL DEFAULT NULL,
   PRIMARY KEY (`CodigoCiudad`),
-  INDEX `CodigoDepartamento` (`CodigoDepartamento` ASC) VISIBLE,
+  INDEX `CodigoDepartamento` (`CodigoDepartamento` ASC),
   CONSTRAINT `ciudad_ibfk_1`
     FOREIGN KEY (`CodigoDepartamento`)
     REFERENCES `urbaneats`.`departamento` (`CodigoDepartamento`))
@@ -161,12 +129,11 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`cliente` (
   `CodigoCliente` INT(11) NOT NULL AUTO_INCREMENT,
   `CodigoUsuario` INT(11) NOT NULL,
   PRIMARY KEY (`CodigoCliente`),
-  INDEX `CodigoUsuario` (`CodigoUsuario` ASC) VISIBLE,
+  INDEX `CodigoUsuario` (`CodigoUsuario` ASC),
   CONSTRAINT `cliente_ibfk_1`
     FOREIGN KEY (`CodigoUsuario`)
     REFERENCES `urbaneats`.`usuario` (`CodigoUsuario`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 16
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
 
@@ -178,12 +145,11 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`repartidor` (
   `CodigoRepartidor` INT(11) NOT NULL AUTO_INCREMENT,
   `CodigoUsuario` INT(11) NOT NULL,
   PRIMARY KEY (`CodigoRepartidor`),
-  INDEX `CodigoUsuario` (`CodigoUsuario` ASC) VISIBLE,
+  INDEX `CodigoUsuario` (`CodigoUsuario` ASC),
   CONSTRAINT `repartidor_ibfk_1`
     FOREIGN KEY (`CodigoUsuario`)
     REFERENCES `urbaneats`.`usuario` (`CodigoUsuario`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 6
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
 
@@ -195,12 +161,11 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`gerente` (
   `CodigoGerente` INT(11) NOT NULL AUTO_INCREMENT,
   `CodigoUsuario` INT(11) NOT NULL,
   PRIMARY KEY (`CodigoGerente`),
-  INDEX `CodigoUsuario` (`CodigoUsuario` ASC) VISIBLE,
+  INDEX `CodigoUsuario` (`CodigoUsuario` ASC),
   CONSTRAINT `gerente_ibfk_1`
     FOREIGN KEY (`CodigoUsuario`)
     REFERENCES `urbaneats`.`usuario` (`CodigoUsuario`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 4
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
 
@@ -218,8 +183,8 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`restaurante` (
   `Latitud` DECIMAL(10,8) NULL DEFAULT NULL,
   `Longitud` DECIMAL(10,8) NULL DEFAULT NULL,
   PRIMARY KEY (`CodigoRestaurante`),
-  INDEX `CodigoCiudad` (`CodigoCiudad` ASC) VISIBLE,
-  INDEX `CodigoGerente` (`CodigoGerente` ASC) VISIBLE,
+  INDEX `CodigoCiudad` (`CodigoCiudad` ASC),
+  INDEX `CodigoGerente` (`CodigoGerente` ASC),
   CONSTRAINT `restaurante_ibfk_1`
     FOREIGN KEY (`CodigoCiudad`)
     REFERENCES `urbaneats`.`ciudad` (`CodigoCiudad`),
@@ -227,7 +192,6 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`restaurante` (
     FOREIGN KEY (`CodigoGerente`)
     REFERENCES `urbaneats`.`gerente` (`CodigoGerente`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 6
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
 
@@ -244,9 +208,9 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`envio` (
   `FechaEnvio` DATE NULL DEFAULT NULL,
   `HoraEntrega` TIME NULL DEFAULT NULL,
   PRIMARY KEY (`CodigoEnvio`),
-  INDEX `CodigoCliente` (`CodigoCliente` ASC) VISIBLE,
-  INDEX `CodigoRepartidor` (`CodigoRepartidor` ASC) VISIBLE,
-  INDEX `CodigoRestaurante` (`CodigoRestaurante` ASC) VISIBLE,
+  INDEX `CodigoCliente` (`CodigoCliente` ASC),
+  INDEX `CodigoRepartidor` (`CodigoRepartidor` ASC),
+  INDEX `CodigoRestaurante` (`CodigoRestaurante` ASC),
   CONSTRAINT `envio_ibfk_1`
     FOREIGN KEY (`CodigoCliente`)
     REFERENCES `urbaneats`.`cliente` (`CodigoCliente`),
@@ -257,7 +221,6 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`envio` (
     FOREIGN KEY (`CodigoRestaurante`)
     REFERENCES `urbaneats`.`restaurante` (`CodigoRestaurante`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 6
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
 
@@ -270,12 +233,11 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`menu` (
   `Categoria` VARCHAR(100) NULL DEFAULT NULL,
   `CodigoRestaurante` INT(11) NOT NULL,
   PRIMARY KEY (`CodigoMenu`),
-  INDEX `CodigoRestaurante` (`CodigoRestaurante` ASC) VISIBLE,
+  INDEX `CodigoRestaurante` (`CodigoRestaurante` ASC),
   CONSTRAINT `menu_ibfk_1`
     FOREIGN KEY (`CodigoRestaurante`)
     REFERENCES `urbaneats`.`restaurante` (`CodigoRestaurante`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 11
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
 
@@ -291,9 +253,9 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`opinion` (
   `Opinion` VARCHAR(300) NULL DEFAULT NULL,
   `Fecha` DATE NULL DEFAULT NULL,
   PRIMARY KEY (`CodigoComentario`),
-  INDEX `CodigoPlato` (`CodigoPlato` ASC) VISIBLE,
-  INDEX `CodigoCliente` (`CodigoCliente` ASC) VISIBLE,
-  INDEX `CodigoRepartidor` (`CodigoRepartidor` ASC) VISIBLE,
+  INDEX `CodigoPlato` (`CodigoPlato` ASC),
+  INDEX `CodigoCliente` (`CodigoCliente` ASC),
+  INDEX `CodigoRepartidor` (`CodigoRepartidor` ASC),
   CONSTRAINT `opinion_ibfk_1`
     FOREIGN KEY (`CodigoPlato`)
     REFERENCES `urbaneats`.`plato` (`CodigoPlato`),
@@ -304,7 +266,6 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`opinion` (
     FOREIGN KEY (`CodigoRepartidor`)
     REFERENCES `urbaneats`.`repartidor` (`CodigoRepartidor`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 6
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
 
@@ -321,8 +282,8 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`pago` (
   `HoraPago` TIME NULL DEFAULT NULL,
   `EstadoPago` ENUM('Aceptado', 'Rechazado') NULL DEFAULT NULL,
   PRIMARY KEY (`CodigoPago`),
-  INDEX `CodigoCliente` (`CodigoCliente` ASC) VISIBLE,
-  INDEX `CodigoEnvio` (`CodigoEnvio` ASC) VISIBLE,
+  INDEX `CodigoCliente` (`CodigoCliente` ASC),
+  INDEX `CodigoEnvio` (`CodigoEnvio` ASC),
   CONSTRAINT `pago_ibfk_1`
     FOREIGN KEY (`CodigoCliente`)
     REFERENCES `urbaneats`.`cliente` (`CodigoCliente`),
@@ -330,7 +291,6 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`pago` (
     FOREIGN KEY (`CodigoEnvio`)
     REFERENCES `urbaneats`.`envio` (`CodigoEnvio`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 6
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
 
@@ -345,8 +305,8 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`pedido` (
   `FechaPedido` DATE NULL DEFAULT NULL,
   `Estado` ENUM('En Proceso', 'Entregado', 'Cancelado') NOT NULL,
   PRIMARY KEY (`CodigoPedido`),
-  UNIQUE INDEX `CodigoEnvio` (`CodigoEnvio` ASC) VISIBLE,
-  INDEX `CodigoRestaurante` (`CodigoRestaurante` ASC) VISIBLE,
+  UNIQUE INDEX `CodigoEnvio` (`CodigoEnvio` ASC),
+  INDEX `CodigoRestaurante` (`CodigoRestaurante` ASC),
   CONSTRAINT `pedido_ibfk_1`
     FOREIGN KEY (`CodigoEnvio`)
     REFERENCES `urbaneats`.`envio` (`CodigoEnvio`),
@@ -354,7 +314,6 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`pedido` (
     FOREIGN KEY (`CodigoRestaurante`)
     REFERENCES `urbaneats`.`restaurante` (`CodigoRestaurante`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 6
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
 
@@ -366,7 +325,7 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`plato_menu` (
   `CodigoMenu` INT(11) NOT NULL,
   `CodigoPlato` INT(11) NOT NULL,
   PRIMARY KEY (`CodigoMenu`, `CodigoPlato`),
-  INDEX `CodigoPlato` (`CodigoPlato` ASC) VISIBLE,
+  INDEX `CodigoPlato` (`CodigoPlato` ASC),
   CONSTRAINT `plato_menu_ibfk_1`
     FOREIGN KEY (`CodigoMenu`)
     REFERENCES `urbaneats`.`menu` (`CodigoMenu`),
@@ -387,7 +346,6 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`rol` (
   `DescripcionRol` VARCHAR(50) NULL DEFAULT NULL,
   PRIMARY KEY (`CodigoRol`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 5
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
 
@@ -399,7 +357,7 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`rol_usuario` (
   `CodigoUsuario` INT(11) NOT NULL,
   `CodigoRol` INT(11) NOT NULL,
   PRIMARY KEY (`CodigoUsuario`, `CodigoRol`),
-  INDEX `CodigoRol` (`CodigoRol` ASC) VISIBLE,
+  INDEX `CodigoRol` (`CodigoRol` ASC),
   CONSTRAINT `rol_usuario_ibfk_1`
     FOREIGN KEY (`CodigoUsuario`)
     REFERENCES `urbaneats`.`usuario` (`CodigoUsuario`),
@@ -422,7 +380,7 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`transaccion` (
   `CUS` VARCHAR(50) NULL DEFAULT NULL,
   `CodigoRespuesta` VARCHAR(50) NULL DEFAULT NULL,
   PRIMARY KEY (`TransaccionID`),
-  UNIQUE INDEX `CodigoPago` (`CodigoPago` ASC) VISIBLE,
+  UNIQUE INDEX `CodigoPago` (`CodigoPago` ASC),
   CONSTRAINT `transaccion_ibfk_1`
     FOREIGN KEY (`CodigoPago`)
     REFERENCES `urbaneats`.`pago` (`CodigoPago`))
@@ -438,11 +396,11 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`vehiculo` (
   `Placa` VARCHAR(20) NOT NULL,
   `CodigoRepartidor` INT(11) NULL DEFAULT NULL,
   `Licencia` VARCHAR(50) NULL DEFAULT NULL,
-  `TipoVehiculo` ENUM('Moto', 'Carro', 'Bicicleta') NOT NULL,
+  `TipoVehiculo` ENUM('Moto', 'Carro', 'Bicicleta', 'Bici') NOT NULL,
   `SeguroVehiculo` VARCHAR(100) NULL DEFAULT NULL,
   `SOAT` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`Placa`),
-  INDEX `CodigoRepartidor` (`CodigoRepartidor` ASC) VISIBLE,
+  INDEX `CodigoRepartidor` (`CodigoRepartidor` ASC),
   CONSTRAINT `vehiculo_ibfk_1`
     FOREIGN KEY (`CodigoRepartidor`)
     REFERENCES `urbaneats`.`repartidor` (`CodigoRepartidor`))
@@ -468,11 +426,11 @@ BEGIN
     END IF;
     
     IF EXISTS(
-		SELECT 1 FROM Pedido p
+		SELECT 1 FROM pedido p
 		WHERE p.CodigoPedido = CodigoPedido
         AND Estado = 'En Proceso'
 	)THEN 
-		UPDATE Pedido p SET Estado = Mensaje 
+		UPDATE pedido p SET Estado = Mensaje 
 		WHERE p.CodigoPedido = CodigoPedido;
         SELECT 'Pedido actualizado correctamente' AS Mensaje;
 	ELSE
@@ -497,8 +455,8 @@ BEGIN
 
     SELECT u.Nombres
     INTO v_nombre
-    FROM Usuario u
-             JOIN Repartidor r ON r.CodigoUsuario = u.CodigoUsuario
+    FROM usuario u
+              JOIN Repartidor r ON r.CodigoUsuario = u.CodigoUsuario
     WHERE r.CodigoRepartidor = idRepartidor
     LIMIT 1;
 
@@ -517,10 +475,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `VerificarPedidos`(IN CodigoCliente 
 BEGIN
 	IF EXISTS(
 		SELECT 1 
-        FROM Pedido p
+        FROM pedido p
         JOIN Envio e ON e.CodigoEnvio = p.CodigoEnvio WHERE CodigoCliente = e.CodigoCliente
     )THEN
-		SELECT FechaPedido FROM Pedido p
+		SELECT FechaPedido FROM pedido p
         JOIN Envio e ON p.CodigoEnvio = e.CodigoEnvio
         WHERE CodigoCliente = e.CodigoCliente;
 	ELSE
@@ -542,13 +500,13 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `ver_estado_pedido`(idPedido INT) RET
 BEGIN
     DECLARE estadoPedido VARCHAR(50);
     SELECT Estado INTO estadoPedido
-    FROM Pedido
+    FROM pedido
     WHERE CodigoPedido = idPedido;
     RETURN estadoPedido;
 END$$
 
 DELIMITER ;
-USE `mydb`;
+USE `urbaneats`;
 
 DELIMITER $$
 USE `urbaneats`$$
@@ -558,7 +516,7 @@ TRIGGER `urbaneats`.`crear_cliente_automaticamente`
 AFTER INSERT ON `urbaneats`.`usuario`
 FOR EACH ROW
 BEGIN
-    INSERT INTO Cliente (CodigoUsuario)
+    INSERT INTO cliente (CodigoUsuario)
     VALUES (NEW.CodigoUsuario);
 END$$
 
@@ -574,7 +532,7 @@ TRIGGER `urbaneats`.`crear_pedido_automaticamente`
 AFTER INSERT ON `urbaneats`.`envio`
 FOR EACH ROW
 BEGIN
-    INSERT INTO Pedido (CodigoEnvio, CodigoRestaurante, FechaPedido, Estado)
+    INSERT INTO pedido (CodigoEnvio, CodigoRestaurante, FechaPedido, Estado)
     VALUES (NEW.CodigoEnvio, NEW.CodigoRestaurante, CURDATE(), 'En Proceso');
 END$$
 

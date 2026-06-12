@@ -15,12 +15,12 @@
     <h1>Urban Eats</h1>
     <p class="subtitulo">Comida saludable para tu día a día</p>
 
-   <form id="form-login" action="php/login_process.php" method="POST" autocomplete="off">
+    <form id="form-login" novalidate>
       <div class="campo">
         <label for="email-login">Email</label>
         <div class="campo-icono">
           <i class="fas fa-envelope"></i>
-          <input type="email" id="email-login" name="email" placeholder="tu@email.com" autocomplete="email" required>
+          <input type="email" id="email-login" placeholder="tu@email.com" autocomplete="email">
         </div>
         <span class="error" id="error-email-login"></span>
       </div>
@@ -29,7 +29,7 @@
         <label for="password-login">Contraseña</label>
         <div class="campo-icono">
           <i class="fas fa-lock"></i>
-          <input type="password" id="password-login" name="password" placeholder="••••••••" autocomplete="current-password" required>
+          <input type="password" id="password-login" placeholder="••••••••" autocomplete="current-password">
         </div>
         <span class="error" id="error-pass-login"></span>
       </div>

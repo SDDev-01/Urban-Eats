@@ -9,11 +9,11 @@ const CLIENTE_DEFAULT = {
 };
 
 
-let cliente = JSON.parse(localStorage.getItem('ue_cliente') || 'null') || { ...CLIENTE_DEFAULT };
+/* let cliente = JSON.parse(localStorage.getItem('ue_cliente') || 'null') || { ...CLIENTE_DEFAULT };
 
 function persistir() {
   localStorage.setItem('ue_cliente', JSON.stringify(cliente));
-}
+} */
 
 function llenarFormulario() {
   document.getElementById('c-nombres').value   = cliente.nombres;
@@ -109,7 +109,7 @@ document.getElementById('btn-verificar').addEventListener('click', () => {
   
   // Redirigir al perfil después de guardar
   setTimeout(() => {
-    window.location.href = 'perfil.html';
+    window.location.href = 'perfil.php';
   }, 1000);
 });
 
