@@ -41,7 +41,6 @@
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s;
-      font-family: var(--fuente);
     }
     .btn-filtro:hover { border-color: var(--principal); color: var(--principal); }
     .btn-filtro.activo {
@@ -148,7 +147,6 @@
       font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
-      font-family: var(--fuente);
       transition: all 0.2s;
     }
     .btn-ver:hover { background: var(--terciario); color: white; border-color: var(--terciario); }

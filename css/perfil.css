@@ -154,7 +154,7 @@
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
-  font-family: var(--fuente);
+  font-family: var(--fuente-texto);
   transition: all 0.2s;
   display: inline-flex;
   align-items: center;

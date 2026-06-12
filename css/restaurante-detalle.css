@@ -109,7 +109,7 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
-  font-family: var(--fuente);
+  font-family: var(--fuente-texto);
 }
 
 .btn-filtro:hover {
@@ -225,7 +225,7 @@
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
-  font-family: var(--fuente);
+  font-family: var(--fuente-texto);
   transition: all 0.2s;
 }
 

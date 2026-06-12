@@ -157,7 +157,7 @@
       border-radius: var(--radio-sm);
       background: white;
       cursor: pointer;
-      font-family: var(--fuente);
+      font-family: var(--fuente-texto);
       font-size: 0.875rem;
       font-weight: 600;
       display: flex;
@@ -229,7 +229,7 @@
       font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
-      font-family: var(--fuente);
+      font-family: var(--fuente-texto);
       transition: background 0.2s, transform 0.15s;
       margin-top: 1.2rem;
       display: flex;

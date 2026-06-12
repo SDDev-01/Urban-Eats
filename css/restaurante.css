@@ -124,7 +124,7 @@
       padding: 0.6rem 0.85rem;
       border: 1.5px solid var(--borde);
       border-radius: var(--radio-sm);
-      font-family: var(--fuente);
+      font-family: var(--fuente-texto);
       font-size: 0.875rem;
       outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;

@@ -1,54 +1,69 @@
-/* ============================
-   URBAN EATS - Estilos Globales
-   ============================ */
 
-:root {
-  --principal: #a42828;
-  --secundario: #fec10b;
-  --terciario: #f7643b;
-  --fondo: #f3f1e2;
-  --texto: #111417;
-  --principal-oscuro: #7d1f1f;
-  --principal-claro: #f7d6d6;
-  --secundario-claro: #fff1bf;
-  --terciario-claro: #ffe0d4;
-  --verde: #a42828;
-  --verde-oscuro: #7d1f1f;
-  --verde-claro: #f7d6d6;
-  --verde-muy-claro: #fff2f0;
-  --blanco: #ffffff;
-  --texto-gris: #4f555a;
-  --borde: #ddd4bf;
-  --sombra: 0 2px 12px rgba(0,0,0,0.08);
-  --sombra-hover: 0 6px 20px rgba(0,0,0,0.14);
-  --radio: 12px;
-  --radio-sm: 8px;
-  --radio-lg: 20px;
-  --fuente: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  --navbar-height: 64px;
+@font-face {
+    font-family: 'Creato Display';
+    src: url('../Fonts/CreatoDisplay-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
 }
 
+@font-face {
+    font-family: 'Creato Display';
+    src: url('../Fonts/CreatoDisplay-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* 2. Variables Globales */
+
+:root {
+    --principal: #a42828;
+    --secundario: #fec10b;
+    --terciario: #f7643b;
+    --fondo: #f3f1e2;
+    --texto: #111417;
+    --principal-oscuro: #7d1f1f;
+    --principal-claro: #f7d6d6;
+    --secundario-claro: #fff1bf;
+    --terciario-claro: #ffe0d4;
+    --blanco: #ffffff;
+    --texto-gris: #4f555a;
+    --borde: #ddd4bf;
+    --sombra: 0 2px 12px rgba(0,0,0,0.08);
+    --sombra-hover: 0 6px 20px rgba(0,0,0,0.14);
+    --radio: 12px;
+    --radio-sm: 8px;
+    --radio-lg: 20px;
+    --navbar-height: 64px;
+
+    --fuente-titulos: 'Cocogoose', sans-serif;
+    --fuente-texto: 'Creato Display', sans-serif;
+}
+/* 3. Estilos Base */
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-  font-family: var(--fuente);
-  background-color: var(--fondo);
-  color: var(--texto);
-  line-height: 1.6;
-  min-height: 100vh;
+    font-family: var(--fuente-texto);
+    background-color: var(--fondo);
+    color: var(--texto);
+    line-height: 1.6;
+    min-height: 100vh;
 }
+
+h1 { font-family: var(--fuente-titulos); font-size: 42pt; line-height: 56px; }
+h2 { font-family: var(--fuente-titulos); font-size: 24pt; line-height: 32px; }
 
 a { text-decoration: none; color: inherit; }
 ul { list-style: none; }
 img { max-width: 100%; display: block; }
 
 /* ============================
-   NAVBAR
+   NAVBAR (y el resto de tus estilos...)
    ============================ */
+/* Pega aquí abajo todo el resto de tu código original (desde .navbar hasta el final) */
 .navbar {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -215,7 +230,7 @@ img { max-width: 100%; display: block; }
   font-weight: 600;
   cursor: pointer;
   border: none;
-  font-family: var(--fuente);
+  font-family: var(--fuente-texto);
   transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
 }
 
@@ -250,7 +265,7 @@ img { max-width: 100%; display: block; }
   padding: 0.65rem 0.9rem;
   border: 1.5px solid var(--borde);
   border-radius: var(--radio-sm);
-  font-family: var(--fuente);
+ font-family: var(--fuente-texto);
   font-size: 0.9rem;
   color: var(--texto);
   background: var(--blanco);
@@ -563,10 +578,16 @@ footer {
 }
 
 .banner-text h2 {
-  font-size: 2.5rem;
-  font-weight: 800;
-  margin-bottom: 0.8rem;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    font-family: var(--fuente-titulos);
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.8rem;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.banner-text h2.titulo-con-numeros {
+   font-family: var(--fuente-texto);
+    font-weight: 700;
 }
 
 .banner-text p {
@@ -640,3 +661,5 @@ footer {
   .banner-arrow-left { left: 10px; }
   .banner-arrow-right { right: 10px; }
 }
+
+
