@@ -4,23 +4,23 @@
   <meta charset="UTF-8">
   <title>Catálogo – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="css/catalogo.css">
+  <link rel="stylesheet" href="{{ asset('css/catalogo.css') }}">
 </head>
 <body>
 
   <!-- NAVBAR -->
   <nav class="navbar">
-    <a href="catalogo.html" class="navbar-logo"><img src="images/Logo.png" alt="Urban Eats"><span>Urban Eats</span></a>
+    <a href="{{ url('/catalogo') }}" class="navbar-logo"><img src="{{ asset('images/Logo.png') }}" alt="Urban Eats"><span>Urban Eats</span></a>
     <div class="navbar-links">
-      <a href="restaurantes.html" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
+      <a href="{{ url('/restaurantes') }}" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
     </div>
     <div class="navbar-right">
       <a href="perfil.php" class="navbar-usuario" style="text-decoration:none;">
         <i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span>
       </a>
-      <a href="carrito.html" class="btn-carrito" aria-label="Ver carrito">
+      <a href="{{ url('/carrito') }}" class="btn-carrito" aria-label="Ver carrito">
         <i class="fas fa-shopping-cart"></i>
         <span class="carrito-badge" id="carrito-badge">0</span>
       </a>
@@ -127,9 +127,9 @@
 
   <div id="toast-container"></div>
   
-  <script src="js/banner.js"></script>
-  <script src="js/data-restaurantes.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/catalogo.js"></script>
+  <script src="{{ asset('js/banner.js') }}"></script>
+  <script src="{{ asset('js/data-restaurantes.js') }}"></script>
+  <script src="{{ asset('js/app.js') }}"></script>
+  <script src="{{ asset('js/catalogo.js') }}"></script>
 </body>
 </html>

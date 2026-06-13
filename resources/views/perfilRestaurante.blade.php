@@ -4,19 +4,19 @@
   <meta charset="UTF-8">
   <title>Mi Restaurante – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/perfil-restaurante.css">
+  <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/perfil-restaurante.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
   <nav class="navbar">
-    <a href="catalogo.html" class="navbar-logo">
-      <img src="images/Logo.png" alt="Urban Eats">
+    <a href="{{ url('/catalogo') }}" class="navbar-logo">
+      <img src="{{ asset('images/Logo.png') }}" alt="Urban Eats">
       <span>Urban Eats</span>
     </a>
     <div class="navbar-links">
-      <a href="restaurantes.html" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
+      <a href="{{ url('/restaurantes') }}" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
     </div>
     <div class="navbar-right">
       <a href="perfil.php" class="navbar-usuario" style="text-decoration:none;">
@@ -165,7 +165,7 @@
     <p>&copy; 2026 Urban Eats – Proyecto Formativo SENA. Comida saludable para todos.</p>
   </footer>
 
-  <script src="js/app.js"></script>
-  <script src="js/perfil-restaurante.js"></script>
+  <script src="{{ asset('js/app.js') }}"></script>
+  <script src="{{ asset('js/perfil-restaurante.js') }}"></script>
 </body>
 </html>

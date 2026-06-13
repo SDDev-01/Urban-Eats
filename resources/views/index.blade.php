@@ -4,23 +4,23 @@
   <meta charset="UTF-8">
   <title>Urban Eats – Comida Saludable 24/7</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="{{ asset('css/index.css') }}">
 </head>
 <body>
 
   <!-- Navbar pública -->
   <nav class="navbar-pub">
     <div class="navbar-logo" style="display:flex;align-items:center;gap:0.5rem;">
-      <img src="images/Logo.png" alt="Urban Eats">
+      <img src="{{ asset('images/Logo.png') }}" alt="Urban Eats">
       <span style="font-weight:700;font-size:1.2rem;">Urban Eats</span>
     </div>
     <div style="display:flex;align-items:center;gap:0.75rem;">
       <a href="login.php" class="btn-login">
         <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
       </a>
-      <a href="registro.html" class="btn-register">
+      <a href="{{ url('/registro') }}" class="btn-register">
         <i class="fas fa-user-plus"></i> Registrarse
       </a>
     </div>
@@ -129,7 +129,7 @@
   <section class="cta-section">
     <h2>¿Listo para comer saludable?</h2>
     <p>Únete a cientos de personas que ya confían en Urban Eats para su alimentación nocturna.</p>
-    <a href="registro.html" class="btn btn-verde" style="font-size:1rem; padding:0.85rem 2rem;">
+    <a href="{{ url('/registro') }}" class="btn btn-verde" style="font-size:1rem; padding:0.85rem 2rem;">
       <i class="fas fa-arrow-right"></i> Comenzar Ahora
     </a>
   </section>
@@ -138,8 +138,8 @@
     <p>&copy; 2026 Urban Eats – Proyecto Formativo SENA. Comida saludable disponible 24/7 en Bogotá.</p>
   </footer>
 
-  <script src="js/index.js"></script>
-  <script src="js/banner.js"></script>
+  <script src="{{ asset('js/index.js') }}"></script>
+  <script src="{{ asset('js/banner.js') }}"></script>
 
 </body>
 </html>

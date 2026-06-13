@@ -19,7 +19,7 @@ function renderizarCarrito() {
         <div class="icono"><i class="fas fa-shopping-cart"></i></div>
         <h3>Tu carrito está vacío</h3>
         <p>Agrega productos desde el catálogo para comenzar tu pedido.</p>
-        <a href="catalogo.html" class="btn btn-verde"><i class="fas fa-arrow-left"></i> Ver Catálogo</a>
+        <a href="/catalogo" class="btn btn-verde"><i class="fas fa-arrow-left"></i> Ver Catálogo</a>
       </div>
     `;
     actualizarResumen(0);

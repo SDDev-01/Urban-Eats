@@ -4,20 +4,20 @@
   <meta charset="UTF-8">
   <title>Carrito – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="css/carrito.css">
+  <link rel="stylesheet" href="{{ asset('css/carrito.css') }}">
 </head>
 <body>
 
   <nav class="navbar">
-    <a href="catalogo.html" class="navbar-logo"><img src="images/Logo.png" alt="Urban Eats"><span>Urban Eats</span></a>
+    <a href="{{ url('/catalogo') }}" class="navbar-logo"><img src="{{ asset('images/Logo.png') }}" alt="Urban Eats"><span>Urban Eats</span></a>
     <div class="navbar-links">
-      <a href="restaurantes.html" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
+      <a href="{{ url('/restaurantes') }}" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
     </div>
     <div class="navbar-right">
       <a href="perfil.php" class="navbar-usuario" style="text-decoration:none;"><i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span></a>
-      <a href="carrito.html" class="btn-carrito" aria-label="Ver carrito">
+      <a href="{{ url('/carrito') }}" class="btn-carrito" aria-label="Ver carrito">
         <i class="fas fa-shopping-cart"></i>
         <span class="carrito-badge" id="carrito-badge">0</span>
       </a>
@@ -26,7 +26,7 @@
 
   <div class="pagina">
     <div style="max-width:1100px; margin:0 auto; padding:0 2rem 0.5rem;">
-      <a href="catalogo.html" style="display:inline-flex; align-items:center; gap:0.4rem; color:var(--texto-gris); font-size:0.875rem; font-weight:500;">
+      <a href="{{ url('/catalogo') }}" style="display:inline-flex; align-items:center; gap:0.4rem; color:var(--texto-gris); font-size:0.875rem; font-weight:500;">
         <i class="fas fa-arrow-left"></i> Seguir comprando
       </a>
     </div>
@@ -60,7 +60,7 @@
 
   <footer><p>&copy; 2026 Urban Eats – Proyecto Formativo SENA</p></footer>
   <div id="toast-container"></div>
-  <script src="js/app.js"></script>
-  <script src="js/carrito.js"></script>
+  <script src="{{ asset('js/app.js') }}"></script>
+  <script src="{{ asset('js/carrito.js') }}"></script>
 </body>
 </html>

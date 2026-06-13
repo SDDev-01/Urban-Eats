@@ -4,15 +4,15 @@
   <meta charset="UTF-8">
   <title>Registro – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="css/registro.css">
+  <link rel="stylesheet" href="{{ asset('css/registro.css') }}">
 </head>
 <body>
 
   <div class="registro-card">
     <div class="registro-header">
-      <div class="registro-logo"><img src="images/Logo.png" alt="Urban Eats"></div>
+      <div class="registro-logo"><img src="{{ asset('images/Logo.png') }}" alt="Urban Eats"></div>
       <h1>Crear Cuenta</h1>
       <p>Únete a Urban Eats y disfruta comida saludable</p>
     </div>
@@ -79,6 +79,6 @@
   </div>
 
   <div id="toast-container"></div>
-  <script src="js/app.js"></script>
+  <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

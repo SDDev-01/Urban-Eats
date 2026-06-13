@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <title>Iniciar Sesión – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="{{ asset('css/login.css') }}">
 </head>
 <body>
 
   <div class="login-card">
-    <div class="login-logo"><img src="images/Logo.png" alt="Urban Eats"></div>
+    <div class="login-logo"><img src="{{ asset('images/Logo.png') }}" alt="Urban Eats"></div>
     <h1>Urban Eats</h1>
     <p class="subtitulo">Comida saludable para tu día a día</p>
 
@@ -38,7 +38,7 @@
       <p class="exito-msg" id="login-exito"></p>
 
       <div class="login-footer">
-        ¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a>
+        ¿No tienes cuenta? <a href="{{ url('/registro') }}">Regístrate aquí</a>
       </div>
     </form>
   </div>
@@ -48,6 +48,6 @@
   </div>
 
   <div id="toast-container"></div>
-  <script src="js/app.js"></script>
+  <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>
