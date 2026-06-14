@@ -69,12 +69,12 @@ INSERT INTO rol_usuario (CodigoUsuario, CodigoRol) VALUES
 -- ============================
 INSERT INTO repartidor (CodigoRepartidor, CodigoUsuario) VALUES (1, 6), (2, 7), (3, 8), (4, 9), (5, 10);
 
-INSERT INTO vehiculo (Placa, CodigoRepartidor, Licencia, TipoVehiculo, SeguroVehiculo, SOAT) VALUES
-('ABC123', 1, 'LIC001', 'Moto', 'Sura', 'SOAT1'), 
-('DEF456', 2, 'LIC002', 'Moto', 'Bolívar', 'SOAT2'),
-('GHI789', 3, 'LIC003', 'Carro', 'Sura', 'SOAT3'), 
-('JKL012', 4, 'LIC004', 'Moto', 'Liberty', 'SOAT4'),
-('MNO345', 5, 'LIC005', 'Bici', 'Bolívar', 'SOAT5');
+INSERT INTO vehiculo (Placa, CodigoRepartidor, TipoVehiculo, SeguroVehiculo, SOAT) VALUES
+('ABC123', 1, 'Moto', 'Sura', 'SOAT1'), 
+('DEF456', 2, 'Moto', 'Bolívar', 'SOAT2'),
+('GHI789', 3, 'Carro', 'Sura', 'SOAT3'), 
+('JKL012', 4, 'Moto', 'Liberty', 'SOAT4'),
+('MNO345', 5, 'Bici', 'Bolívar', 'SOAT5');
 
 INSERT INTO gerente (CodigoGerente, CodigoUsuario) VALUES 
 (1, 11), 
@@ -125,6 +125,6 @@ INSERT INTO transaccion (TransaccionID, CodigoPago, MetodoPago, BancoNombre, CUS
 ('TX-0001', 1, 'Tarjeta', 'Bancolombia', 'CUS1', '00'), ('TX-0002', 2, 'PSE', 'Davivienda', 'CUS2', '00'),
 ('TX-0003', 3, 'Tarjeta', 'BBVA', 'CUS3', '00'), ('TX-0004', 4, 'Efectivo', 'N/A', 'CUS4', '05'), ('TX-0005', 5, 'Tarjeta', 'Bancolombia', 'CUS5', '00');
 
-INSERT INTO opinion (CodigoComentario, CodigoPlato, CodigoCliente, CodigoRepartidor, Opinion, Fecha) VALUES
+INSERT INTO opinion (CodigoOpinion, CodigoPlato, CodigoCliente, CodigoRepartidor, Opinion, Fecha) VALUES
 (1, 1, 1, 1, 'Caliente y rico.', '2026-05-20'), (2, 3, 2, 2, 'Excelente.', '2026-05-20'),
 (3, 5, 3, 3, 'Muy fresco.', '2026-05-21'), (4, 7, 4, 4, 'Un poco fría.', '2026-05-21'), (5, 9, 5, 5, 'Recomendado.', '2026-05-22');

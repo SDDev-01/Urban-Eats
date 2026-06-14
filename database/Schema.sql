@@ -246,13 +246,13 @@ COLLATE = utf8mb4_unicode_ci;
 -- Table `urbaneats`.`opinion`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `urbaneats`.`opinion` (
-  `CodigoComentario` INT(11) NOT NULL AUTO_INCREMENT,
+  `CodigoOpinion` INT(11) NOT NULL AUTO_INCREMENT,
   `CodigoPlato` INT(11) NULL DEFAULT NULL,
   `CodigoCliente` INT(11) NULL DEFAULT NULL,
   `CodigoRepartidor` INT(11) NULL DEFAULT NULL,
   `Opinion` VARCHAR(300) NULL DEFAULT NULL,
   `Fecha` DATE NULL DEFAULT NULL,
-  PRIMARY KEY (`CodigoComentario`),
+  PRIMARY KEY (`CodigoOpinion`),
   INDEX `CodigoPlato` (`CodigoPlato` ASC),
   INDEX `CodigoCliente` (`CodigoCliente` ASC),
   INDEX `CodigoRepartidor` (`CodigoRepartidor` ASC),
@@ -395,7 +395,6 @@ COLLATE = utf8mb4_unicode_ci;
 CREATE TABLE IF NOT EXISTS `urbaneats`.`vehiculo` (
   `Placa` VARCHAR(20) NOT NULL,
   `CodigoRepartidor` INT(11) NULL DEFAULT NULL,
-  `Licencia` VARCHAR(50) NULL DEFAULT NULL,
   `TipoVehiculo` ENUM('Moto', 'Carro', 'Bicicleta', 'Bici') NOT NULL,
   `SeguroVehiculo` VARCHAR(100) NULL DEFAULT NULL,
   `SOAT` VARCHAR(100) NULL DEFAULT NULL,

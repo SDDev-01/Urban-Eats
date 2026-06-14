@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Gerente extends Model
+class Direccion extends Model
 {
-    protected $table = 'gerente';
-    protected $primaryKey = 'CodigoGerente';
+    protected $table = 'direccion';
+    protected $primaryKey = 'CodigoDireccion';
     public $timestamps = false;
 
     protected $fillable = [
+        'Direccion',
         'CodigoUsuario'
     ];
 
@@ -18,9 +19,5 @@ class Gerente extends Model
 
     public function usuario(){
         return $this->belongsTo(Usuario::class,'CodigoUsuario');
-    }
-
-    public function restaurante(){
-        return $this->hasMany(Restaurante::class,'CodigoGerente');
     }
 }
