@@ -91,7 +91,7 @@ document.getElementById('btn-verificar').addEventListener('click', () => {
   const ok = validarTodo();
   mostrarMensaje(ok);
   if (!ok) return;
-  window.UE.mostrarToast('¡Datos del restaurante guardados!');
+  document.getElementById('form-restaurante').submit();
 });
 
 // Inicializar chips vacíos al cargar

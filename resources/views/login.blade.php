@@ -35,6 +35,12 @@
         <span class="error" id="error-pass-login"></span>
       </div>
 
+      @if(session('error'))
+        <div class="login-error-msg">
+          <i class="fas fa-exclamation-circle"></i> {{ session('error') }}
+        </div>
+      @endif
+
       <button type="submit" class="btn-login">Iniciar Sesión</button>
       <p class="exito-msg" id="login-exito"></p>
 

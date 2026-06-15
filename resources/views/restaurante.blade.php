@@ -22,11 +22,12 @@
 
       <div class="form-card">
         <div class="form-card-body">
-          <form id="form-restaurante"  >
+          <form id="form-restaurante" action="{{ url('/restaurante') }}" method="POST">
+            @csrf
 
             <div class="campo">
               <label for="r-nombre">Nombre del restaurante</label>
-              <input type="text" id="r-nombre" placeholder="Ej: Green Kitchen">
+              <input type="text" id="r-nombre" name="Nombre" placeholder="Ej: Green Kitchen">
               <span class="error" id="err-r-nombre"></span>
             </div>
 
@@ -34,7 +35,7 @@
               <label for="r-direccion">Dirección</label>
               <div class="campo-icono">
                 <i class="fas fa-map-marker-alt"></i>
-                <input type="text" id="r-direccion" placeholder="Calle 72 # 5-80, Bogotá">
+                <input type="text" id="r-direccion" name="Ubicacion" placeholder="Calle 72 # 5-80, Bogotá">
               </div>
               <span class="error" id="err-r-dir"></span>
             </div>
@@ -43,7 +44,7 @@
               <label for="r-horario">Horario de atención</label>
               <div class="campo-icono">
                 <i class="fas fa-clock"></i>
-                <input type="text" id="r-horario" placeholder="Ej: 12:00 AM – 5:00 AM">
+                <input type="text" id="r-horario" name="Horario" placeholder="Ej: 12:00 AM – 5:00 AM">
               </div>
               <span class="error" id="err-r-horario"></span>
             </div>

@@ -28,11 +28,10 @@
         </div>
 
         <div class="rest-hero-info">
-          <h1 id="rest-nombre">Nombre del Restaurante</h1>
-          <p id="rest-descripcion">Comida saludable y deliciosa para todos</p>
+          <h1 id="rest-nombre">{{ $restaurante->Nombre ?? 'Mi Restaurante' }}</h1>
+          <p id="rest-descripcion">{{ $restaurante->Horario ?? '' }}</p>
           <div class="rest-meta">
-            <span><i class="fas fa-map-marker-alt"></i> <span id="rest-direccion">Dirección del restaurante</span></span>
-            <span><i class="fas fa-phone"></i> <span id="rest-telefono">000 000 0000</span></span>
+            <span><i class="fas fa-map-marker-alt"></i> <span id="rest-direccion">{{ $restaurante->Ubicacion ?? 'Dirección del restaurante' }}</span></span>
           </div>
         </div>
 
