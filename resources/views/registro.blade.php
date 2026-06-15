@@ -17,16 +17,17 @@
       <p>Únete a Urban Eats y disfruta comida saludable</p>
     </div>
 
-    <form id="form-registro" novalidate>
+    <form id="form-registro" action="{{ url('/registro') }}" method="POST">
+      @csrf
       <div class="form-grid">
         <div class="campo">
           <label for="reg-nombres">Nombres</label>
-          <input type="text" id="reg-nombres" placeholder="Juan">
+          <input type="text" id="reg-nombres" name="Nombres" placeholder="Juan">
           <span class="error" id="error-nombres"></span>
         </div>
         <div class="campo">
           <label for="reg-apellidos">Apellidos</label>
-          <input type="text" id="reg-apellidos" placeholder="Pérez">
+          <input type="text" id="reg-apellidos" name="Apellidos" placeholder="Pérez">
           <span class="error" id="error-apellidos"></span>
         </div>
       </div>
@@ -35,7 +36,7 @@
         <label for="reg-email">Correo electrónico</label>
         <div class="campo-icono">
           <i class="fas fa-envelope"></i>
-          <input type="email" id="reg-email" placeholder="tu@email.com">
+          <input type="email" id="reg-email" name="Correo" placeholder="tu@email.com">
         </div>
         <span class="error" id="error-email"></span>
       </div>
@@ -45,7 +46,7 @@
           <label for="reg-telefono">Teléfono</label>
           <div class="campo-icono">
             <i class="fas fa-phone"></i>
-            <input type="tel" id="reg-telefono" placeholder="300 123 4567" maxlength="10" pattern="[0-9]*" inputmode="numeric">
+            <input type="tel" id="reg-telefono" name="Telefono" placeholder="300 123 4567" maxlength="10" pattern="[0-9]*" inputmode="numeric">
           </div>
           <span class="error" id="error-telefono"></span>
         </div>
@@ -53,7 +54,7 @@
           <label for="reg-password">Contraseña</label>
           <div class="campo-icono">
             <i class="fas fa-lock"></i>
-            <input type="password" id="reg-password" placeholder="Mínimo 4 caracteres">
+            <input type="password" id="reg-password" name="Password" placeholder="Mínimo 4 caracteres">
           </div>
           <span class="error" id="error-password"></span>
         </div>
@@ -63,7 +64,7 @@
         <label for="reg-direccion">Dirección de entrega</label>
         <div class="campo-icono">
           <i class="fas fa-map-marker-alt"></i>
-          <input type="text" id="reg-direccion" placeholder="Calle 45 # 12-30, Bogotá">
+          <input type="text" id="reg-direccion" name="Direccion" placeholder="Calle 45 # 12-30, Bogotá">
         </div>
         <span class="error" id="error-direccion"></span>
       </div>
@@ -73,7 +74,7 @@
       </button>
 
       <div class="reg-footer">
-        ¿Ya tienes cuenta? <a href="login.php">Inicia sesión</a>
+        ¿Ya tienes cuenta? <a href="{{ url('/login') }}">Inicia sesión</a>
       </div>
     </form>
   </div>

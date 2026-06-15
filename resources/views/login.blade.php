@@ -15,7 +15,8 @@
     <h1>Urban Eats</h1>
     <p class="subtitulo">Comida saludable para tu día a día</p>
 
-   <form id="form-login" action="php/login_process.php" method="POST" autocomplete="off">
+  <form id="form-login" action="{{ url('/login') }}" method="POST" autocomplete="off">
+    @csrf
       <div class="campo">
         <label for="email-login">Email</label>
         <div class="campo-icono">

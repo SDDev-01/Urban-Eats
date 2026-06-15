@@ -20,21 +20,21 @@ INSERT INTO rol (CodigoRol, NombreRol, DescripcionRol) VALUES
 (1, 'Cliente', 'Hace pedidos'), (2, 'Repartidor', 'Entrega'), (3, 'Tecnico', 'Gestión'), (4, 'Gerente', 'Admin');
 
 INSERT INTO usuario (CodigoUsuario, Correo, Password, Nombres, Apellidos) VALUES
-(1, 'juan.rodriguez1@email.com', 'pass123', 'Juan Carlos', 'Rodríguez'),
-(2, 'maria.gonzalez2@email.com', 'pass123', 'María Elena', 'González'),
-(3, 'carlos.martinez3@email.com', 'pass123', 'Carlos Alberto', 'Martínez'),
-(4, 'ana.fernandez4@email.com', 'pass123', 'Ana Patricia', 'Fernández'),
-(5, 'luis.ramirez5@email.com', 'pass123', 'Luis Fernando', 'Ramírez'),
-(6, 'sofia.herrera6@email.com', 'pass123', 'Sofía Isabel', 'Herrera'),
-(7, 'diego.vargas7@email.com', 'pass123', 'Diego Armando', 'Vargas'),
-(8, 'valentina.cruz8@email.com', 'pass123', 'Valentina', 'Cruz'),
-(9, 'andres.reyes9@email.com', 'pass123', 'Andrés Felipe', 'Reyes'),
-(10, 'camila.gomez10@email.com', 'pass123', 'Camila Andrea', 'Gómez'),
-(11, 'lucia.paredes11@email.com', 'pass123', 'Lucía', 'Paredes'),
-(12, 'renato.campos12@email.com', 'pass123', 'Renato', 'Campos'),
-(13, 'daniela.fuentes13@email.com', 'pass123', 'Daniela', 'Fuentes'),
-(14, 'mateo.quispe14@email.com', 'pass123', 'Mateo', 'Quispe'),
-(15, 'isabella.torres15@email.com', 'pass123', 'Isabella', 'Torres');
+(1, '1@email.com', '\$2y\$12\$Y4Ds3p2Zlz9tKsuuqpc49O18b0wTCWFKeC/KL6EL3Y2ZeDpyIvAA2', 'Juan Carlos', 'Rodríguez'),
+(2, '2@email.com', '\$2y\$12\$Y4Ds3p2Zlz9tKsuuqpc49O18b0wTCWFKeC/KL6EL3Y2ZeDpyIvAA2', 'María Elena', 'González'),
+(3, '3@email.com', '\$2y\$12\$Y4Ds3p2Zlz9tKsuuqpc49O18b0wTCWFKeC/KL6EL3Y2ZeDpyIvAA2', 'Carlos Alberto', 'Martínez'),
+(4, '4@email.com', '\$2y\$12\$Y4Ds3p2Zlz9tKsuuqpc49O18b0wTCWFKeC/KL6EL3Y2ZeDpyIvAA2', 'Ana Patricia', 'Fernández'),
+(5, '5@email.com', '\$2y\$12\$Y4Ds3p2Zlz9tKsuuqpc49O18b0wTCWFKeC/KL6EL3Y2ZeDpyIvAA2', 'Luis Fernando', 'Ramírez'),
+(6, '6@email.com', '\$2y\$12\$Y4Ds3p2Zlz9tKsuuqpc49O18b0wTCWFKeC/KL6EL3Y2ZeDpyIvAA2', 'Lucy', 'Emma'),
+(7, '7@email.com', '\$2y\$12\$Y4Ds3p2Zlz9tKsuuqpc49O18b0wTCWFKeC/KL6EL3Y2ZeDpyIvAA2', 'Diego Armando', 'Vargas'),
+(8, '8@email.com', '\$2y\$12\$Y4Ds3p2Zlz9tKsuuqpc49O18b0wTCWFKeC/KL6EL3Y2ZeDpyIvAA2', 'Valentina', 'Cruz'),
+(9, '9@email.com', '\$2y\$12\$Y4Ds3p2Zlz9tKsuuqpc49O18b0wTCWFKeC/KL6EL3Y2ZeDpyIvAA2', 'Andrés Felipe', 'Reyes'),
+(10, '10@email.com', '\$2y\$12\$Y4Ds3p2Zlz9tKsuuqpc49O18b0wTCWFKeC/KL6EL3Y2ZeDpyIvAA2', 'Camila Andrea', 'Gómez'),
+(11, '11@email.com', '\$2y\$12\$Y4Ds3p2Zlz9tKsuuqpc49O18b0wTCWFKeC/KL6EL3Y2ZeDpyIvAA2', 'Lucía', 'Paredes'),
+(12, '12@email.com', '\$2y\$12\$Y4Ds3p2Zlz9tKsuuqpc49O18b0wTCWFKeC/KL6EL3Y2ZeDpyIvAA2', 'Renato', 'Campos'),
+(13, '13@email.com', '\$2y\$12\$Y4Ds3p2Zlz9tKsuuqpc49O18b0wTCWFKeC/KL6EL3Y2ZeDpyIvAA2', 'Daniela', 'Fuentes'),
+(14, '14@email.com', '\$2y\$12\$Y4Ds3p2Zlz9tKsuuqpc49O18b0wTCWFKeC/KL6EL3Y2ZeDpyIvAA2', 'Mateo', 'Quispe'),
+(15, '15@email.com', '\$2y\$12\$Y4Ds3p2Zlz9tKsuuqpc49O18b0wTCWFKeC/KL6EL3Y2ZeDpyIvAA2', 'Isabella', 'Torres');
 
 -- ============================
 -- ENTIDADES DERIVADAS DE USUARIO

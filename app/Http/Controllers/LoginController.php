@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Usuario;
+
+class LoginController extends Controller
+{
+    public function mostrarPagina(){
+        return view('login');
+    }
+
+    public function iniciarSesion(Request $request){
+        $correo = $request->input('email');
+        $password = $request->input('password');
+
+        $usuario = Usuario::where('Correo',$correo)->first();
+
+        if($usuario && Hash::check($password, $usuario->Password)){
+            //salio bien
+            session([
+                'CodigoUsuario' => $usuario->CodigoUsuario,
+                'Nombres' => $usuario->Nombres
+            ]);
+            return redirect('/catalogo');
+        }else{
+            //salio mal
+            return back()->with('error','Correo o contraseña incorrectos');
+        }
+    }
+}

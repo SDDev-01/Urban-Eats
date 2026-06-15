@@ -21,7 +21,7 @@
       <a href="{{ url('/restaurantes') }}" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
     </div>
     <div class="navbar-right">
-      <a href="perfil.php" class="navbar-usuario" style="text-decoration:none;">
+      <a href="{{ url('/perfil') }}" class="navbar-usuario" style="text-decoration:none;">
         <i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span>
       </a>
       <a href="{{ url('/carrito') }}" class="btn-carrito" aria-label="Ver carrito">
@@ -124,7 +124,7 @@
             </div>
           </div>
 
-          <form id="perfil-form-tarjeta" novalidate>
+          <form id="perfil-form-tarjeta"  >
             <div class="campo">
               <label for="perfil-t-numero">Número de tarjeta</label>
               <div class="campo-icono">
@@ -179,9 +179,12 @@
 
       <!-- Cerrar sesión -->
       <div class="perfil-card perfil-logout">
-        <a href="php/logout.php" class="btn-logout" style="text-decoration: none;">
-          <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-        </a>
+        <form action="{{ url('/logout') }}" method="POST">
+          @csrf
+          <button type="submit" class="btn btn-verde btn-grande">
+            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+          </button>
+        </form>
       </div>
 
     </div>

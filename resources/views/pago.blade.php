@@ -16,7 +16,7 @@
       <a href="{{ url('/restaurantes') }}" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
     </div>
     <div class="navbar-right">
-      <a href="perfil.php" class="navbar-usuario" style="text-decoration:none;"><i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span></a>
+      <a href="{{ url('/perfil') }}" class="navbar-usuario" style="text-decoration:none;"><i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span></a>
       <a href="{{ url('/carrito') }}" class="btn-carrito" aria-label="Ver carrito">
         <i class="fas fa-shopping-cart"></i>
         <span class="carrito-badge" id="carrito-badge">0</span>
@@ -67,7 +67,7 @@
             </div>
           </div>
 
-          <form id="form-tarjeta" novalidate>
+          <form id="form-tarjeta"  >
             <div class="campo">
               <label for="t-numero">Número de tarjeta</label>
               <div class="campo-icono">
