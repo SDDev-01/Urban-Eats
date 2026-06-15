@@ -20,14 +20,14 @@ function obtenerIdRestaurante() {
 function cargarRestaurante() {
   const id = obtenerIdRestaurante();
   if (!id) {
-    window.location.href = 'restaurantes.html';
+    window.location.href = '/restaurantes';
     return;
   }
 
   restauranteActual = obtenerRestaurantePorId(id);
   if (!restauranteActual) {
     window.UE.mostrarToast('Restaurante no encontrado', 'fa-exclamation-circle');
-    window.location.href = 'restaurantes.html';
+    window.location.href = '/restaurantes';
     return;
   }
 

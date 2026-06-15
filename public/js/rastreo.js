@@ -2,9 +2,8 @@
    URBAN EATS - Rastreo JS
    ============================ */
 
-// ---- CARGAR PEDIDO ----
-const pedido = JSON.parse(localStorage.getItem('ue_pedido_actual') || 'null');
-const pedidoId = pedido ? pedido.id : ('ORD-' + Date.now());
+// ID del pedido actual (generado en esta sesión)
+const pedidoId = 'ORD-' + Date.now();
 
 // Mostrar ID del pedido
 document.getElementById('pedido-id-label').textContent = `Pedido #${pedidoId}`;
@@ -12,9 +11,9 @@ document.getElementById('pedido-id-label').textContent = `Pedido #${pedidoId}`;
 // ---- CARGAR ITEMS EN RESUMEN ----
 (function cargarItems() {
   const wrap = document.getElementById('rastreo-items');
-  let items = pedido ? pedido.items : [];
 
-  // Si no hay pedido guardado, mostrar demo
+  // Mostrar items del carrito actual; si está vacío, usar datos de demo
+  let items = window.UE ? window.UE.obtenerCarrito() : [];
   if (!items || items.length === 0) {
     items = [{ nombre: 'Bowl Mediterráneo', cantidad: 1, precio: 18500 }];
   }

@@ -2,34 +2,6 @@
    URBAN EATS - Repartidor JS
    ============================ */
 
-const REPARTIDOR_DEFAULT = {
-  nombres: '', apellidos: '',
-  email: '', telefono: '',
-  direccion: '',
-  vehiculo: '', placa: '',
-  licencia: '', soat: '', seguro: ''
-};
-
-/* let repartidor = JSON.parse(localStorage.getItem('ue_repartidor') || 'null') || { ...REPARTIDOR_DEFAULT }; */
-
-function persistir() {
-  localStorage.setItem('ue_repartidor', JSON.stringify(repartidor));
-}
-
-function llenarFormulario() {
-  document.getElementById('rp-nombres').value   = repartidor.nombres;
-  document.getElementById('rp-apellidos').value = repartidor.apellidos;
-  document.getElementById('rp-email').value     = repartidor.email;
-  document.getElementById('rp-telefono').value  = repartidor.telefono;
-  document.getElementById('rp-direccion').value = repartidor.direccion;
-  document.getElementById('rp-vehiculo').value  = repartidor.vehiculo;
-  document.getElementById('rp-placa').value     = repartidor.placa;
-  document.getElementById('rp-licencia').value  = repartidor.licencia;
-  document.getElementById('rp-soat').value      = repartidor.soat;
-  document.getElementById('rp-seguro').value    = repartidor.seguro;
-  ocultarMensaje();
-}
-
 function ocultarMensaje() {
   const msg = document.getElementById('msg-verificacion');
   if (msg) msg.style.display = 'none';
@@ -118,18 +90,5 @@ document.getElementById('btn-verificar').addEventListener('click', () => {
   const ok = validarTodo();
   mostrarMensaje(ok);
   if (!ok) return;
-  repartidor.nombres   = document.getElementById('rp-nombres').value.trim();
-  repartidor.apellidos = document.getElementById('rp-apellidos').value.trim();
-  repartidor.email     = document.getElementById('rp-email').value.trim();
-  repartidor.telefono  = document.getElementById('rp-telefono').value.trim();
-  repartidor.direccion = document.getElementById('rp-direccion').value.trim();
-  repartidor.vehiculo  = document.getElementById('rp-vehiculo').value;
-  repartidor.placa     = document.getElementById('rp-placa').value.trim().toUpperCase();
-  repartidor.licencia  = document.getElementById('rp-licencia').value.trim();
-  repartidor.soat      = document.getElementById('rp-soat').value.trim();
-  repartidor.seguro    = document.getElementById('rp-seguro').value.trim();
-  persistir();
   window.UE.mostrarToast('¡Datos del repartidor guardados!');
 });
-
-llenarFormulario();

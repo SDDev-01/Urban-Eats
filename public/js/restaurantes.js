@@ -58,7 +58,7 @@ function renderizarRestaurantes() {
 
 // Navegar a página de detalle del restaurante
 function navegarARestaurante(id) {
-  window.location.href = `restaurante-detalle.html?id=${id}`;
+  window.location.href = `/restauranteDetalle?id=${id}`;
 }
 
 // Inicializar al cargar la página

@@ -2,19 +2,7 @@
    URBAN EATS - Restaurante JS
    ============================ */
 
-const RESTAURANTE_DEFAULT = {
-  nombre: '', direccion: '',
-  horario: '',
-  menu: []
-};
-/* 
-let restaurante = JSON.parse(localStorage.getItem('ue_restaurante') || 'null') ||
-  { ...RESTAURANTE_DEFAULT, menu: [...RESTAURANTE_DEFAULT.menu] };
-let menuTemp = [...restaurante.menu];
-
-function persistir() {
-  localStorage.setItem('ue_restaurante', JSON.stringify(restaurante));
-} */
+let menuTemp = [];
 
 function renderizarChips() {
   const wrap = document.getElementById('menu-chips');
@@ -35,15 +23,6 @@ function renderizarChips() {
 function quitarItem(i) {
   menuTemp.splice(i, 1);
   renderizarChips();
-}
-
-function llenarFormulario() {
-  document.getElementById('r-nombre').value    = restaurante.nombre;
-  document.getElementById('r-direccion').value = restaurante.direccion;
-  document.getElementById('r-horario').value   = restaurante.horario;
-  menuTemp = [...restaurante.menu];
-  renderizarChips();
-  ocultarMensaje();
 }
 
 function ocultarMensaje() {
@@ -112,12 +91,8 @@ document.getElementById('btn-verificar').addEventListener('click', () => {
   const ok = validarTodo();
   mostrarMensaje(ok);
   if (!ok) return;
-  restaurante.nombre    = document.getElementById('r-nombre').value.trim();
-  restaurante.direccion = document.getElementById('r-direccion').value.trim();
-  restaurante.horario   = document.getElementById('r-horario').value.trim();
-  restaurante.menu      = [...menuTemp];
-  persistir();
   window.UE.mostrarToast('¡Datos del restaurante guardados!');
 });
 
-llenarFormulario();
+// Inicializar chips vacíos al cargar
+renderizarChips();
