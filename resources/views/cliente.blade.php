@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cliente – Urban Eats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/cliente.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+@include('partials.navbar')
+
+  <div class="pagina-form">
+    <div class="form-wrapper">
+
+      <div class="form-page-header">
+        <h2><i class="fas fa-user"></i> Datos del Cliente</h2>
+        <p>Ingresa o actualiza la información del cliente.</p>
+      </div>
+
+      <div class="form-card">
+        <div class="form-card-body">
+          <form id="form-cliente"  >
+
+            <div class="form-grid">
+              <div class="campo">
+                <label for="c-nombres">Nombres</label>
+                <input type="text" id="c-nombres" placeholder="Juan">
+                <span class="error" id="err-nombres"></span>
+              </div>
+              <div class="campo">
+                <label for="c-apellidos">Apellidos</label>
+                <input type="text" id="c-apellidos" placeholder="Pérez">
+                <span class="error" id="err-apellidos"></span>
+              </div>
+            </div>
+
+            <div class="campo">
+              <label for="c-email">Correo electrónico</label>
+              <div class="campo-icono">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="c-email" placeholder="cliente@email.com">
+              </div>
+              <span class="error" id="err-email"></span>
+            </div>
+
+            <div class="campo">
+              <label for="c-telefono">Teléfono</label>
+              <div class="campo-icono">
+                <i class="fas fa-phone"></i>
+                <input type="tel" id="c-telefono" placeholder="300 123 4567">
+              </div>
+              <span class="error" id="err-telefono"></span>
+            </div>
+
+            <div class="campo">
+              <label for="c-direccion">Dirección</label>
+              <div class="campo-icono">
+                <i class="fas fa-map-marker-alt"></i>
+                <input type="text" id="c-direccion" placeholder="Calle 45 # 12-30, Bogotá">
+              </div>
+              <span class="error" id="err-dir"></span>
+            </div>
+
+            <!-- Mensaje de verificación -->
+            <div id="msg-verificacion" class="msg-verificacion" style="display:none;"></div>
+
+            <!-- Botón al final del formulario -->
+            <div class="form-btn-wrap">
+              <button type="button" class="btn btn-verde btn-grande" id="btn-verificar">
+                <i class="fas fa-check-circle"></i> Aceptar
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer><p>&copy; 2026 Urban Eats – Proyecto Formativo SENA</p></footer>
+  <div id="toast-container"></div>
+  <script src="{{ asset('js/app.js') }}"></script>
+  <script src="{{ asset('js/cliente.js') }}"></script>
+</body>
+</html>
