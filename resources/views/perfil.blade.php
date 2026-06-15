@@ -11,25 +11,7 @@
 </head>
 <body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <a href="{{ url('/catalogo') }}" class="navbar-logo">
-      <img src="{{ asset('images/Logo.png') }}" alt="Urban Eats">
-      <span>Urban Eats</span>
-    </a>
-    <div class="navbar-links">
-      <a href="{{ url('/restaurantes') }}" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
-    </div>
-    <div class="navbar-right">
-      <a href="{{ url('/perfil') }}" class="navbar-usuario" style="text-decoration:none;">
-        <i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span>
-      </a>
-      <a href="{{ url('/carrito') }}" class="btn-carrito" aria-label="Ver carrito">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="carrito-badge" id="carrito-badge">0</span>
-      </a>
-    </div>
-  </nav>
+  @include('partials.navbar')
 
   <div class="pagina">
     <div class="perfil-container">
@@ -39,7 +21,7 @@
         <div class="perfil-avatar">
           <i class="fas fa-user"></i>
         </div>
-        <h1 class="perfil-nombre" id="perfil-nombre">Usuario</h1>
+        <h1 class="perfil-nombre" id="perfil-nombre">{{ $usuario->Nombres }}</h1>
         <p class="perfil-tipo">Cliente de Urban Eats</p>
       </div>
 
@@ -49,23 +31,23 @@
         <div class="perfil-info-grid">
           <div class="perfil-info-item">
             <span class="perfil-info-label">Nombres</span>
-            <span class="perfil-info-value" id="info-nombres">-</span>
+            <span class="perfil-info-value" id="info-nombres">{{ $usuario->Nombres }}</span>
           </div>
           <div class="perfil-info-item">
             <span class="perfil-info-label">Apellidos</span>
-            <span class="perfil-info-value" id="info-apellidos">-</span>
+            <span class="perfil-info-value" id="info-apellidos">{{ $usuario->Apellidos }}</span>
           </div>
           <div class="perfil-info-item">
             <span class="perfil-info-label">Email</span>
-            <span class="perfil-info-value" id="info-email">-</span>
+            <span class="perfil-info-value" id="info-email">{{ $usuario->Correo }}</span>
           </div>
           <div class="perfil-info-item">
             <span class="perfil-info-label">Teléfono</span>
-            <span class="perfil-info-value" id="info-telefono">-</span>
+            <span class="perfil-info-value" id="info-telefono">{{ $usuario->telefono->first()?->Telefono }}</span>
           </div>
           <div class="perfil-info-item full">
             <span class="perfil-info-label">Dirección</span>
-            <span class="perfil-info-value" id="info-direccion">-</span>
+            <span class="perfil-info-value" id="info-direccion">{{ $usuario->direccion->first()?->Direccion }}</span>
           </div>
         </div>
         <div style="margin-top: 1.5rem;">

@@ -10,20 +10,7 @@
 </head>
 <body>
 
-  <nav class="navbar">
-    <a href="{{ url('/catalogo') }}" class="navbar-logo">
-      <img src="{{ asset('images/Logo.png') }}" alt="Urban Eats">
-      <span>Urban Eats</span>
-    </a>
-    <div class="navbar-links">
-      <a href="{{ url('/restaurantes') }}" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
-    </div>
-    <div class="navbar-right">
-      <a href="{{ url('/perfil') }}" class="navbar-usuario" style="text-decoration:none;">
-        <i class="fas fa-user-circle"></i> <span id="navbar-nombre">Mi Restaurante</span>
-      </a>
-    </div>
-  </nav>
+@include('partials.navbar')
 
   <div class="pagina">
 

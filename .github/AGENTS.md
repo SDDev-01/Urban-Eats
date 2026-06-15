@@ -2,14 +2,15 @@
 
 ## Project Overview
 
-Urban Eats is a **student academic project** for SENA Colombia - a web-based food delivery and logistics platform built with vanilla HTML, CSS, and JavaScript. It connects restaurants, customers, and delivery drivers in **Bogotá** (localized with Colombian pesos). Urban Eats is a connection/logistics platform: it does **not** prepare food or directly employ couriers.
+Urban Eats is a **student academic project** for SENA Colombia - a web-based food delivery and logistics platform built with **Laravel 13**. It connects restaurants, customers, and delivery drivers in **Bogotá** (localized with Colombian pesos). Urban Eats is a connection/logistics platform: it does **not** prepare food or directly employ couriers.
 
 **Important**: This is a learning project for a 4-person student team. Code must be **simple and explainable** - the team presents and defends their code every 3 months in "sustentaciones". Prioritize readability and understanding over clever solutions.
 
 ### Current Phase
-- Using localStorage for data persistence (no backend yet)
-- Database exists as SQL files in `/databases/` but is **not connected** to the application
-- Database integration planned for a future learning phase
+- **Migrated to Laravel 13** — the project no longer uses plain HTML/CSS/JS with localStorage
+- **MySQL database is connected and in use** via Eloquent ORM
+- Eloquent models and relationships already exist — reuse them instead of writing raw SQL
+- Do **not** create migrations to recreate existing tables; the schema already exists
 
 ## Key Clarifications (Wiki)
 - **Not a real business**: academic-only scope.
@@ -31,27 +32,21 @@ The project is organized around **5 core management modules** (see use case diag
 1. **Gestión de Cliente** - Customer management
    - Create user, update information, shopping cart
    - Técnico (antes Administrador): validate/eliminate clients
-   - Files: `cliente.html`, `cliente.js`, `cliente.css`, `perfil.php`, `perfil.js`, `perfil.css`
 
-2. **Gestión de Restaurante** - Restaurant management  
+2. **Gestión de Restaurante** - Restaurant management
    - Browse restaurants, view menus, reviews
    - Técnico (antes Administrador): create restaurants, manage menus
-   - Files: `restaurante.html`, `restaurante.js`, `restaurante.css`, `restaurantes.html`, `restaurantes.js`, `restaurantes.css`,
-     `restaurante-detalle.html`, `restaurante-detalle.js`, `restaurante-detalle.css`, `catalogo.html`, `catalogo.js`, `catalogo.css`
 
 3. **Gestión de Repartidor** - Delivery driver management
    - Driver profile, payment preferences, delivery assignment
    - Técnico (antes Administrador): assign drivers, Cliente: rate drivers
-   - Files: `repartidor.html`, `repartidor.js`, `repartidor.css`
 
 4. **Gestión de Pago** - Payment management
    - Generate/view receipts, payment methods, refunds
-   - Files: `pago.html`, `pago.js`, `pago.css`
 
 5. **Gestión de Pedidos** - Order management (CENTRAL MODULE)
    - Create/modify/cancel orders, track delivery
    - Connects Cliente → Restaurante → Repartidor → Pago
-   - Files: `carrito.html`, `carrito.js`, `carrito.css`, `rastreo.html`, `rastreo.js`, `rastreo.css`, `mapa.html`, `mapa.css`
 
 ### Documentation Structure
 
@@ -84,60 +79,119 @@ When working on features, **reference these diagrams**:
 
 ## Architecture
 
-### Page Structure
-The application follows a **multi-page architecture** where each HTML file represents a distinct user role or workflow:
+### Technology Stack
+- **Framework**: Laravel 13
+- **Backend language**: PHP
+- **ORM**: Eloquent
+- **Template engine**: Blade
+- **Database**: MySQL (connected and active)
+- **Frontend**: HTML, CSS, JavaScript (no frontend frameworks)
+- **Icons**: FontAwesome 6.5.0 (via CDN)
 
-- **index.html**: Landing page for unauthenticated users
-- **login.php / registro.html**: Authentication pages
-- **cliente.html**: Customer profile management
-- **restaurante.html**: Restaurant profile management
-- **perfil.php**: Customer profile and payment preference
-- **restaurantes.html**: Restaurant listing
-- **restaurante-detalle.html**: Restaurant detail and menu
-- **catalogo.html**: Browse restaurants and menu items
-- **carrito.html**: Shopping cart and order management
-- **pago.html**: Payment processing page
-- **repartidor.html**: Delivery driver interface
-- **rastreo.html**: Order tracking page
-- **mapa.html**: Map view for delivery tracking
-- **404.html / 500.html**: Error pages
+### Routing
+- Use `Route::view(...)` for fully static pages with no dynamic data.
+- Use `Route::get(...)` or `Route::post(...)` with a controller for any page that needs logic or database data.
 
-### JavaScript Modules
-Each page has a corresponding JS file in `/js/` that follows a **functional module pattern**:
+```php
+// Página estática
+Route::view('/inicio', 'inicio');
 
-- **app.js**: Global utilities (navbar state, user display, cart badge)
-- **banner.js**: Slider del banner compartido por `index.html` y `catalogo.html`
-- **data-restaurantes.js**: Datos de restaurantes/productos y carga inicial en localStorage
-- Page-specific modules (cliente.js, restaurante.js, restaurantes.js, restaurante-detalle.js, carrito.js, perfil.js, etc.) handle their own state
+// Página con lógica
+Route::get('/perfil', [PerfilController::class, 'index']);
+Route::post('/perfil/actualizar', [PerfilController::class, 'actualizar']);
+```
 
-### State Management
-All application state is stored in **localStorage** with prefixed keys:
+### Controllers
+The following controllers already exist and must be reused:
+- **LoginController**: handles user login
+- **RegistroController**: handles new user registration
+- **LogoutController**: handles session termination
 
-- `ue_cliente`: Customer profile data
-- `ue_restaurante`: Restaurant profile data
-- `ue_repartidor`: Delivery driver profile data
-- `ue_usuario`: User authentication data
-- `ue_carrito`: Shopping cart items
-- `ue_pedido_actual`: Current order being processed
-- `ue_sesion`: Session flag
-- `ue_restaurantes`: Catálogo de restaurantes (datos de prueba)
-- `ue_productos`: Catálogo de productos (datos de prueba)
-- `ue_metodo_pago`: Método de pago preferido
-- `ue_datos_tarjeta`: Datos de tarjeta guardados
+When adding new features, check whether an appropriate controller already exists before creating a new one.
 
-**Pattern**: Each module defines a default object, loads from localStorage, and provides a `persistir()` function to save changes.
+### Authentication & Sessions
+The project uses a custom authentication system built with Laravel sessions. Passwords are stored and verified using Laravel's `Hash` facade:
 
-### Styling Architecture
-CSS follows a **CSS Custom Properties (variables) + component pattern**:
+```php
+// Al registrar
+Hash::make($request->password)
 
-- **styles.css**: Global variables (spacing, typography, shadows) and shared components (navbar, buttons, forms)
-- Page-specific CSS files extend global styles for page-specific layouts
-- **error-style.css**: Estilos para páginas 404/500
-- **Reference**: `/docs/Wireframes/` for UI design
+// Al verificar
+Hash::check($request->password, $usuario->password)
+```
+
+On login, the session stores at minimum:
+- `CodigoUsuario`
+- `Nombres`
+
+Access session data in controllers:
+```php
+$codigo = session('CodigoUsuario');
+$nombre = session('Nombres');
+```
+
+Access session data in Blade views:
+```blade
+{{ session('Nombres') }}
+```
+
+### Blade Views
+All views use Blade syntax. Key conventions:
+
+```blade
+{{-- Imprimir una variable --}}
+{{ $variable }}
+
+{{-- Formularios POST siempre llevan @csrf --}}
+<form method="POST" action="/ruta">
+    @csrf
+    ...
+</form>
+
+{{-- Reutilizar componentes compartidos --}}
+@include('partials.navbar')
+```
+
+### Navbar reutilizable
+The navbar has been extracted to a shared Blade partial to avoid duplication. **All future changes to the navbar must be made in that partial file only** — never copy-paste navbar HTML into individual views.
+
+```blade
+@include('partials.navbar')
+```
+
+### Eloquent Models & Relationships
+Eloquent models and their relationships (`hasOne`, `hasMany`, `belongsTo`, `belongsToMany`) are already defined. Always use them instead of writing raw SQL queries.
+
+```php
+// ✅ Correcto — usar Eloquent
+$pedidos = Cliente::find($id)->pedidos;
+
+// ❌ Evitar — SQL manual innecesario
+$pedidos = DB::select('SELECT * FROM pedidos WHERE cliente_id = ?', [$id]);
+```
+
+Do **not** create new migrations to recreate tables that already exist. The database schema is already in place.
+
+### Profile Page Pattern
+The profile page retrieves the authenticated user via `session('CodigoUsuario')`, queries the database through Eloquent, and passes the model to Blade for rendering:
+
+```php
+// En el controlador
+public function index()
+{
+    $usuario = Usuario::findOrFail(session('CodigoUsuario'));
+    return view('perfil', compact('usuario'));
+}
+```
+
+```blade
+{{-- En la vista --}}
+<p>{{ $usuario->Nombres }}</p>
+```
 
 ## Database Schema
 
-The MySQL schema is defined in `/databases/`:
+The MySQL schema is defined in `/databases/` and is **already connected to the application**:
 
 - **Schema.sql**: Complete database structure (UrbanEats database)
 - **Inserts.sql**: Sample data for testing
@@ -162,38 +216,13 @@ Follow the Git workflow defined in README.md:
 
 Always work from `main` branch and create pull requests for merging.
 
-### LocalStorage Keys
-All localStorage keys use the `ue_` prefix (UrbanEats) to avoid conflicts:
-```javascript
-localStorage.getItem('ue_cliente')
-localStorage.setItem('ue_carrito', JSON.stringify(carrito))
-```
-
-### Data Persistence Pattern
-Each module follows this pattern:
-```javascript
-const DEFAULT = { /* default values */ };
-let data = JSON.parse(localStorage.getItem('ue_key') || 'null') || { ...DEFAULT };
-
-function persistir() {
-  localStorage.setItem('ue_key', JSON.stringify(data));
-}
-```
-
 ### Form Validation
 - Error messages use IDs like `err-nombres`, `err-email` (prefixed with `err-`)
 - Success/verification messages use IDs like `msg-verificacion`
 - Validation functions clear previous errors before showing new ones
 
-### Navbar Active State
-The global `app.js` automatically adds the `.activo` class to navbar links matching the current page:
-```javascript
-// Runs on page load to highlight current page in navbar
-marcarActivo()
-```
-
 ### Icon Library
-FontAwesome 6.5.0 is used throughout (CDN link in all HTML files):
+FontAwesome 6.5.0 is used throughout (CDN link in all Blade views):
 ```html
 <i class="fas fa-icon-name"></i>
 ```
@@ -202,11 +231,21 @@ FontAwesome 6.5.0 is used throughout (CDN link in all HTML files):
 
 ```
 /
-├── *.html                 # Main application pages
-├── css/                   # Stylesheets (global + page-specific)
-├── js/                    # JavaScript modules (global + page-specific)
-├── databases/             # SQL schema and data
-└── docs/                  # Documentation and diagrams (UML, wireframes, etc.)
+├── app/
+│   ├── Http/
+│   │   └── Controllers/     # LoginController, RegistroController, LogoutController, etc.
+│   └── Models/              # Modelos Eloquent (Usuario, Cliente, Pedido, etc.)
+├── resources/
+│   └── views/
+│       ├── partials/        # Componentes reutilizables (navbar, footer, etc.)
+│       └── *.blade.php      # Vistas de cada módulo
+├── routes/
+│   └── web.php              # Definición de rutas
+├── databases/               # SQL schema and reference data
+├── public/
+│   ├── css/                 # Stylesheets (global + page-specific)
+│   └── js/                  # JavaScript for frontend interactions
+└── docs/                    # Documentation and diagrams (UML, wireframes, etc.)
 ```
 
 ## Code Standards for This Project
@@ -214,8 +253,13 @@ FontAwesome 6.5.0 is used throughout (CDN link in all HTML files):
 ### Simplicity First
 - **Keep code simple**: The team must explain all code in "sustentaciones" (quarterly presentations)
 - Write code that is easy to read and understand, not clever or overly optimized
-- Modern JavaScript features (ES6+) are fine, but keep logic straightforward
 - Avoid complex patterns, advanced techniques, or anything hard to explain
+- Prefer Eloquent relationships over raw SQL; prefer existing controllers over new ones
+
+### Reuse Before Creating
+- Before writing a new controller, model, or Blade partial — check if one already exists
+- Reuse Blade partials (`@include`) to avoid duplicating HTML
+- Reuse Eloquent relationships instead of rewriting queries
 
 ### Language
 - **All code comments in Spanish**: Explain what the code does, not just what it is
@@ -229,21 +273,14 @@ FontAwesome 6.5.0 is used throughout (CDN link in all HTML files):
 - All content assumes Colombian context
 - Target audience: "trabajadores, estudiantes y personas activas" (workers, students, active people)
 
-### Technology Stack
-- **HTML/CSS/JS only**: No frameworks, no build tools, no npm
-- This matches what the team is currently learning at SENA
-- Future phases may introduce new technologies as the curriculum progresses
-- Direct file editing - changes visible on browser refresh
-
 ### Database
-- SQL files in `/databases/` are for reference and future integration only
-- **Not currently connected** to the application
-- All data currently managed through localStorage
-- Database connection is planned for a future learning phase
+- The database is **connected and active** — do not use localStorage for data that belongs in the DB
+- Use Eloquent ORM; avoid raw `DB::select(...)` queries unless strictly necessary
+- Do **not** create migrations to recreate tables that already exist
+- SQL files in `/databases/` remain as reference and backup
 
 ## Notes
 
-- **No build process**: Direct HTML/CSS/JS - changes are immediately visible on refresh
-- **No package.json**: No npm dependencies or build tools
+- **No localStorage for core data**: now that the DB is connected, persistent data lives in MySQL, not the browser
 - **Testing**: Manual testing in browser (no automated test suite)
-- **Evolution**: Project requirements and technologies may change every 3 months as new topics are learned
+- **Evolution**: Project requirements and technologies may change every 3 months as new topics are learned at SENA
