@@ -302,7 +302,7 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`pedido` (
   `CodigoEnvio` INT(11) NOT NULL,
   `CodigoRestaurante` INT(11) NOT NULL,
   `FechaPedido` DATE NULL DEFAULT NULL,
-  `Estado` ENUM('En Proceso', 'Entregado', 'Cancelado') NOT NULL,
+  `Estado` ENUM('Iniciando', 'En Proceso', 'Entregado', 'Cancelado') NOT NULL,
   PRIMARY KEY (`CodigoPedido`),
   UNIQUE INDEX `CodigoEnvio` (`CodigoEnvio` ASC),
   INDEX `CodigoRestaurante` (`CodigoRestaurante` ASC),
@@ -546,7 +546,7 @@ AFTER INSERT ON `urbaneats`.`envio`
 FOR EACH ROW
 BEGIN
     INSERT INTO pedido (CodigoEnvio, CodigoRestaurante, FechaPedido, Estado)
-    VALUES (NEW.CodigoEnvio, NEW.CodigoRestaurante, CURDATE(), 'En Proceso');
+    VALUES (NEW.CodigoEnvio, NEW.CodigoRestaurante, CURDATE(), 'Iniciando');
 END$$
 
 

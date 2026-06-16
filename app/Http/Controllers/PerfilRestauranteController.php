@@ -22,7 +22,14 @@ class PerfilRestauranteController extends Controller
             return redirect('/restaurante')->with('info', 'Primero crea tu restaurante.');
         }
 
-        $restaurante = $gerente->restaurante()->first();
+        $codigoActivo = session('restaurante_activo');
+        $restaurante = $codigoActivo
+            ? $gerente->restaurante()->where('CodigoRestaurante', $codigoActivo)->first()
+            : $gerente->restaurante()->first();
+
+        if (! $restaurante) {
+            return redirect('/seleccion-restaurante');
+        }
 
         $estadoMap = [
             'En Proceso' => 'nuevo',

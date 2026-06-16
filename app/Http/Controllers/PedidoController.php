@@ -6,6 +6,7 @@ use App\Models\Cliente;
 use App\Models\DetallePedido;
 use App\Models\Envio;
 use App\Models\Pago;
+use App\Models\Pedido;
 use App\Models\Plato;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -86,5 +87,37 @@ class PedidoController extends Controller
         } catch (\Throwable $e) {
             return response()->json(['error' => 'Error al procesar el pedido. Inténtalo nuevamente.'], 500);
         }
+    }
+
+    public function estado(int $id): JsonResponse
+    {
+        $pedido = Pedido::find($id);
+
+        if (! $pedido) {
+            return response()->json(['estado' => null], 404);
+        }
+
+        return response()->json(['estado' => $pedido->Estado]);
+    }
+
+    public function cancelar(int $id): JsonResponse
+    {
+        if (! session('CodigoUsuario')) {
+            return response()->json(['error' => 'No autenticado'], 401);
+        }
+
+        $pedido = Pedido::find($id);
+
+        if (! $pedido) {
+            return response()->json(['error' => 'Pedido no encontrado'], 404);
+        }
+
+        if ($pedido->Estado !== 'Iniciando') {
+            return response()->json(['error' => 'El pedido no puede cancelarse en su estado actual'], 422);
+        }
+
+        $pedido->update(['Estado' => 'Cancelado']);
+
+        return response()->json(['ok' => true]);
     }
 }

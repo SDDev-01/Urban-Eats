@@ -9,8 +9,10 @@ use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\PerfilRestauranteController;
 use App\Http\Controllers\RastreoController;
 use App\Http\Controllers\RegistroController;
+use App\Http\Controllers\RepartidorController;
 use App\Http\Controllers\RestauranteController;
 use App\Http\Controllers\RestauranteDetalleController;
+use App\Http\Controllers\SeleccionRolController;
 use Illuminate\Support\Facades\Route;
 
 // por ahora estaticas, si despues tomamos datos entonces ahi si usamos route:get o post
@@ -24,7 +26,13 @@ Route::view('/mapa', 'mapa');
 Route::view('/pago', 'pago');
 Route::get('/rastreo', [RastreoController::class, 'mostrar']);
 Route::post('/pedido/confirmar', [PedidoController::class, 'confirmar']);
-Route::view('/repartidor', 'repartidor');
+Route::get('/pedido/{id}/estado', [PedidoController::class, 'estado']);
+Route::post('/pedido/{id}/cancelar', [PedidoController::class, 'cancelar']);
+Route::get('/repartidor', [RepartidorController::class, 'mostrarFormulario']);
+Route::post('/repartidor', [RepartidorController::class, 'registrar']);
+Route::get('/perfilRepartidor', [RepartidorController::class, 'mostrarPerfil']);
+Route::post('/repartidor/tomar/{envioId}', [RepartidorController::class, 'tomarPedido']);
+Route::patch('/repartidor/entregar/{envioId}', [RepartidorController::class, 'marcarEntregado']);
 
 // login
 // get es cuando entran a la pagina, y post es cuando dan a enviar
@@ -38,8 +46,14 @@ Route::post('/registro', [RegistroController::class, 'Registrarse']);
 // cerrar sesion
 Route::post('/logout', [LogoutController::class, 'logout']);
 
+// seleccion de rol (gerentes)
+Route::get('/seleccion-rol', [SeleccionRolController::class, 'mostrarRol']);
+Route::get('/seleccion-restaurante', [SeleccionRolController::class, 'mostrarRestaurantes']);
+Route::post('/seleccion-restaurante/{id}', [SeleccionRolController::class, 'confirmarRestaurante']);
+
 // perfil
 Route::get('/perfil', [PerfilController::class, 'MostrarDatos']);
+Route::patch('/perfil', [PerfilController::class, 'actualizar']);
 
 // restaurante
 Route::get('/restaurante', [RestauranteController::class, 'mostrarPagina']);

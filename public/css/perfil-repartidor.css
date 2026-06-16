@@ -1,0 +1,253 @@
+/* ============================
+   PERFIL REPARTIDOR
+   ============================ */
+
+.rep-pagina {
+  padding-top: calc(var(--navbar-height) + 2rem);
+  padding-bottom: 4rem;
+  min-height: 100vh;
+  background: var(--fondo);
+}
+
+/* ── HERO ─────────────────────────────── */
+.rep-hero {
+  background: linear-gradient(135deg, var(--principal) 0%, var(--principal-oscuro) 100%);
+  padding: 2rem 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.rep-hero-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.rep-avatar {
+  width: 80px;
+  height: 80px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #fff;
+  flex-shrink: 0;
+  border: 3px solid rgba(255,255,255,0.35);
+}
+
+.rep-hero-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.rep-hero-nombre {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 0.2rem;
+}
+
+.rep-hero-email {
+  color: rgba(255,255,255,0.8);
+  font-size: 0.88rem;
+  margin-bottom: 0.55rem;
+}
+
+.rep-hero-vehiculo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 20px;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.83rem;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ── STATS ─────────────────────────────── */
+.rep-contenido {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.rep-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  border-radius: var(--radio-lg);
+  box-shadow: var(--sombra);
+  padding: 1.2rem 1rem;
+  text-align: center;
+}
+
+.stat-numero {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--principal);
+  line-height: 1;
+  margin-bottom: 0.35rem;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--texto-gris);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── SECCIONES ────────────────────────── */
+.rep-seccion {
+  margin-bottom: 2rem;
+}
+
+.rep-seccion-titulo {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--texto);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--borde);
+}
+
+.rep-seccion-titulo i { color: var(--principal); }
+
+/* ── TARJETA DE PEDIDO ────────────────── */
+.pedido-card {
+  background: white;
+  border-radius: var(--radio-lg);
+  box-shadow: var(--sombra);
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 0.85rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.pedido-icono {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.pedido-icono.verde  { background: var(--terciario-claro); color: var(--terciario); }
+.pedido-icono.naranja { background: #fff3e0; color: #e65100; }
+.pedido-icono.gris   { background: var(--fondo); color: var(--texto-gris); }
+
+.pedido-info { flex: 1; min-width: 0; }
+
+.pedido-restaurante {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 0.2rem;
+}
+
+.pedido-meta {
+  font-size: 0.8rem;
+  color: var(--texto-gris);
+  margin-bottom: 0.5rem;
+}
+
+.pedido-items {
+  font-size: 0.82rem;
+  color: var(--texto-gris);
+  margin-bottom: 0.6rem;
+  line-height: 1.5;
+}
+
+.pedido-total {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--principal);
+}
+
+.pedido-acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+/* ── ESTADO VACÍO ─────────────────────── */
+.rep-vacio {
+  background: white;
+  border-radius: var(--radio-lg);
+  padding: 2rem;
+  text-align: center;
+  color: var(--texto-gris);
+  box-shadow: var(--sombra);
+}
+
+.rep-vacio i {
+  font-size: 2.5rem;
+  color: var(--borde);
+  margin-bottom: 0.7rem;
+  display: block;
+}
+
+.rep-vacio p { font-size: 0.9rem; }
+
+/* ── HISTORIAL ────────────────────────── */
+.historial-tabla {
+  background: white;
+  border-radius: var(--radio-lg);
+  box-shadow: var(--sombra);
+  overflow: hidden;
+}
+
+.historial-fila {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 80px 90px;
+  gap: 0.75rem;
+  padding: 0.85rem 1.2rem;
+  border-bottom: 1px solid var(--borde);
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.historial-fila:last-child { border-bottom: none; }
+
+.historial-fila.header {
+  background: var(--fondo);
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  color: var(--texto-gris);
+  letter-spacing: 0.04em;
+}
+
+.badge-entregado {
+  background: var(--terciario-claro);
+  color: var(--terciario);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+}
+
+@media (max-width: 600px) {
+  .rep-stats { grid-template-columns: 1fr 1fr; }
+  .historial-fila { grid-template-columns: 1fr 1fr; }
+  .historial-fila .col-fecha,
+  .historial-fila .col-estado { display: none; }
+}

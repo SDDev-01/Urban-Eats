@@ -38,33 +38,6 @@
 
           <hr class="divisor">
 
-          {{-- Platos existentes --}}
-          <p class="seccion-titulo"><i class="fas fa-list-check"></i> Tomar platos existentes</p>
-
-          @if($platosExistentes->isEmpty())
-            <p class="sin-platos">No hay platos registrados aún. Puedes crear nuevos abajo.</p>
-          @else
-            <div class="platos-existentes-grid">
-              @foreach($platosExistentes as $plato)
-                <label class="plato-check-label">
-                  <input type="checkbox"
-                         name="platos_existentes[]"
-                         value="{{ $plato->CodigoPlato }}"
-                         {{ in_array($plato->CodigoPlato, old('platos_existentes', [])) ? 'checked' : '' }}>
-                  <span>
-                    <span class="plato-check-nombre">{{ $plato->Nombre }}</span><br>
-                    <span class="plato-check-precio">
-                      {{ $plato->TipoComida ? $plato->TipoComida.' · ' : '' }}
-                      ${{ number_format($plato->Precio ?? 0, 0, ',', '.') }}
-                    </span>
-                  </span>
-                </label>
-              @endforeach
-            </div>
-          @endif
-
-          <hr class="divisor">
-
           {{-- Nuevos platos --}}
           <p class="seccion-titulo"><i class="fas fa-plus-circle"></i> Agregar nuevos platos</p>
 
