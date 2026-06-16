@@ -1,72 +1,79 @@
-/* ============================
-   URBAN EATS - Restaurante Detalle JS
-   Muestra el menú de un restaurante específico
-   ============================ */
+const PALETA_COLORES = ['#d5f5e3', '#fef9e7', '#e8f4fd', '#fdecea', '#f0e6ff', '#fff3e0'];
 
-// Variables globales
-let restauranteActual = null;
 let productosRestaurante = [];
 let categoriaActiva = 'todos';
 let productoSeleccionado = null;
 let cantidadModal = 1;
 
-// Obtener ID del restaurante desde URL
-function obtenerIdRestaurante() {
-  const params = new URLSearchParams(window.location.search);
-  return parseInt(params.get('id'));
+function colorPorId(id) {
+  return PALETA_COLORES[id % PALETA_COLORES.length];
 }
 
-// Cargar y renderizar información del restaurante
 function cargarRestaurante() {
-  const id = obtenerIdRestaurante();
-  if (!id) {
+  const restaurante = window.RESTAURANTE_BD;
+  const productos = window.PRODUCTOS_BD || [];
+
+  if (!restaurante) {
     window.location.href = '/restaurantes';
     return;
   }
 
-  restauranteActual = obtenerRestaurantePorId(id);
-  if (!restauranteActual) {
-    window.UE.mostrarToast('Restaurante no encontrado', 'fa-exclamation-circle');
-    window.location.href = '/restaurantes';
-    return;
-  }
+  document.title = `${restaurante.nombre} – Urban Eats`;
 
-  // Renderizar hero del restaurante
-  const heroElement = document.getElementById('restaurante-hero');
-  heroElement.style.background = `linear-gradient(135deg, ${restauranteActual.color} 0%, var(--verde-oscuro) 100%)`;
-  heroElement.innerHTML = `
-    <div class="restaurante-logo-grande" style="background: rgba(255, 255, 255, 0.25);">
-      ${restauranteActual.logo}
+  const hero = document.getElementById('restaurante-hero');
+  hero.style.background = `linear-gradient(135deg, ${colorPorId(restaurante.id)} 0%, #1b5e20 100%)`;
+  hero.innerHTML = `
+    <div class="restaurante-logo-grande" style="background: rgba(255,255,255,0.25);">
+      🍽️
     </div>
     <div class="restaurante-info-hero">
-      <h1>${restauranteActual.nombre}</h1>
-      <p>${restauranteActual.descripcion}</p>
+      <h1>${restaurante.nombre}</h1>
       <div class="restaurante-detalles">
         <div class="restaurante-detalle-item">
           <i class="fas fa-map-marker-alt"></i>
-          <span>${restauranteActual.ubicacion}</span>
+          <span>${restaurante.direccion || '—'}</span>
         </div>
         <div class="restaurante-detalle-item">
           <i class="fas fa-clock"></i>
-          <span>${restauranteActual.horario}</span>
-        </div>
-        <div class="restaurante-detalle-item">
-          <i class="fas fa-check-circle"></i>
-          <span>Abierto ahora</span>
+          <span>${restaurante.horario || '—'}</span>
         </div>
       </div>
     </div>
   `;
 
-  // Actualizar título de la página
-  document.title = `${restauranteActual.nombre} – Urban Eats`;
-
-  // Cargar productos del restaurante
-  productosRestaurante = obtenerProductosDeRestaurante(id);
-  renderizarProductos(productosRestaurante);
+  productosRestaurante = productos;
+  generarFiltros(productos);
+  renderizarProductos(productos);
 }
 
-// Renderizar tarjetas de productos
+function generarFiltros(productos) {
+  const wrap = document.querySelector('.filtros-wrap');
+  if (!wrap) return;
+
+  const categorias = [...new Set(productos.map(p => p.categoria).filter(Boolean))].sort();
+  wrap.innerHTML = '<button class="btn-filtro activo" data-categoria="todos">Todos</button>';
+
+  categorias.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'btn-filtro';
+    btn.dataset.categoria = cat;
+    btn.textContent = cat;
+    wrap.appendChild(btn);
+  });
+
+  wrap.querySelectorAll('.btn-filtro').forEach(btn => {
+    btn.addEventListener('click', () => {
+      wrap.querySelectorAll('.btn-filtro').forEach(b => b.classList.remove('activo'));
+      btn.classList.add('activo');
+      categoriaActiva = btn.dataset.categoria;
+      const filtrados = categoriaActiva === 'todos'
+        ? productosRestaurante
+        : productosRestaurante.filter(p => p.categoria === categoriaActiva);
+      renderizarProductos(filtrados);
+    });
+  });
+}
+
 function renderizarProductos(lista) {
   const grid = document.getElementById('productos-grid');
   grid.innerHTML = '';
@@ -78,24 +85,19 @@ function renderizarProductos(lista) {
   }
 
   lista.forEach(producto => {
+    const color = colorPorId(producto.id);
     const card = document.createElement('div');
     card.className = 'producto-card';
     card.innerHTML = `
-      <div class="producto-img-wrap" style="background:${producto.color};">
-        <img 
-          src="${producto.imagen}" 
-          alt="${producto.nombre}"
-          class="producto-img"
-          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-        >
-        <span class="producto-emoji" style="display:none;">${producto.emoji}</span>
+      <div class="producto-img-wrap" style="background:${color};">
+        <span class="producto-emoji" style="display:flex; font-size:3rem; align-items:center; justify-content:center; height:100%;">🍽️</span>
       </div>
       <div class="producto-body">
-        <div class="producto-categoria">${producto.categoria}</div>
+        <div class="producto-categoria">${producto.categoria || '—'}</div>
         <div class="producto-nombre">${producto.nombre}</div>
         <div class="producto-desc">${producto.descripcion}</div>
         <div class="producto-footer">
-          <span class="producto-precio">$${producto.precio.toLocaleString('es-CO')} COP</span>
+          <span class="producto-precio">$${Number(producto.precio).toLocaleString('es-CO')} COP</span>
           <button class="btn-ver" data-id="${producto.id}">Ver detalles</button>
         </div>
       </div>
@@ -103,7 +105,6 @@ function renderizarProductos(lista) {
     grid.appendChild(card);
   });
 
-  // Agregar event listeners a botones
   document.querySelectorAll('.btn-ver').forEach(btn => {
     btn.addEventListener('click', () => {
       abrirModal(parseInt(btn.dataset.id));
@@ -111,64 +112,39 @@ function renderizarProductos(lista) {
   });
 }
 
-// Filtros de categorías
-document.querySelectorAll('.btn-filtro').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.btn-filtro').forEach(b => b.classList.remove('activo'));
-    btn.classList.add('activo');
-    categoriaActiva = btn.dataset.categoria;
-    
-    const filtrados = categoriaActiva === 'todos'
-      ? productosRestaurante
-      : productosRestaurante.filter(p => p.categoria === categoriaActiva);
-    
-    renderizarProductos(filtrados);
-  });
-});
-
-// Abrir modal de detalle del producto
 function abrirModal(id) {
   const producto = productosRestaurante.find(p => p.id === id);
   if (!producto) return;
-  
+
   productoSeleccionado = producto;
   cantidadModal = 1;
 
+  const color = colorPorId(producto.id);
+
   document.getElementById('modal-titulo').textContent = producto.nombre;
-  document.getElementById('modal-categoria').textContent = producto.categoria;
+  document.getElementById('modal-categoria').textContent = producto.categoria || '';
   document.getElementById('modal-nombre').textContent = producto.nombre;
   document.getElementById('modal-descripcion').textContent = producto.descripcion;
   document.getElementById('detalle-cantidad').textContent = cantidadModal;
 
   document.getElementById('modal-imagen-wrap').innerHTML = `
-    <img 
-      src="${producto.imagen}" 
-      alt="${producto.nombre}"
-      class="detalle-img"
-      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-    >
-    <div class="detalle-img-fallback" style="background:${producto.color}; font-size:5rem; display:none;">
-      ${producto.emoji}
+    <div class="detalle-img-fallback" style="background:${color}; font-size:5rem; display:flex; align-items:center; justify-content:center;">
+      🍽️
     </div>
   `;
 
-  document.getElementById('modal-stats').innerHTML = `
-    <span class="stat-chip"><i class="fas fa-fire" style="color:#e67e22;"></i> ${producto.calorias} cal</span>
-    <span class="stat-chip"><i class="fas fa-dumbbell" style="color:#3498db;"></i> ${producto.proteina} proteína</span>
-  `;
+  document.getElementById('modal-stats').innerHTML = '';
 
   actualizarPrecioModal();
   document.getElementById('modal-detalle').classList.add('abierto');
 }
 
-// Actualizar precio en el modal
 function actualizarPrecioModal() {
   if (!productoSeleccionado) return;
   const total = productoSeleccionado.precio * cantidadModal;
   document.getElementById('modal-precio').textContent = `$${total.toLocaleString('es-CO')} COP`;
 }
 
-// Cerrar modal
 document.getElementById('modal-cerrar-btn').addEventListener('click', () => {
   document.getElementById('modal-detalle').classList.remove('abierto');
 });
@@ -179,7 +155,6 @@ document.getElementById('modal-detalle').addEventListener('click', (e) => {
   }
 });
 
-// Controles de cantidad
 document.getElementById('btn-mas').addEventListener('click', () => {
   cantidadModal++;
   document.getElementById('detalle-cantidad').textContent = cantidadModal;
@@ -194,23 +169,21 @@ document.getElementById('btn-menos').addEventListener('click', () => {
   }
 });
 
-// Agregar al carrito
 document.getElementById('btn-agregar-carrito').addEventListener('click', () => {
   if (!productoSeleccionado) return;
-  
+
   const carrito = window.UE.obtenerCarrito();
   const existe = carrito.find(p => p.id === productoSeleccionado.id);
-  
+
   if (existe) {
     existe.cantidad += cantidadModal;
   } else {
     carrito.push({ ...productoSeleccionado, cantidad: cantidadModal });
   }
-  
+
   window.UE.guardarCarrito(carrito);
   window.UE.mostrarToast(`¡${productoSeleccionado.nombre} agregado al carrito!`);
   document.getElementById('modal-detalle').classList.remove('abierto');
 });
 
-// Inicializar al cargar la página
 cargarRestaurante();

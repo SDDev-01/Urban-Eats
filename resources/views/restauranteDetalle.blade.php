@@ -26,15 +26,8 @@
       </a>
     </div>
 
-    <!-- FILTROS DE CATEGORÍAS -->
-    <div class="filtros-wrap">
-      <button class="btn-filtro activo" data-categoria="todos">Todos</button>
-      <button class="btn-filtro" data-categoria="Bowls">Bowls</button>
-      <button class="btn-filtro" data-categoria="Platos Principales">Platos Principales</button>
-      <button class="btn-filtro" data-categoria="Desayunos">Desayunos</button>
-      <button class="btn-filtro" data-categoria="Wraps">Wraps</button>
-      <button class="btn-filtro" data-categoria="Bebidas">Bebidas</button>
-    </div>
+    <!-- FILTROS DE CATEGORÍAS (generados dinámicamente por JS) -->
+    <div class="filtros-wrap"></div>
 
     <!-- GRID DE PRODUCTOS -->
     <div class="productos-grid" id="productos-grid">
@@ -77,8 +70,11 @@
 
   <div id="toast-container"></div>
   
-  <script src="{{ asset('js/data-restaurantes.js') }}"></script>
   <script src="{{ asset('js/app.js') }}"></script>
+  <script>
+    window.RESTAURANTE_BD = @json($restauranteJS);
+    window.PRODUCTOS_BD   = @json($productosJS);
+  </script>
   <script src="{{ asset('js/restaurante-detalle.js') }}"></script>
 </body>
 </html>

@@ -63,6 +63,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `urbaneats`.`plato` (
   `CodigoPlato` INT(11) NOT NULL AUTO_INCREMENT,
+  `CodigoMenu` INT(11) NULL DEFAULT NULL,
   `Nombre` VARCHAR(150) NULL DEFAULT NULL,
   `Descripcion` VARCHAR(300) NULL DEFAULT NULL,
   `Precio` DECIMAL(10,2) NULL DEFAULT NULL,
@@ -178,10 +179,8 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`restaurante` (
   `CodigoCiudad` INT(11) NOT NULL,
   `CodigoGerente` INT(11) NOT NULL,
   `Nombre` VARCHAR(150) NULL DEFAULT NULL,
-  `Ubicacion` VARCHAR(200) NULL DEFAULT NULL,
+  `Direccion` VARCHAR(200) NULL DEFAULT NULL,
   `Horario` VARCHAR(100) NULL DEFAULT NULL,
-  `Latitud` DECIMAL(10,8) NULL DEFAULT NULL,
-  `Longitud` DECIMAL(10,8) NULL DEFAULT NULL,
   PRIMARY KEY (`CodigoRestaurante`),
   INDEX `CodigoCiudad` (`CodigoCiudad` ASC),
   INDEX `CodigoGerente` (`CodigoGerente` ASC),
@@ -318,23 +317,11 @@ DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
 
 
--- -----------------------------------------------------
--- Table `urbaneats`.`plato_menu`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `urbaneats`.`plato_menu` (
-  `CodigoMenu` INT(11) NOT NULL,
-  `CodigoPlato` INT(11) NOT NULL,
-  PRIMARY KEY (`CodigoMenu`, `CodigoPlato`),
-  INDEX `CodigoPlato` (`CodigoPlato` ASC),
-  CONSTRAINT `plato_menu_ibfk_1`
-    FOREIGN KEY (`CodigoMenu`)
-    REFERENCES `urbaneats`.`menu` (`CodigoMenu`),
-  CONSTRAINT `plato_menu_ibfk_2`
-    FOREIGN KEY (`CodigoPlato`)
-    REFERENCES `urbaneats`.`plato` (`CodigoPlato`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_unicode_ci;
+-- FK de plato → menu (se agrega al final porque plato se crea antes que menu)
+-- ALTER TABLE `urbaneats`.`plato`
+--   ADD INDEX `CodigoMenu` (`CodigoMenu` ASC),
+--   ADD CONSTRAINT `plato_ibfk_menu`
+--     FOREIGN KEY (`CodigoMenu`) REFERENCES `urbaneats`.`menu` (`CodigoMenu`);
 
 
 -- -----------------------------------------------------
@@ -537,6 +524,15 @@ END$$
 
 
 DELIMITER ;
+
+-- FK plato → menu (definida al final porque plato se crea antes que menu)
+ALTER TABLE `urbaneats`.`plato`
+  ADD INDEX `CodigoMenu_idx` (`CodigoMenu` ASC),
+  ADD CONSTRAINT `plato_ibfk_menu`
+    FOREIGN KEY (`CodigoMenu`)
+    REFERENCES `urbaneats`.`menu` (`CodigoMenu`)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

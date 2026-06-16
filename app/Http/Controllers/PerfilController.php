@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Hash;
 use App\Models\Usuario;
 
 class PerfilController extends Controller
 {
-    public function MostrarDatos(){
-        $codigoUsuario = session('CodigoUsuario');
-        $usuario = Usuario::find($codigoUsuario);
+    public function MostrarDatos()
+    {
+        if ($redireccion = $this->requiereLogin()) {
+            return $redireccion;
+        }
 
-        //extraemos datos
-        $datosUsuario = compact('usuario');
+        $usuario = Usuario::find(session('CodigoUsuario'));
 
-        return view('perfil', $datosUsuario);
+        return view('perfil', compact('usuario'));
     }
 }

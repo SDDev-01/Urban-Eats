@@ -1,34 +1,36 @@
-/* ============================
-   URBAN EATS - Restaurantes JS
-   Lista de restaurantes disponibles
-   ============================ */
+const PALETA = ['#d5f5e3', '#fef9e7', '#e8f4fd', '#fdecea', '#f0e6ff', '#fff3e0'];
 
-// Renderizar tarjetas de restaurantes
 function renderizarRestaurantes() {
   const grid = document.getElementById('restaurantes-grid');
-  const restaurantes = obtenerRestaurantes();
-  
+  const restaurantes = window.RESTAURANTES_BD || [];
+
   grid.innerHTML = '';
 
-  restaurantes.forEach(restaurante => {
+  if (restaurantes.length === 0) {
+    grid.innerHTML = '<p style="text-align:center;padding:3rem;color:var(--texto-gris);">No hay restaurantes disponibles.</p>';
+    return;
+  }
+
+  restaurantes.forEach((restaurante, i) => {
+    const color = PALETA[i % PALETA.length];
     const card = document.createElement('div');
     card.className = 'restaurante-card';
     card.innerHTML = `
-      <div class="restaurante-header" style="background: ${restaurante.color};">
-        ${restaurante.logo}
+      <div class="restaurante-header" style="background: ${color};">
+        <span style="font-size: 2.5rem;">🍽️</span>
         <span class="restaurante-badge">Abierto</span>
       </div>
       <div class="restaurante-body">
         <h3 class="restaurante-nombre">${restaurante.nombre}</h3>
-        <p class="restaurante-descripcion">${restaurante.descripcion}</p>
+        <p class="restaurante-descripcion">${restaurante.horario || 'Horario no disponible'}</p>
         <div class="restaurante-info">
           <div class="restaurante-info-item">
             <i class="fas fa-map-marker-alt"></i>
-            <span>${restaurante.ubicacion}</span>
+            <span>${restaurante.direccion || '—'}</span>
           </div>
           <div class="restaurante-info-item">
             <i class="fas fa-clock"></i>
-            <span>${restaurante.horario}</span>
+            <span>${restaurante.horario || '—'}</span>
           </div>
         </div>
         <button class="btn-ver-menu" data-id="${restaurante.id}">
@@ -36,18 +38,16 @@ function renderizarRestaurantes() {
         </button>
       </div>
     `;
-    
-    // Click en tarjeta completa navega al restaurante
+
     card.addEventListener('click', (e) => {
       if (!e.target.closest('.btn-ver-menu')) {
         navegarARestaurante(restaurante.id);
       }
     });
-    
+
     grid.appendChild(card);
   });
 
-  // Click en botones "Ver Menú"
   document.querySelectorAll('.btn-ver-menu').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -56,10 +56,8 @@ function renderizarRestaurantes() {
   });
 }
 
-// Navegar a página de detalle del restaurante
 function navegarARestaurante(id) {
   window.location.href = `/restauranteDetalle?id=${id}`;
 }
 
-// Inicializar al cargar la página
 renderizarRestaurantes();

@@ -73,7 +73,7 @@ const RESTAURANTE_DEMO = {
   telefono: '310 456 7890'
 };
 
-let pedidos = [...PEDIDOS_DEMO];
+let pedidos = window.PEDIDOS_BD ? [...window.PEDIDOS_BD] : [];
 let abierto = true;
 let filtroActivo = 'todos';
 
