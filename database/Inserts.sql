@@ -131,3 +131,17 @@ INSERT INTO transaccion (TransaccionID, CodigoPago, MetodoPago, BancoNombre, CUS
 INSERT INTO opinion (CodigoOpinion, CodigoPlato, CodigoCliente, CodigoRepartidor, Opinion, Fecha) VALUES
 (1, 1, 1, 1, 'Caliente y rico.', '2026-05-20'), (2, 3, 2, 2, 'Excelente.', '2026-05-20'),
 (3, 5, 3, 3, 'Muy fresco.', '2026-05-21'), (4, 7, 4, 4, 'Un poco fría.', '2026-05-21'), (5, 9, 5, 5, 'Recomendado.', '2026-05-22');
+
+-- ============================
+-- DETALLE DE PEDIDO
+-- Los pedidos 1-5 son creados automáticamente por el trigger
+-- `crear_pedido_automaticamente` al insertar los envíos de arriba.
+-- Los montos coinciden con los registros de `pago`.
+-- ============================
+INSERT INTO detalle_pedido (CodigoDetalle, CodigoPedido, CodigoPlato, Cantidad, PrecioUnitario) VALUES
+(1, 1, 1, 1, 18000.00),  -- Pedido 1 · Pollo asado 1/4  (subtotal 18000)
+(2, 1, 2, 1,  6000.00),  -- Pedido 1 · Limonada         (subtotal  6000 → total 24000)
+(3, 2, 3, 1, 28000.00),  -- Pedido 2 · Pizza margarita  (total 28000)
+(4, 3, 5, 1, 26000.00),  -- Pedido 3 · Roll california  (total 26000)
+(5, 4, 7, 1, 10000.00),  -- Pedido 4 · Arepa con queso  (total 10000)
+(6, 5, 9, 1, 35000.00);  -- Pedido 5 · Churrasco        (total 35000)

@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Pago – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="{{ asset('css/pago.css') }}">
@@ -110,11 +111,10 @@
         </div>
         <hr class="resumen-separador">
         <div class="resumen-linea"><span class="label">Subtotal</span><span id="pago-subtotal">$0</span></div>
-        <div class="resumen-linea"><span class="label">Domicilio</span><span>$5.000</span></div>
         <hr class="resumen-separador">
         <div class="resumen-total-pago">
           <span>Total</span>
-          <span class="monto" id="pago-total">$5.000 COP</span>
+          <span class="monto" id="pago-total">$0 COP</span>
         </div>
         <button class="btn-pagar" id="btn-pagar">
           <i class="fas fa-lock"></i> Confirmar Pago

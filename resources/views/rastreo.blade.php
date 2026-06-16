@@ -19,46 +19,11 @@
     </div>
 
     <div class="rastreo-layout">
-      <!-- Columna izquierda: mapa y repartidor -->
+      <!-- Columna izquierda: resumen del envío -->
       <div>
-        <!-- Mapa visual -->
-        <div class="mapa-card">
-          <div class="mapa-header">
-            <i class="fas fa-map-marker-alt"></i> Ubicación en Tiempo Real
-          </div>
-          <div class="mapa-contenedor">
-            <iframe 
-              src="mapa.html" 
-              width="100%" 
-              height="100%" 
-              style="border: none;"
-              title="Mapa de ubicación del pedido">
-            </iframe>
-          </div>
-          <a href="{{ url('/mapa') }}"
-             target="_blank"
-             rel="noopener noreferrer"
-             aria-label="Abrir mapa en una nueva pestaña"
-             class="mapa-link">
-            Ver mapa en pantalla completa
-          </a>
-        </div>
-
-        <!-- Repartidor -->
-        <div class="mapa-card" style="padding:1.2rem 1.3rem; margin-bottom:0;">
-          <div class="mapa-header" style="border-bottom:none; padding:0 0 0.75rem;">
-            <i class="fas fa-user-circle"></i> Tu Repartidor
-          </div>
-          <div class="repartidor-card" style="box-shadow:none; padding:0;">
-            <div class="repartidor-avatar">C</div>
-            <div class="repartidor-info">
-              <h4>Carlos Rodríguez</h4>
-              <span>Repartidor Urban Eats</span>
-            </div>
-            <button class="btn-llamar">
-              <i class="fas fa-phone"></i> Llamar
-            </button>
-          </div>
+        <div class="resumen-card-rastreo" style="margin-bottom:1.5rem;">
+          <h3><i class="fas fa-box-open" style="color:var(--principal);margin-right:0.5rem;"></i> Resumen del Envío</h3>
+          <div id="envio-items"></div>
         </div>
       </div>
 
@@ -77,7 +42,7 @@
             <i class="fas fa-bicycle"></i>
             <div>
               <h4>Tu pedido está en camino</h4>
-              <p>Carlos Rodríguez va hacia tu ubicación</p>
+              <p>El repartidor va hacia tu ubicación</p>
             </div>
           </div>
 
@@ -102,6 +67,7 @@
   <footer><p>&copy; 2026 Urban Eats – Proyecto Formativo SENA</p></footer>
   <div id="toast-container"></div>
   <script src="{{ asset('js/app.js') }}"></script>
+  <script>window.PEDIDO_BD = @json($pedidoData);</script>
   <script src="{{ asset('js/rastreo.js') }}"></script>
 </body>
 </html>

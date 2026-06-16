@@ -8,32 +8,62 @@ const pedidoId = 'ORD-' + Date.now();
 // Mostrar ID del pedido
 document.getElementById('pedido-id-label').textContent = `Pedido #${pedidoId}`;
 
-// ---- CARGAR ITEMS EN RESUMEN ----
+// ---- CARGAR ITEMS EN RESUMEN DE TOTALES ----
 (function cargarItems() {
   const wrap = document.getElementById('rastreo-items');
+  const pedido = window.PEDIDO_BD;
 
-  // Mostrar items del carrito actual; si está vacío, usar datos de demo
-  let items = window.UE ? window.UE.obtenerCarrito() : [];
-  if (!items || items.length === 0) {
-    items = [{ nombre: 'Bowl Mediterráneo', cantidad: 1, precio: 18500 }];
-  }
+  // Priorizar datos del servidor; caer en localStorage si no hay pedido en sesión
+  const items = pedido
+    ? pedido.items.map(i => ({ nombre: i.nombre, cantidad: i.cantidad, precio: i.precio_unitario, subtotal: i.subtotal }))
+    : (window.UE ? window.UE.obtenerCarrito().map(i => ({ nombre: i.nombre, cantidad: i.cantidad, precio: i.precio, subtotal: i.precio * i.cantidad })) : []);
 
-  let subtotal = 0;
+  let total = 0;
   let html = '';
   items.forEach(item => {
-    const precio = item.precio * item.cantidad;
-    subtotal += precio;
+    total += item.subtotal;
     html += `
       <div class="resumen-item">
         <span class="nombre">${item.cantidad}x ${item.nombre}</span>
-        <span>$${precio.toLocaleString('es-CO')}</span>
+        <span>$${item.subtotal.toLocaleString('es-CO')}</span>
+      </div>
+    `;
+  });
+  wrap.innerHTML = html || '<p style="color:var(--texto-gris);font-size:0.85rem;">Sin productos.</p>';
+  document.getElementById('rastreo-total').textContent = `$${total.toLocaleString('es-CO')} COP`;
+})();
+
+// ---- RESUMEN DEL ENVÍO (con descripción) ----
+(function cargarResumenEnvio() {
+  const wrap = document.getElementById('envio-items');
+  if (!wrap) return;
+
+  const pedido = window.PEDIDO_BD;
+
+  // Priorizar datos del servidor
+  const items = pedido
+    ? pedido.items
+    : (window.UE ? window.UE.obtenerCarrito().map(i => ({ nombre: i.nombre, descripcion: i.descripcion ?? '', cantidad: i.cantidad, subtotal: i.precio * i.cantidad })) : []);
+
+  if (items.length === 0) {
+    wrap.innerHTML = '<p style="color:var(--texto-gris);font-size:0.85rem;">No hay productos en este pedido.</p>';
+    return;
+  }
+
+  let html = '';
+  items.forEach(item => {
+    const subtotal = item.subtotal ?? (item.precio_unitario * item.cantidad);
+    html += `
+      <div style="padding:0.85rem 0; border-bottom:1px solid var(--borde);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;">
+          <span style="font-weight:700;font-size:0.9rem;">${item.cantidad}x ${item.nombre}</span>
+          <span style="font-weight:700;color:var(--terciario);font-size:0.875rem;">$${subtotal.toLocaleString('es-CO')}</span>
+        </div>
+        ${item.descripcion ? `<p style="font-size:0.8rem;color:var(--texto-gris);margin:0;">${item.descripcion}</p>` : ''}
       </div>
     `;
   });
   wrap.innerHTML = html;
-
-  const total = subtotal + 5000;
-  document.getElementById('rastreo-total').textContent = `$${total.toLocaleString('es-CO')} COP`;
 })();
 
 // ---- PASOS DEL PEDIDO ----
@@ -95,7 +125,7 @@ function actualizarTimer() {
   if (segundosTotales <= 600 && pasoActual < 3) {
     pasoActual = 3;
     renderizarPasos();
-    actualizarAlerta('Estamos muy cerca', 'Carlos está a menos de 5 minutos de tu ubicación.', '#e8f5e9', '#27ae60', 'fa-map-marker-alt');
+    actualizarAlerta('Estamos muy cerca', 'El repartidor está a menos de 5 minutos de tu ubicación.', '#e8f5e9', '#27ae60', 'fa-map-marker-alt');
   }
   if (segundosTotales <= 0) {
     pasoActual = 4;
@@ -130,7 +160,3 @@ const intervaloTimer = setInterval(() => {
   }
 }, 1000);
 
-// ---- BOTÓN LLAMAR ----
-document.querySelector('.btn-llamar').addEventListener('click', () => {
-  window.UE.mostrarToast('Conectando con Carlos Rodríguez...', 'fa-phone');
-});

@@ -325,6 +325,33 @@ COLLATE = utf8mb4_unicode_ci;
 
 
 -- -----------------------------------------------------
+-- Table `urbaneats`.`detalle_pedido`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `urbaneats`.`detalle_pedido` (
+  `CodigoDetalle` INT(11) NOT NULL AUTO_INCREMENT,
+  `CodigoPedido` INT(11) NOT NULL,
+  `CodigoPlato` INT(11) NOT NULL,
+  `Cantidad` INT NOT NULL,
+  `PrecioUnitario` DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (`CodigoDetalle`),
+  INDEX `CodigoPedido` (`CodigoPedido` ASC),
+  INDEX `CodigoPlato` (`CodigoPlato` ASC),
+  CONSTRAINT `detalle_pedido_ibfk_1`
+    FOREIGN KEY (`CodigoPedido`)
+    REFERENCES `urbaneats`.`pedido` (`CodigoPedido`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `detalle_pedido_ibfk_2`
+    FOREIGN KEY (`CodigoPlato`)
+    REFERENCES `urbaneats`.`plato` (`CodigoPlato`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
 -- Table `urbaneats`.`rol`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `urbaneats`.`rol` (

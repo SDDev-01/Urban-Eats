@@ -24,13 +24,14 @@ class RestauranteDetalleController extends Controller
             'horario' => $restaurante->Horario ?? '',
         ];
 
-        $productosJS = $restaurante->menu->flatMap(function ($menu) {
+        $productosJS = $restaurante->menu->flatMap(function ($menu) use ($restaurante) {
             return $menu->plato->map(fn ($p) => [
                 'id' => $p->CodigoPlato,
                 'nombre' => $p->Nombre,
                 'categoria' => $p->TipoComida ?? $menu->Categoria,
                 'descripcion' => $p->Descripcion ?? '',
                 'precio' => (float) ($p->Precio ?? 0),
+                'restaurante_id' => $restaurante->CodigoRestaurante,
             ]);
         })->values();
 

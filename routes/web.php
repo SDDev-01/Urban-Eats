@@ -4,8 +4,10 @@ use App\Http\Controllers\CatalogoController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\PerfilRestauranteController;
+use App\Http\Controllers\RastreoController;
 use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\RestauranteController;
 use App\Http\Controllers\RestauranteDetalleController;
@@ -20,7 +22,8 @@ Route::get('/catalogo', [CatalogoController::class, 'mostrar']);
 Route::view('/cliente', 'cliente');
 Route::view('/mapa', 'mapa');
 Route::view('/pago', 'pago');
-Route::view('/rastreo', 'rastreo');
+Route::get('/rastreo', [RastreoController::class, 'mostrar']);
+Route::post('/pedido/confirmar', [PedidoController::class, 'confirmar']);
 Route::view('/repartidor', 'repartidor');
 
 // login

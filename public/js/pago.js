@@ -2,7 +2,6 @@
    URBAN EATS - Pago JS
    ============================ */
 
-const DOMICILIO = 5000;
 let metodoActivo = 'tarjeta';
 
 // ---- CARGAR RESUMEN DEL PEDIDO ----
@@ -13,7 +12,7 @@ let metodoActivo = 'tarjeta';
   if (carrito.length === 0) {
     wrap.innerHTML = '<p style="color:var(--texto-gris);font-size:0.875rem;">No hay productos en el carrito.</p>';
     document.getElementById('pago-subtotal').textContent = '$0';
-    document.getElementById('pago-total').textContent = `$${DOMICILIO.toLocaleString('es-CO')} COP`;
+    document.getElementById('pago-total').textContent = '$0 COP';
     return;
   }
 
@@ -31,7 +30,7 @@ let metodoActivo = 'tarjeta';
   });
   wrap.innerHTML = html;
   document.getElementById('pago-subtotal').textContent = `$${subtotal.toLocaleString('es-CO')}`;
-  document.getElementById('pago-total').textContent = `$${(subtotal + DOMICILIO).toLocaleString('es-CO')} COP`;
+  document.getElementById('pago-total').textContent = `$${subtotal.toLocaleString('es-CO')} COP`;
 })();
 
 // ---- CAMBIAR MÉTODO DE PAGO ----
@@ -118,22 +117,41 @@ function validarTarjeta() {
 
 // ---- CONFIRMAR PAGO ----
 document.getElementById('btn-pagar').addEventListener('click', () => {
-  let valido = true;
-
-  if (metodoActivo === 'tarjeta') {
-    valido = validarTarjeta();
-  }
-  // efectivo: siempre válido
-
-  if (!valido) {
+  if (metodoActivo === 'tarjeta' && !validarTarjeta()) {
     window.UE.mostrarToast('Por favor corrige los errores antes de continuar.', 'fa-exclamation-circle');
     return;
   }
 
-  window.UE.mostrarToast('¡Pago procesado exitosamente! 🎉');
-  window.UE.guardarCarrito([]);
+  const carrito = window.UE.obtenerCarrito();
+  if (carrito.length === 0) {
+    window.UE.mostrarToast('El carrito está vacío.', 'fa-exclamation-circle');
+    return;
+  }
 
-  setTimeout(() => {
-    window.location.href = '/rastreo';
-  }, 1800);
+  const btn = document.getElementById('btn-pagar');
+  btn.disabled = true;
+
+  fetch('/pedido/confirmar', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+    },
+    body: JSON.stringify({ items: carrito, metodo_pago: metodoActivo }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.redirect) {
+        window.UE.mostrarToast('¡Pago procesado exitosamente!');
+        window.UE.guardarCarrito([]);
+        setTimeout(() => { window.location.href = data.redirect; }, 1800);
+      } else {
+        window.UE.mostrarToast(data.error || 'Error al procesar el pago.', 'fa-exclamation-circle');
+        btn.disabled = false;
+      }
+    })
+    .catch(() => {
+      window.UE.mostrarToast('Error de conexión. Inténtalo nuevamente.', 'fa-exclamation-circle');
+      btn.disabled = false;
+    });
 });

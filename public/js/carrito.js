@@ -2,13 +2,12 @@
    URBAN EATS - Carrito JS
    ============================ */
 
-const DOMICILIO = 5000;
-
 // Renderiza los items del carrito
 function renderizarCarrito() {
   const carrito = window.UE.obtenerCarrito();
   const wrap = document.getElementById('carrito-items-wrap');
   const titulo = document.getElementById('carrito-titulo');
+  const resumenCard = document.getElementById('resumen-card');
   const totalItems = carrito.reduce((s, p) => s + p.cantidad, 0);
 
   titulo.textContent = `Tu Carrito (${totalItems} ${totalItems === 1 ? 'producto' : 'productos'})`;
@@ -22,9 +21,10 @@ function renderizarCarrito() {
         <a href="/catalogo" class="btn btn-verde"><i class="fas fa-arrow-left"></i> Ver Catálogo</a>
       </div>
     `;
-    actualizarResumen(0);
+    resumenCard.style.display = 'none';
     return;
   }
+  resumenCard.style.display = '';
 
   let subtotal = 0;
   let html = '<div class="carrito-items">';
@@ -73,9 +73,8 @@ function renderizarCarrito() {
 
 // Actualiza subtotal y total en el resumen
 function actualizarResumen(subtotal) {
-  const total = subtotal + DOMICILIO;
   document.getElementById('resumen-subtotal').textContent = `$${subtotal.toLocaleString('es-CO')}`;
-  document.getElementById('resumen-total').textContent = `$${total.toLocaleString('es-CO')} COP`;
+  document.getElementById('resumen-total').textContent = `$${subtotal.toLocaleString('es-CO')} COP`;
 }
 
 // Eventos de + / - / eliminar
