@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class LogoutController extends Controller
 {
-    public function logout(){
+    public function logout()
+    {
+        if ($redireccion = $this->requiereLogin()) {
+            return $redireccion;
+        }
+
         session()->flush();
+
         return redirect('/login');
     }
 }

@@ -2,17 +2,15 @@
 const formLogin = document.getElementById('form-login');
 if (formLogin) {
   formLogin.addEventListener('submit', (e) => {
-    //e.preventDefault();
+    e.preventDefault();
 
     const email = document.getElementById('email-login');
     const password = document.getElementById('password-login');
     const errorEmail = document.getElementById('error-email-login');
     const errorPassword = document.getElementById('error-password-login');
-    const loginExito = document.getElementById('login-exito');
 
     errorEmail.textContent = '';
     errorPassword.textContent = '';
-    loginExito.textContent = '';
 
     let valido = true;
 
@@ -27,12 +25,7 @@ if (formLogin) {
     }
 
     if (valido) {
-      loginExito.textContent = 'Inicio de sesión exitoso. Redirigiendo...';
-
-      // Redirigir al index después de 1 segundo
-      setTimeout(() => {
-        window.location.href = "home.html";
-      }, 1000);
+      formLogin.submit();
     }
   });
 }

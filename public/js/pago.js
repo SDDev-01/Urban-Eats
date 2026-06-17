@@ -2,44 +2,23 @@
    URBAN EATS - Pago JS
    ============================ */
 
-const DOMICILIO = 5000;
 let metodoActivo = 'tarjeta';
 
 // ---- CARGAR RESUMEN DEL PEDIDO ----
 (function cargarResumen() {
-  const pedido = JSON.parse(localStorage.getItem('ue_pedido_actual') || 'null');
+  const carrito = window.UE.obtenerCarrito();
   const wrap = document.getElementById('resumen-items-pago');
 
-  if (!pedido || !pedido.items || pedido.items.length === 0) {
-    // Si no hay pedido guardado, mostrar carrito actual
-    const carrito = window.UE.obtenerCarrito();
-    if (carrito.length === 0) {
-      wrap.innerHTML = '<p style="color:var(--texto-gris);font-size:0.875rem;">No hay productos en el carrito.</p>';
-      document.getElementById('pago-subtotal').textContent = '$0';
-      document.getElementById('pago-total').textContent = `$${DOMICILIO.toLocaleString('es-CO')} COP`;
-      return;
-    }
-    let subtotal = 0;
-    let html = '';
-    carrito.forEach(item => {
-      const precioItem = item.precio * item.cantidad;
-      subtotal += precioItem;
-      html += `
-        <div style="display:flex;justify-content:space-between;font-size:0.875rem;margin-bottom:0.4rem;">
-          <span>${item.cantidad}x ${item.nombre}</span>
-          <span>$${precioItem.toLocaleString('es-CO')}</span>
-        </div>
-      `;
-    });
-    wrap.innerHTML = html;
-    document.getElementById('pago-subtotal').textContent = `$${subtotal.toLocaleString('es-CO')}`;
-    document.getElementById('pago-total').textContent = `$${(subtotal + DOMICILIO).toLocaleString('es-CO')} COP`;
+  if (carrito.length === 0) {
+    wrap.innerHTML = '<p style="color:var(--texto-gris);font-size:0.875rem;">No hay productos en el carrito.</p>';
+    document.getElementById('pago-subtotal').textContent = '$0';
+    document.getElementById('pago-total').textContent = '$0 COP';
     return;
   }
 
   let subtotal = 0;
   let html = '';
-  pedido.items.forEach(item => {
+  carrito.forEach(item => {
     const precioItem = item.precio * item.cantidad;
     subtotal += precioItem;
     html += `
@@ -51,7 +30,7 @@ let metodoActivo = 'tarjeta';
   });
   wrap.innerHTML = html;
   document.getElementById('pago-subtotal').textContent = `$${subtotal.toLocaleString('es-CO')}`;
-  document.getElementById('pago-total').textContent = `$${(subtotal + DOMICILIO).toLocaleString('es-CO')} COP`;
+  document.getElementById('pago-total').textContent = `$${subtotal.toLocaleString('es-CO')} COP`;
 })();
 
 // ---- CAMBIAR MÉTODO DE PAGO ----
@@ -66,50 +45,11 @@ document.querySelectorAll('.metodo-btn').forEach(btn => {
   });
 });
 
-// ---- CARGAR DATOS DE TARJETA GUARDADOS ----
-(function cargarDatosTarjeta() {
-  const datosTarjeta = JSON.parse(localStorage.getItem('ue_datos_tarjeta') || 'null');
-  
-  if (datosTarjeta) {
-    const inputNumero  = document.getElementById('t-numero');
-    const inputTitular = document.getElementById('t-titular');
-    const inputFecha   = document.getElementById('t-fecha');
-    const inputCvv     = document.getElementById('t-cvv');
-    
-    if (datosTarjeta.numero) {
-      inputNumero.value = datosTarjeta.numero;
-      document.getElementById('preview-numero').textContent = datosTarjeta.numero;
-    }
-    if (datosTarjeta.titular) {
-      inputTitular.value = datosTarjeta.titular;
-      document.getElementById('preview-titular').textContent = datosTarjeta.titular.toUpperCase();
-    }
-    if (datosTarjeta.fecha) {
-      inputFecha.value = datosTarjeta.fecha;
-      document.getElementById('preview-fecha').textContent = datosTarjeta.fecha;
-    }
-    if (datosTarjeta.cvv) {
-      inputCvv.value = datosTarjeta.cvv;
-    }
-  }
-})();
-
 // ---- PREVIEW DE TARJETA ----
 const inputNumero  = document.getElementById('t-numero');
 const inputTitular = document.getElementById('t-titular');
 const inputFecha   = document.getElementById('t-fecha');
 const inputCvv     = document.getElementById('t-cvv');
-
-// Función para guardar datos en localStorage
-function guardarDatosTarjeta() {
-  const datosTarjeta = {
-    numero: inputNumero.value,
-    titular: inputTitular.value,
-    fecha: inputFecha.value,
-    cvv: inputCvv.value
-  };
-  localStorage.setItem('ue_datos_tarjeta', JSON.stringify(datosTarjeta));
-}
 
 // Formatear número de tarjeta (grupos de 4)
 inputNumero.addEventListener('input', () => {
@@ -117,14 +57,12 @@ inputNumero.addEventListener('input', () => {
   inputNumero.value = val.replace(/(.{4})/g, '$1 ').trim();
   const preview = val.padEnd(16, '•').replace(/(.{4})/g, '$1 ').trim();
   document.getElementById('preview-numero').textContent = preview;
-  guardarDatosTarjeta();
 });
 
 // Titular en mayúsculas en preview
 inputTitular.addEventListener('input', () => {
   const val = inputTitular.value.toUpperCase() || 'NOMBRE TITULAR';
   document.getElementById('preview-titular').textContent = val;
-  guardarDatosTarjeta();
 });
 
 // Formatear fecha MM/AA
@@ -135,14 +73,11 @@ inputFecha.addEventListener('input', () => {
   }
   inputFecha.value = val;
   document.getElementById('preview-fecha').textContent = val || 'MM/AA';
-  guardarDatosTarjeta();
 });
 
-// Guardar CVV al cambiar
+// Solo permitir números en CVV
 inputCvv.addEventListener('input', () => {
-  // Solo permitir números
   inputCvv.value = inputCvv.value.replace(/\D/g, '');
-  guardarDatosTarjeta();
 });
 
 // ---- VALIDACIÓN TARJETA ----
@@ -182,23 +117,41 @@ function validarTarjeta() {
 
 // ---- CONFIRMAR PAGO ----
 document.getElementById('btn-pagar').addEventListener('click', () => {
-  let valido = true;
-
-  if (metodoActivo === 'tarjeta') {
-    valido = validarTarjeta();
-  }
-  // efectivo: siempre válido
-
-  if (!valido) {
+  if (metodoActivo === 'tarjeta' && !validarTarjeta()) {
     window.UE.mostrarToast('Por favor corrige los errores antes de continuar.', 'fa-exclamation-circle');
     return;
   }
 
-  window.UE.mostrarToast('¡Pago procesado exitosamente! 🎉');
-  localStorage.removeItem('ue_pedido_actual');
-  window.UE.guardarCarrito([]);
+  const carrito = window.UE.obtenerCarrito();
+  if (carrito.length === 0) {
+    window.UE.mostrarToast('El carrito está vacío.', 'fa-exclamation-circle');
+    return;
+  }
 
-  setTimeout(() => {
-    window.location.href = 'rastreo.html';
-  }, 1800);
+  const btn = document.getElementById('btn-pagar');
+  btn.disabled = true;
+
+  fetch('/pedido/confirmar', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+    },
+    body: JSON.stringify({ items: carrito, metodo_pago: metodoActivo }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.redirect) {
+        window.UE.mostrarToast('¡Pago procesado exitosamente!');
+        window.UE.guardarCarrito([]);
+        setTimeout(() => { window.location.href = data.redirect; }, 1800);
+      } else {
+        window.UE.mostrarToast(data.error || 'Error al procesar el pago.', 'fa-exclamation-circle');
+        btn.disabled = false;
+      }
+    })
+    .catch(() => {
+      window.UE.mostrarToast('Error de conexión. Inténtalo nuevamente.', 'fa-exclamation-circle');
+      btn.disabled = false;
+    });
 });

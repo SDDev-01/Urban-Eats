@@ -2,12 +2,8 @@
    MÉTODO DE PAGO PREFERIDO
    ============================ */
 (function gestionarMetodoPago() {
-  // Clave en localStorage para el método preferido
-  const CLAVE = 'ue_metodo_pago';
-  const CLAVE_DATOS = 'ue_datos_tarjeta';
-
-  // Leer preferencia guardada (por defecto: tarjeta)
-  const preferencia = localStorage.getItem(CLAVE) || 'tarjeta';
+  // Método por defecto: tarjeta
+  const preferencia = 'tarjeta';
 
   // Elementos del DOM
   const btnTarjeta  = document.getElementById('perfil-met-tarjeta');
@@ -31,97 +27,7 @@
   // Salir si alguno de los elementos necesarios no existe
   if (!btnTarjeta || !btnEfectivo || !secTarjeta || !secEfectivo) return;
 
-  // Cargar datos de tarjeta guardados
-  function cargarDatosTarjeta() {
-    const datosTarjeta = JSON.parse(localStorage.getItem(CLAVE_DATOS) || 'null');
-    
-    if (datosTarjeta) {
-      if (datosTarjeta.numero) {
-        inputNumero.value = datosTarjeta.numero;
-        if (previewNumero) previewNumero.textContent = datosTarjeta.numero;
-      }
-      if (datosTarjeta.titular) {
-        inputTitular.value = datosTarjeta.titular;
-        if (previewTitular) previewTitular.textContent = datosTarjeta.titular.toUpperCase();
-      }
-      if (datosTarjeta.fecha) {
-        inputFecha.value = datosTarjeta.fecha;
-        if (previewFecha) previewFecha.textContent = datosTarjeta.fecha;
-      }
-      if (datosTarjeta.cvv) {
-        inputCvv.value = datosTarjeta.cvv;
-      }
-    }
-  }
-
-/*   // Guardar datos de tarjeta en localStorage
-// esto es peligroso no?
-  function guardarDatosTarjeta() {
-    const datosTarjeta = {
-      numero: inputNumero.value,
-      titular: inputTitular.value,
-      fecha: inputFecha.value,
-      cvv: inputCvv.value
-    };
-    localStorage.setItem(CLAVE_DATOS, JSON.stringify(datosTarjeta));
-  } */
-
-  // Cargar datos al inicio
-  cargarDatosTarjeta();
-
-  // Formatear número de tarjeta con espacios cada 4 dígitos
-  if (inputNumero) {
-    inputNumero.addEventListener('input', function(e) {
-      // Limitar a 16 dígitos numéricos (igual que pago.js)
-      let val = e.target.value.replace(/\D/g, '').substring(0, 16);
-      let formatted = val.match(/.{1,4}/g)?.join(' ') || '';
-      e.target.value = formatted;
-      
-      // Actualizar preview
-      if (previewNumero) {
-        previewNumero.textContent = formatted || '•••• •••• •••• ••••';
-      }
-      guardarDatosTarjeta();
-    });
-  }
-
-  // Actualizar titular en preview
-  if (inputTitular) {
-    inputTitular.addEventListener('input', function(e) {
-      if (previewTitular) {
-        previewTitular.textContent = e.target.value.toUpperCase() || 'NOMBRE TITULAR';
-      }
-      guardarDatosTarjeta();
-    });
-  }
-
-  // Formatear fecha MM/AA
-  if (inputFecha) {
-    inputFecha.addEventListener('input', function(e) {
-      let val = e.target.value.replace(/\D/g, '');
-      if (val.length >= 2) {
-        val = val.substring(0, 2) + '/' + val.substring(2, 4);
-      }
-      e.target.value = val;
-      
-      // Actualizar preview
-      if (previewFecha) {
-        previewFecha.textContent = val || 'MM/AA';
-      }
-      guardarDatosTarjeta();
-    });
-  }
-
-  // Guardar CVV al cambiar
-  if (inputCvv) {
-    inputCvv.addEventListener('input', function() {
-      // Solo permitir números
-      this.value = this.value.replace(/\D/g, '');
-      guardarDatosTarjeta();
-    });
-  }
-
-  // Mostrar la sección según la preferencia guardada
+  // Mostrar la sección según la preferencia
   function mostrarSeccion(metodo) {
     if (metodo === 'tarjeta') {
       secTarjeta.style.display  = '';
@@ -147,6 +53,53 @@
   btnEfectivo.addEventListener('click', function () {
     mostrarSeccion('efectivo');
   });
+
+  // Formatear número de tarjeta con espacios cada 4 dígitos
+  if (inputNumero) {
+    inputNumero.addEventListener('input', function(e) {
+      // Limitar a 16 dígitos numéricos (igual que pago.js)
+      let val = e.target.value.replace(/\D/g, '').substring(0, 16);
+      let formatted = val.match(/.{1,4}/g)?.join(' ') || '';
+      e.target.value = formatted;
+
+      // Actualizar preview
+      if (previewNumero) {
+        previewNumero.textContent = formatted || '•••• •••• •••• ••••';
+      }
+    });
+  }
+
+  // Actualizar titular en preview
+  if (inputTitular) {
+    inputTitular.addEventListener('input', function(e) {
+      if (previewTitular) {
+        previewTitular.textContent = e.target.value.toUpperCase() || 'NOMBRE TITULAR';
+      }
+    });
+  }
+
+  // Formatear fecha MM/AA
+  if (inputFecha) {
+    inputFecha.addEventListener('input', function(e) {
+      let val = e.target.value.replace(/\D/g, '');
+      if (val.length >= 2) {
+        val = val.substring(0, 2) + '/' + val.substring(2, 4);
+      }
+      e.target.value = val;
+
+      // Actualizar preview
+      if (previewFecha) {
+        previewFecha.textContent = val || 'MM/AA';
+      }
+    });
+  }
+
+  // Solo permitir números en CVV
+  if (inputCvv) {
+    inputCvv.addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '');
+    });
+  }
 
   // Guardar método "Tarjeta"
   btnGuardarTarjeta.addEventListener('click', function () {
@@ -193,49 +146,15 @@
     }
     if (!valido) return;
 
-    // Guardar datos de la tarjeta
-    guardarDatosTarjeta();
-    
-/*     // Persistir preferencia
-    localStorage.setItem(CLAVE, 'tarjeta');
- */
     if (window.UE && window.UE.mostrarToast) {
       window.UE.mostrarToast('Método de pago guardado', 'fa-check-circle');
     }
   });
 
-/*   // Guardar método "Efectivo"
+  // Guardar método "Efectivo"
   btnGuardarEfectivo.addEventListener('click', function () {
-    localStorage.setItem(CLAVE, 'efectivo');
     if (window.UE && window.UE.mostrarToast) {
       window.UE.mostrarToast('Método de pago guardado', 'fa-check-circle');
     }
-  }); */
-})();
-
-/* ============================
-   CARGAR DATOS DEL PERFIL
-   ============================ */
-(function cargarPerfil() {
-/*   const cliente = JSON.parse(localStorage.getItem('ue_cliente') || 'null'); */
-  
-  if (!cliente || !cliente.nombres) {
-    // Si no hay datos del cliente, mostrar valores por defecto
-    document.getElementById('perfil-nombre').textContent = 'Usuario';
-    document.getElementById('info-nombres').textContent = 'No registrado';
-    document.getElementById('info-apellidos').textContent = 'No registrado';
-    document.getElementById('info-email').textContent = 'No registrado';
-    document.getElementById('info-telefono').textContent = 'No registrado';
-    document.getElementById('info-direccion').textContent = 'No registrado';
-    return;
-  }
-
-  // Mostrar datos del cliente
-  const nombreCompleto = (cliente.nombres + ' ' + (cliente.apellidos || '')).trim();
-  document.getElementById('perfil-nombre').textContent = nombreCompleto || 'Usuario';
-  document.getElementById('info-nombres').textContent = cliente.nombres || '-';
-  document.getElementById('info-apellidos').textContent = cliente.apellidos || '-';
-  document.getElementById('info-email').textContent = cliente.email || '-';
-  document.getElementById('info-telefono').textContent = cliente.telefono || '-';
-  document.getElementById('info-direccion').textContent = cliente.direccion || '-';
+  });
 })();

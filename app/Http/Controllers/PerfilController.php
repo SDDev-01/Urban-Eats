@@ -2,18 +2,64 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Hash;
+use App\Models\Direccion;
+use App\Models\Telefono;
 use App\Models\Usuario;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class PerfilController extends Controller
 {
-    public function MostrarDatos(){
-        $codigoUsuario = session('CodigoUsuario');
-        $usuario = Usuario::find($codigoUsuario);
+    public function MostrarDatos(): View|RedirectResponse
+    {
+        if ($redireccion = $this->requiereLogin()) {
+            return $redireccion;
+        }
 
-        //extraemos datos
-        $datosUsuario = compact('usuario');
+        $usuario = Usuario::with(['telefono', 'direccion'])->find(session('CodigoUsuario'));
 
-        return view('perfil', $datosUsuario);
+        return view('perfil', compact('usuario'));
+    }
+
+    public function actualizar(Request $request): RedirectResponse
+    {
+        if ($redireccion = $this->requiereLogin()) {
+            return $redireccion;
+        }
+
+        $request->validate([
+            'Nombres' => ['required', 'string', 'max:100'],
+            'Apellidos' => ['required', 'string', 'max:100'],
+            'Correo' => ['required', 'email', 'max:150'],
+            'Telefono' => ['nullable', 'digits:10'],
+            'Direccion' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $usuario = Usuario::find(session('CodigoUsuario'));
+
+        $usuario->update([
+            'Nombres' => $request->input('Nombres'),
+            'Apellidos' => $request->input('Apellidos'),
+            'Correo' => $request->input('Correo'),
+        ]);
+
+        if ($request->filled('Telefono')) {
+            Telefono::updateOrCreate(
+                ['CodigoUsuario' => $usuario->CodigoUsuario],
+                ['Telefono' => $request->input('Telefono')]
+            );
+        }
+
+        if ($request->filled('Direccion')) {
+            Direccion::updateOrCreate(
+                ['CodigoUsuario' => $usuario->CodigoUsuario],
+                ['Direccion' => $request->input('Direccion')]
+            );
+        }
+
+        session(['Nombres' => $usuario->Nombres]);
+
+        return redirect('/perfil')->with('exito', 'Información actualizada correctamente.');
     }
 }
