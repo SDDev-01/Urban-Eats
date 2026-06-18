@@ -13,29 +13,22 @@ use App\Http\Controllers\RepartidorController;
 use App\Http\Controllers\RestauranteController;
 use App\Http\Controllers\RestauranteDetalleController;
 use App\Http\Controllers\SeleccionRolController;
+use App\Http\Controllers\PagoController;
 use Illuminate\Support\Facades\Route;
 
 // por ahora estaticas, si despues tomamos datos entonces ahi si usamos route:get o post
+// get es cuando entran a la pagina, y post es cuando dan a enviar
 
 // vistas estaticas
 Route::view('/', 'index');
 Route::view('/carrito', 'carrito');
-Route::get('/catalogo', [CatalogoController::class, 'mostrar']);
 Route::view('/cliente', 'cliente');
 Route::view('/mapa', 'mapa');
-Route::view('/pago', 'pago');
-Route::get('/rastreo', [RastreoController::class, 'mostrar']);
-Route::post('/pedido/confirmar', [PedidoController::class, 'confirmar']);
-Route::get('/pedido/{id}/estado', [PedidoController::class, 'estado']);
-Route::post('/pedido/{id}/cancelar', [PedidoController::class, 'cancelar']);
-Route::get('/repartidor', [RepartidorController::class, 'mostrarFormulario']);
-Route::post('/repartidor', [RepartidorController::class, 'registrar']);
-Route::get('/perfilRepartidor', [RepartidorController::class, 'mostrarPerfil']);
-Route::post('/repartidor/tomar/{envioId}', [RepartidorController::class, 'tomarPedido']);
-Route::patch('/repartidor/entregar/{envioId}', [RepartidorController::class, 'marcarEntregado']);
+
+//catalogo
+Route::get('/catalogo', [CatalogoController::class, 'mostrar']);
 
 // login
-// get es cuando entran a la pagina, y post es cuando dan a enviar
 Route::get('/login', [LoginController::class, 'mostrarPagina']);
 Route::post('/login', [LoginController::class, 'iniciarSesion']);
 
@@ -66,3 +59,19 @@ Route::patch('/perfilRestaurante/plato/{id}', [PerfilRestauranteController::clas
 Route::delete('/perfilRestaurante/plato/{id}', [PerfilRestauranteController::class, 'eliminarPlato']);
 Route::get('/menu', [MenuController::class, 'mostrarFormulario']);
 Route::post('/menu', [MenuController::class, 'crearMenu']);
+
+//repartidor
+Route::get('/repartidor', [RepartidorController::class, 'mostrarFormulario']);
+Route::post('/repartidor', [RepartidorController::class, 'registrar']);
+Route::get('/perfilRepartidor', [RepartidorController::class, 'mostrarPerfil']);
+Route::post('/repartidor/tomar/{envioId}', [RepartidorController::class, 'tomarPedido']);
+Route::patch('/repartidor/entregar/{envioId}', [RepartidorController::class, 'marcarEntregado']);
+
+//pedido
+Route::get('/rastreo', [RastreoController::class, 'mostrar']);
+Route::post('/pedido/confirmar', [PedidoController::class, 'confirmar']);
+Route::get('/pedido/{id}/estado', [PedidoController::class, 'estado']);
+Route::post('/pedido/{id}/cancelar', [PedidoController::class, 'cancelar']);
+
+//pago
+Route::get('/pago', [PagoController::class, 'mostrarPagina']);

@@ -114,7 +114,9 @@
         <hr class="resumen-separador">
         <div class="resumen-total-pago">
           <span>Total</span>
+          <!--monto pago-->
           <span class="monto" id="pago-total">$0 COP</span>
+          <input type="hidden" id="monto-input" name="monto" value="0">
         </div>
         <button class="btn-pagar" id="btn-pagar">
           <i class="fas fa-lock"></i> Confirmar Pago

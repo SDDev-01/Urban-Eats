@@ -30,7 +30,9 @@ let metodoActivo = 'tarjeta';
   });
   wrap.innerHTML = html;
   document.getElementById('pago-subtotal').textContent = `$${subtotal.toLocaleString('es-CO')}`;
+  //pago total
   document.getElementById('pago-total').textContent = `$${subtotal.toLocaleString('es-CO')} COP`;
+  document.getElementById('monto-input').value=subtotal;
 })();
 
 // ---- CAMBIAR MÉTODO DE PAGO ----
