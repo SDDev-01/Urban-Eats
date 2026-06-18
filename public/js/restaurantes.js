@@ -13,9 +13,14 @@ function renderizarRestaurantes() {
   restaurantes.forEach(restaurante => {
     const card = document.createElement('div');
     card.className = 'restaurante-card';
+    const emojisHtml = (restaurante.emojisComida || []).map((emoji, i) =>
+      `<span class="emoji-decorativo emoji-pos-${i}">${emoji}</span>`
+    ).join('');
+
     card.innerHTML = `
       <div class="restaurante-header" style="background: ${restaurante.color};">
-        ${restaurante.logo}
+        ${emojisHtml}
+        <span class="restaurante-logo-principal">${restaurante.logo}</span>
         <span class="restaurante-badge">Abierto</span>
       </div>
       <div class="restaurante-body">

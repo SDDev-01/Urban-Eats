@@ -62,12 +62,52 @@
   justify-content: center;
   font-size: 4rem;
   position: relative;
+  overflow: hidden;
   transition: transform 0.3s;
 }
 
 .restaurante-card:hover .restaurante-header {
   transform: scale(1.05);
 }
+
+/* Logo principal centrado */
+.restaurante-logo-principal {
+  font-size: 4rem;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.15));
+  transition: transform 0.3s;
+}
+
+.restaurante-card:hover .restaurante-logo-principal {
+  transform: scale(1.15) rotate(-5deg);
+}
+
+/* Emojis decorativos flotantes */
+.emoji-decorativo {
+  position: absolute;
+  font-size: 1.6rem;
+  opacity: 0.55;
+  z-index: 1;
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none;
+}
+
+.restaurante-card:hover .emoji-decorativo {
+  opacity: 0.8;
+}
+
+.emoji-pos-0 { top: 10px;  left: 12px;  transform: rotate(-15deg); }
+.emoji-pos-1 { top: 12px;  right: 50px; transform: rotate(10deg); }
+.emoji-pos-2 { bottom: 10px; left: 18px; transform: rotate(12deg); }
+.emoji-pos-3 { bottom: 8px;  right: 14px; transform: rotate(-10deg); }
+.emoji-pos-4 { top: 50%;   left: 10px;  transform: translateY(-50%) rotate(5deg); }
+
+.restaurante-card:hover .emoji-pos-0 { transform: rotate(-20deg) scale(1.1); }
+.restaurante-card:hover .emoji-pos-1 { transform: rotate(15deg)  scale(1.1); }
+.restaurante-card:hover .emoji-pos-2 { transform: rotate(18deg)  scale(1.1); }
+.restaurante-card:hover .emoji-pos-3 { transform: rotate(-15deg) scale(1.1); }
+.restaurante-card:hover .emoji-pos-4 { transform: translateY(-50%) rotate(8deg) scale(1.1); }
 
 /* Badge de estado */
 .restaurante-badge {
