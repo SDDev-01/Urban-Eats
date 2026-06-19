@@ -25,14 +25,13 @@
         <div id="carrito-items-wrap"></div>
       </div>
 
-      <div class="resumen-card">
+      <div class="resumen-card" id="resumen-card">
         <h3>Resumen del Pedido</h3>
         <div class="resumen-fila"><span class="label">Subtotal</span><span id="resumen-subtotal">$0</span></div>
-        <div class="resumen-fila"><span class="label">Domicilio</span><span>$5.000</span></div>
         <hr class="resumen-separador">
         <div class="resumen-total">
           <span>Total</span>
-          <span class="monto" id="resumen-total">$5.000 COP</span>
+          <span class="monto" id="resumen-total">$0 COP</span>
         </div>
         <button class="btn-pedido" id="btn-realizar-pedido">
           <i class="fas fa-check-circle"></i> Realizar Pedido

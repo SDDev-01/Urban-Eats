@@ -1,0 +1,108 @@
+.seccion-titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--texto-principal);
+  margin: 1.5rem 0 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.platos-existentes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.6rem;
+}
+
+.plato-check-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.65rem 0.85rem;
+  border: 1.5px solid var(--borde);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  font-size: 0.88rem;
+  line-height: 1.3;
+}
+
+.plato-check-label:has(input:checked) {
+  border-color: var(--principal);
+  background: var(--principal-claro, #f0faf0);
+}
+
+.plato-check-label input[type="checkbox"] {
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: var(--principal);
+}
+
+.plato-check-nombre { font-weight: 600; }
+
+.plato-check-precio {
+  color: var(--texto-secundario);
+  font-size: 0.8rem;
+}
+
+.plato-fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1.5px solid var(--borde);
+  border-radius: 12px;
+  margin-bottom: 0.75rem;
+  position: relative;
+  background: var(--fondo-card, #fafafa);
+}
+
+.plato-fila .campo { margin-bottom: 0; }
+
+.plato-fila-full { grid-column: 1 / -1; }
+
+.btn-quitar-plato {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  background: none;
+  border: none;
+  color: #c0392b;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.2rem 0.4rem;
+}
+
+.btn-quitar-plato:hover { opacity: 0.7; }
+
+.btn-agregar-plato {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 2px dashed var(--principal);
+  color: var(--principal);
+  border-radius: 10px;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  width: 100%;
+  justify-content: center;
+  margin-top: 0.25rem;
+  transition: background 0.2s;
+}
+
+.btn-agregar-plato:hover { background: var(--principal-claro, #f0faf0); }
+
+.sin-platos {
+  color: var(--texto-secundario);
+  font-size: 0.88rem;
+  font-style: italic;
+}
+
+.divisor {
+  border: none;
+  border-top: 1.5px solid var(--borde);
+  margin: 1.5rem 0;
+}

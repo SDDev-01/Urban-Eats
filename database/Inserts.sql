@@ -81,12 +81,12 @@ INSERT INTO gerente (CodigoGerente, CodigoUsuario) VALUES
 (2, 12), 
 (3, 13);
 
-INSERT INTO restaurante (CodigoRestaurante, CodigoCiudad, CodigoGerente, Nombre, Ubicacion, Horario, Latitud, Longitud) VALUES
-(1, 1, 1, 'Pollería El Rico Sabor', 'Av. Caracas 123', '10:00-22:00', 4.7115, -74.0725),
-(2, 2, 2, 'Pizzería Don Giuseppe', 'Calle 93 #11-20', '12:00-23:00', 6.2440, -75.5810),
-(3, 3, 3, 'Sushi Pacífico', 'Cra 4 #10-20', '11:00-22:30', 3.4519, -76.5318),
-(4, 4, 1, 'Arepas La Costeña', 'Calle 72 #45-10', '08:00-21:00', 10.9687, -74.7811),
-(5, 5, 2, 'Parrilla Santandereana', 'Av. 27 #36-50', '11:30-22:00', 7.1195, -73.1225);
+INSERT INTO restaurante (CodigoRestaurante, CodigoCiudad, CodigoGerente, Nombre, Direccion, Horario) VALUES
+(1, 1, 1, 'Pollería El Rico Sabor', 'Av. Caracas 123', '10:00-22:00'),
+(2, 2, 2, 'Pizzería Don Giuseppe', 'Calle 93 #11-20', '12:00-23:00'),
+(3, 3, 3, 'Sushi Pacífico', 'Cra 4 #10-20', '11:00-22:30'),
+(4, 4, 1, 'Arepas La Costeña', 'Calle 72 #45-10', '08:00-21:00'),
+(5, 5, 2, 'Parrilla Santandereana', 'Av. 27 #36-50', '11:30-22:00');
 
 -- ============================
 -- MENÚ Y PLATOS
@@ -94,17 +94,20 @@ INSERT INTO restaurante (CodigoRestaurante, CodigoCiudad, CodigoGerente, Nombre,
 INSERT INTO menu (CodigoMenu, Categoria, CodigoRestaurante) VALUES
 (1, 'Pollo', 1), (2, 'Bebidas', 1), (3, 'Pizzas', 2), (4, 'Pastas', 2), (5, 'Sushi', 3), (6, 'Entradas', 3), (7, 'Arepas', 4), (8, 'Bebidas', 4), (9, 'Carnes', 5), (10,'Bebidas', 5);
 
-INSERT INTO plato (CodigoPlato, Nombre, Descripcion, Precio, TipoComida, Disponibilidad) VALUES
-(1, 'Pollo asado 1/4', 'Con papa', 18000.00, 'Pollo', 'Disponible'), (2, 'Limonada', 'Con hielo', 6000.00, 'Bebida', 'Disponible'),
-(3, 'Pizza margarita', 'Mozzarella', 28000.00, 'Pizza', 'Disponible'), (4, 'Lasagna', 'Boloñesa', 32000.00, 'Pasta', 'Disponible'),
-(5, 'Roll california', 'Cangrejo', 26000.00, 'Sushi', 'Disponible'), (6, 'Gyozas', 'Empanaditas', 20000.00, 'Entrada', 'Disponible'),
-(7, 'Arepa con queso', 'Rellena', 10000.00, 'Arepa', 'Disponible'), (8, 'Gaseosa', '350ml', 5000.00, 'Bebida', 'Disponible'),
-(9, 'Churrasco', 'A la parrilla', 35000.00, 'Carne', 'Disponible'), (10, 'Cerveza', 'Nacional', 7000.00, 'Bebida', 'Disponible');
+INSERT INTO plato (CodigoPlato, CodigoMenu, Nombre, Descripcion, Precio, TipoComida, Disponibilidad) VALUES
+(1, 1, 'Pollo asado 1/4', 'Con papa', 18000.00, 'Pollo', 'Disponible'),
+(2, 2, 'Limonada', 'Con hielo', 6000.00, 'Bebida', 'Disponible'),
+(3, 3, 'Pizza margarita', 'Mozzarella', 28000.00, 'Pizza', 'Disponible'),
+(4, 4, 'Lasagna', 'Boloñesa', 32000.00, 'Pasta', 'Disponible'),
+(5, 5, 'Roll california', 'Cangrejo', 26000.00, 'Sushi', 'Disponible'),
+(6, 6, 'Gyozas', 'Empanaditas', 20000.00, 'Entrada', 'Disponible'),
+(7, 7, 'Arepa con queso', 'Rellena', 10000.00, 'Arepa', 'Disponible'),
+(8, 8, 'Gaseosa', '350ml', 5000.00, 'Bebida', 'Disponible'),
+(9, 9, 'Churrasco', 'A la parrilla', 35000.00, 'Carne', 'Disponible'),
+(10, 10, 'Cerveza', 'Nacional', 7000.00, 'Bebida', 'Disponible');
 
 INSERT INTO alergeno (CodigoAlergeno, CodigoPlato, Nombre) VALUES
 (1, 3, 'Gluten'), (2, 3, 'Lácteos'), (3, 4, 'Gluten'), (4, 4, 'Huevo'), (5, 4, 'Lácteos'), (6, 5, 'Mariscos'), (7, 6, 'Soya'), (8, 7, 'Lácteos'), (9, 10, 'Gluten');
-
-INSERT INTO plato_menu (CodigoMenu, CodigoPlato) VALUES (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9), (10, 10);
 
 -- ============================
 -- ENVÍOS, PAGOS Y OPINIONES
@@ -128,3 +131,17 @@ INSERT INTO transaccion (TransaccionID, CodigoPago, MetodoPago, BancoNombre, CUS
 INSERT INTO opinion (CodigoOpinion, CodigoPlato, CodigoCliente, CodigoRepartidor, Opinion, Fecha) VALUES
 (1, 1, 1, 1, 'Caliente y rico.', '2026-05-20'), (2, 3, 2, 2, 'Excelente.', '2026-05-20'),
 (3, 5, 3, 3, 'Muy fresco.', '2026-05-21'), (4, 7, 4, 4, 'Un poco fría.', '2026-05-21'), (5, 9, 5, 5, 'Recomendado.', '2026-05-22');
+
+-- ============================
+-- DETALLE DE PEDIDO
+-- Los pedidos 1-5 son creados automáticamente por el trigger
+-- `crear_pedido_automaticamente` al insertar los envíos de arriba.
+-- Los montos coinciden con los registros de `pago`.
+-- ============================
+INSERT INTO detalle_pedido (CodigoDetalle, CodigoPedido, CodigoPlato, Cantidad, PrecioUnitario) VALUES
+(1, 1, 1, 1, 18000.00),  -- Pedido 1 · Pollo asado 1/4  (subtotal 18000)
+(2, 1, 2, 1,  6000.00),  -- Pedido 1 · Limonada         (subtotal  6000 → total 24000)
+(3, 2, 3, 1, 28000.00),  -- Pedido 2 · Pizza margarita  (total 28000)
+(4, 3, 5, 1, 26000.00),  -- Pedido 3 · Roll california  (total 26000)
+(5, 4, 7, 1, 10000.00),  -- Pedido 4 · Arepa con queso  (total 10000)
+(6, 5, 9, 1, 35000.00);  -- Pedido 5 · Churrasco        (total 35000)

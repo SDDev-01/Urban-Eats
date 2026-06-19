@@ -2,28 +2,6 @@
    URBAN EATS - Cliente JS
    ============================ */
 
-const CLIENTE_DEFAULT = {
-  nombres: '', apellidos: '',
-  email: '', telefono: '',
-  direccion: ''
-};
-
-
-/* let cliente = JSON.parse(localStorage.getItem('ue_cliente') || 'null') || { ...CLIENTE_DEFAULT };
-
-function persistir() {
-  localStorage.setItem('ue_cliente', JSON.stringify(cliente));
-} */
-
-function llenarFormulario() {
-  document.getElementById('c-nombres').value   = cliente.nombres;
-  document.getElementById('c-apellidos').value = cliente.apellidos;
-  document.getElementById('c-email').value     = cliente.email;
-  document.getElementById('c-telefono').value  = cliente.telefono;
-  document.getElementById('c-direccion').value = cliente.direccion;
-  ocultarMensaje();
-}
-
 function ocultarMensaje() {
   const msg = document.getElementById('msg-verificacion');
   if (msg) msg.style.display = 'none';
@@ -94,23 +72,10 @@ function validarTodo() {
   return ok;
 }
 
-// Botón Aceptar: valida y guarda si todo está bien
+// Botón Aceptar: valida y muestra resultado
 document.getElementById('btn-verificar').addEventListener('click', () => {
   const ok = validarTodo();
   mostrarMensaje(ok);
   if (!ok) return;
-  cliente.nombres   = document.getElementById('c-nombres').value.trim();
-  cliente.apellidos = document.getElementById('c-apellidos').value.trim();
-  cliente.email     = document.getElementById('c-email').value.trim();
-  cliente.telefono  = document.getElementById('c-telefono').value.trim();
-  cliente.direccion = document.getElementById('c-direccion').value.trim();
-  persistir();
   window.UE.mostrarToast('¡Datos del cliente guardados!');
-  
-  // Redirigir al perfil después de guardar
-  setTimeout(() => {
-    window.location.href = 'perfil.php';
-  }, 1000);
 });
-
-llenarFormulario();

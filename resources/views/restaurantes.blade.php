@@ -32,8 +32,8 @@
 
   <div id="toast-container"></div>
   
-  <script src="{{ asset('js/data-restaurantes.js') }}"></script>
   <script src="{{ asset('js/app.js') }}"></script>
+  <script>window.RESTAURANTES_BD = @json($restaurantesJS);</script>
   <script src="{{ asset('js/restaurantes.js') }}"></script>
 </body>
 </html>

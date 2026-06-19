@@ -73,7 +73,7 @@ const RESTAURANTE_DEMO = {
   telefono: '310 456 7890'
 };
 
-let pedidos = [...PEDIDOS_DEMO];
+let pedidos = window.PEDIDOS_BD ? [...window.PEDIDOS_BD] : [];
 let abierto = true;
 let filtroActivo = 'todos';
 
@@ -90,11 +90,13 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function cargarInfoRestaurante() {
-  document.getElementById('rest-nombre').textContent    = RESTAURANTE_DEMO.nombre;
-  document.getElementById('rest-descripcion').textContent = RESTAURANTE_DEMO.descripcion;
-  document.getElementById('rest-direccion').textContent  = RESTAURANTE_DEMO.direccion;
-  document.getElementById('rest-telefono').textContent   = RESTAURANTE_DEMO.telefono;
-  document.getElementById('navbar-nombre').textContent   = RESTAURANTE_DEMO.nombre;
+  // Los datos del restaurante ya fueron renderizados por Blade en el HTML.
+  // Solo sincronizamos el navbar con el nombre del restaurante.
+  const nombreEl = document.getElementById('rest-nombre');
+  const navbarNombre = document.getElementById('navbar-nombre');
+  if (nombreEl && navbarNombre) {
+    navbarNombre.textContent = nombreEl.textContent || RESTAURANTE_DEMO.nombre;
+  }
 }
 
 // ---- TOGGLE ABIERTO/CERRADO ----
