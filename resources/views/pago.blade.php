@@ -20,87 +20,15 @@
     </div>
 
     <div class="pago-layout">
-
-      <!-- Columna izquierda: formulario -->
-      <div>
-        <!-- Métodos -->
-        <div class="pago-seccion">
-          <h3><i class="fas fa-wallet"></i> Selecciona un método</h3>
-          <div class="metodos-pago">
-            <button class="metodo-btn activo" data-metodo="tarjeta" id="met-tarjeta">
-              <i class="fas fa-credit-card"></i> Tarjeta
-            </button>
-            <button class="metodo-btn" data-metodo="efectivo" id="met-efectivo">
-              <i class="fas fa-money-bill-wave"></i> Efectivo
-            </button>
-          </div>
-        </div>
-
-        <!-- Formulario tarjeta -->
-        <div class="pago-seccion" id="seccion-tarjeta">
-          <h3><i class="fas fa-credit-card"></i> Datos de la tarjeta</h3>
-
-          <!-- Tarjeta visual -->
-          <div class="tarjeta-visual" id="tarjeta-preview">
-            <div class="tarjeta-chip"></div>
-            <div class="tarjeta-numero" id="preview-numero">•••• •••• •••• ••••</div>
-            <div class="tarjeta-footer">
-              <div>
-                <div class="label">Titular</div>
-                <div id="preview-titular">NOMBRE TITULAR</div>
-              </div>
-              <div>
-                <div class="label">Vence</div>
-                <div id="preview-fecha">MM/AA</div>
-              </div>
-            </div>
-          </div>
-
-          <form id="form-tarjeta"  >
-            <div class="campo">
-              <label for="t-numero">Número de tarjeta</label>
-              <div class="campo-icono">
-                <i class="fas fa-credit-card"></i>
-                <input type="text" id="t-numero" placeholder="1234 5678 9012 3456" maxlength="19">
-              </div>
-              <span class="error" id="err-t-num"></span>
-            </div>
-
-            <div class="campo">
-              <label for="t-titular">Nombre del titular</label>
-              <input type="text" id="t-titular" placeholder="Como aparece en la tarjeta" style="text-transform:uppercase;">
-              <span class="error" id="err-t-tit"></span>
-            </div>
-
-            <div class="form-grid">
-              <div class="campo">
-                <label for="t-fecha">Fecha de vencimiento</label>
-                <input type="text" id="t-fecha" placeholder="MM/AA" maxlength="5">
-                <span class="error" id="err-t-fecha"></span>
-              </div>
-              <div class="campo">
-                <label for="t-cvv">CVV</label>
-                <div class="campo-icono">
-                  <i class="fas fa-lock"></i>
-                  <input type="password" id="t-cvv" placeholder="•••" maxlength="4" pattern="[0-9]*" inputmode="numeric">
-                </div>
-                <span class="error" id="err-t-cvv"></span>
-              </div>
-            </div>
-          </form>
-        </div>
-
-        <!-- Efectivo -->
-        <div class="pago-seccion" id="seccion-efectivo" style="display:none;">
-          <h3><i class="fas fa-money-bill-wave"></i> Pago en efectivo</h3>
-          <div style="text-align:center; padding:1.5rem;">
-            <div style="font-size:3.5rem; margin-bottom:1rem;">💵</div>
-            <p style="color:var(--texto-gris); font-size:0.95rem;">
-              El repartidor llevará el pedido y recibirá el pago al momento de la entrega.<br>
-              <strong style="color:var(--texto);">Por favor ten el dinero exacto.</strong>
-            </p>
-          </div>
-        </div>
+      <!--sacar variable public key de ENV-->
+      <script>
+        window.MP_PUBLIC_KEY = "{{ env('MERCADOPAGO_PUBLIC_KEY') }}";
+      </script>
+      <!-- Columna izquierda: mercado pago -->
+      <script src="https://sdk.mercadopago.com/js/v2"></script>
+      <!--contenedor del brick-->
+      <div id="paymentBrick_container">
+        
       </div>
 
       <!-- Resumen lateral -->
@@ -118,6 +46,7 @@
           <span class="monto" id="pago-total">$0 COP</span>
           <input type="hidden" id="monto-input" name="monto" value="0">
         </div>
+        <!-- boton viejo de pago
         <button class="btn-pagar" id="btn-pagar">
           <i class="fas fa-lock"></i> Confirmar Pago
         </button>
@@ -125,6 +54,7 @@
           <i class="fas fa-shield-alt" style="color:var(--verde);"></i>
           Pago 100% seguro y encriptado
         </div>
+        -->
       </div>
     </div>
   </div>

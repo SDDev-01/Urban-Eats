@@ -75,3 +75,6 @@ Route::post('/pedido/{id}/cancelar', [PedidoController::class, 'cancelar']);
 
 //pago
 Route::get('/pago', [PagoController::class, 'mostrarPagina']);
+
+//mercadopago
+Route::post('/process_payment', [PagoController::class, 'iniciarPago']);

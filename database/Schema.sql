@@ -279,7 +279,7 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`pago` (
   `Monto` DECIMAL(10,2) NULL DEFAULT NULL,
   `FechaPago` DATE NULL DEFAULT NULL,
   `HoraPago` TIME NULL DEFAULT NULL,
-  `EstadoPago` ENUM('Pendiente', 'Aceptado', 'Rechazado', 'Cancelado') NOT NULL DEFAULT 'Pendiente',
+  `EstadoPago` ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'pending',
   PRIMARY KEY (`CodigoPago`),
   INDEX `CodigoCliente` (`CodigoCliente` ASC),
   INDEX `CodigoEnvio` (`CodigoEnvio` ASC),

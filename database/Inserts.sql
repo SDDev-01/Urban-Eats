@@ -120,9 +120,9 @@ SELECT 4, CodigoCliente, 4, 4, 'Pedido 4', '2026-05-21', '09:15:00' FROM cliente
 SELECT 5, CodigoCliente, 5, 5, 'Pedido 5', '2026-05-22', '14:05:00' FROM cliente WHERE CodigoUsuario = 5;
 
 INSERT INTO pago (CodigoPago, CodigoCliente, CodigoEnvio, Monto, FechaPago, HoraPago, EstadoPago) VALUES
-(1, 1, 1, 24000.00, '2026-05-20', '13:00:00', 'Aceptado'), (2, 2, 2, 28000.00, '2026-05-20', '19:40:00', 'Aceptado'),
-(3, 3, 3, 26000.00, '2026-05-21', '19:10:00', 'Aceptado'), (4, 4, 4, 10000.00, '2026-05-21', '08:50:00', 'Rechazado'),
-(5, 5, 5, 35000.00, '2026-05-22', '13:30:00', 'Aceptado');
+(1, 1, 1, 24000.00, '2026-05-20', '13:00:00', 'approved'), (2, 2, 2, 28000.00, '2026-05-20', '19:40:00', 'approved'),
+(3, 3, 3, 26000.00, '2026-05-21', '19:10:00', 'approved'), (4, 4, 4, 10000.00, '2026-05-21', '08:50:00', 'approved'),
+(5, 5, 5, 35000.00, '2026-05-22', '13:30:00', 'approved');
 
 INSERT INTO transaccion (TransaccionID, CodigoPago, MetodoPago, BancoNombre, CUS, CodigoRespuesta) VALUES
 ('TX-0001', 1, 'Tarjeta', 'Bancolombia', 'CUS1', '00'), ('TX-0002', 2, 'PSE', 'Davivienda', 'CUS2', '00'),
