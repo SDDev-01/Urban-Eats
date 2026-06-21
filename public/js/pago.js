@@ -67,7 +67,8 @@ const renderPaymentBrick = async (bricksBuilder) => {
     customization: {
       paymentMethods: {
         ticket: "all",
-        bankTransfer: "all",
+        //este es PSE
+        //bankTransfer: "all",
         creditCard: "all",
         prepaidCard: "all",
         debitCard: "all",
@@ -83,6 +84,8 @@ const renderPaymentBrick = async (bricksBuilder) => {
       },
       onSubmit: ({ selectedPaymentMethod, formData }) => {
         console.log(formData);
+        console.log("CLICK EN PAGAR");
+        console.log(formData);
        // callback llamado al hacer clic en el botón enviar datos
         return new Promise((resolve, reject) => {
           fetch("/process_payment", {
@@ -94,7 +97,12 @@ const renderPaymentBrick = async (bricksBuilder) => {
           })
             .then((response) => response.json())
             .then((response) => {
-             // recibir el resultado del pago
+              // recibir el resultado del pago
+              if (response.status === "approved") {
+                window.location.href = "/rastreo";
+              } else {
+                window.location.href = "/pago?error=1";
+              }
               resolve();
             })
             .catch((error) => {

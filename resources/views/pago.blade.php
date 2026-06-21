@@ -12,6 +12,10 @@
 <body>
 
 @include('partials.navbar')
+@if(request('error'))
+  <p style="color:red;">El pago no pudo completarse</p>
+@endif
+
 
   <div class="pagina">
     <div style="max-width:1000px; margin:0 auto; padding:0 2rem 1rem;">
