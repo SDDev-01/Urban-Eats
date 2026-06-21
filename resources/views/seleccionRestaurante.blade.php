@@ -154,6 +154,19 @@
       @endforeach
     </div>
 
+    <div class="restaurantes-lista" style="margin-top:0.85rem;">
+      <a href="{{ url('/restaurante') }}" class="restaurante-opcion" style="text-decoration:none;">
+        <div class="restaurante-icono" style="background:rgba(254,193,11,0.25);color:#fec10b;">
+          <i class="fas fa-plus"></i>
+        </div>
+        <div class="restaurante-info">
+          <div class="restaurante-nombre">Crear nuevo restaurante</div>
+          <div class="restaurante-direccion">Registra otro establecimiento</div>
+        </div>
+        <i class="fas fa-chevron-right restaurante-flecha"></i>
+      </a>
+    </div>
+
     <a href="{{ url('/seleccion-rol') }}" class="btn-volver">
       <i class="fas fa-arrow-left"></i> Volver
     </a>

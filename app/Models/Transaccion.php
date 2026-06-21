@@ -7,20 +7,28 @@ use Illuminate\Database\Eloquent\Model;
 class Transaccion extends Model
 {
     protected $table = 'transaccion';
-    protected $primaryKey = 'TransaccionId';
+
+    protected $primaryKey = 'TransaccionID';
+
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
     public $timestamps = false;
 
     protected $fillable = [
+        'TransaccionID',
         'CodigoPago',
         'MetodoPago',
         'BancoNombre',
         'CUS',
-        'CodigoRespuesta'
+        'CodigoRespuesta',
     ];
 
-    //coordinalidad
+    // coordinalidad
 
-    public function pago(){
-        return $this->belongsTo(Pago::class,'CodigoPago');
+    public function pago()
+    {
+        return $this->belongsTo(Pago::class, 'CodigoPago');
     }
 }

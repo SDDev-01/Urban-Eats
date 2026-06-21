@@ -53,6 +53,20 @@ const renderPaymentBrick = async (bricksBuilder) => {
       //preferenceId: "<PREFERENCE_ID>",
     },
     customization: {
+      visual: {
+        style: {
+          theme: 'default',
+          customVariables: {
+            baseColor: '#fec10b',
+            baseColorFirstVariant: '#e6ac00',
+            baseColorSecondVariant: '#f7643b',
+            buttonTextColor: '#111417',
+            outlinePrimaryColor: '#fec10b',
+            outlineSecondaryColor: '#ddd4bf',
+            errorColor: '#a42828',
+          },
+        },
+      },
       paymentMethods: {
         ticket: "all",
         //este es PSE
@@ -71,36 +85,35 @@ const renderPaymentBrick = async (bricksBuilder) => {
        */
       },
       onSubmit: ({ selectedPaymentMethod, formData }) => {
-        //console.log(formData);
-        //console.log("CLICK EN PAGAR");
-        // callback llamado al hacer clic en el botón enviar datos
         return new Promise((resolve, reject) => {
           fetch("/process_payment", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...formData, items: window.UE.obtenerCarrito() }),
           })
-            .then((response) => response.json())
-            .then((response) => {
-              // recibir el resultado del pago
-              if (response.status === "approved") {
+            .then(res => res.json())
+            .then(data => {
+              const exitoso = ["approved", "in_process", "authorized"];
+              if (exitoso.includes(data.status)) {
+                window.UE.guardarCarrito([]);
                 window.location.href = "/rastreo";
               } else {
-                window.location.href = "/pago?error=1";
+                window.UE.mostrarToast(
+                  data.mensaje_error || 'Tu pago fue rechazado. Intenta con otro método.',
+                  'fa-exclamation-circle'
+                );
               }
               resolve();
             })
-            .catch((error) => {
-             // manejar la respuesta de error al intentar crear el pago
+            .catch(() => {
+              window.UE.mostrarToast('Error de conexión. Inténtalo nuevamente.', 'fa-exclamation-circle');
               reject();
             });
         });
       },
       onError: (error) => {
-       // callback llamado para todos los casos de error de Brick
         console.error(error);
+        window.UE.mostrarToast('Ocurrió un error en el formulario de pago.', 'fa-exclamation-circle');
       },
     },
   };

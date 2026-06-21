@@ -135,16 +135,33 @@
       <div class="perfil-card">
         <h3><i class="fas fa-rocket"></i> ¿Quieres hacer más?</h3>
         <div class="opciones-grid">
-          <a href="{{ url('/repartidor') }}" class="opcion-card">
-            <div class="opcion-icon"><i class="fas fa-motorcycle" style="color: #3498db;"></i></div>
-            <div class="opcion-titulo">Sé Repartidor</div>
-            <div class="opcion-desc">Gana dinero entregando pedidos</div>
-          </a>
-          <a href="{{ url('/restaurante') }}" class="opcion-card">
-            <div class="opcion-icon"><i class="fas fa-store" style="color: #e67e22;"></i></div>
-            <div class="opcion-titulo">Registra tu Restaurante</div>
-            <div class="opcion-desc">Vende tu comida saludable</div>
-          </a>
+          @if ($esRepartidor)
+            <a href="{{ url('/perfilRepartidor') }}" class="opcion-card">
+              <div class="opcion-icon"><i class="fas fa-motorcycle" style="color: #3498db;"></i></div>
+              <div class="opcion-titulo">Panel Repartidor</div>
+              <div class="opcion-desc">Ver pedidos y gestionar entregas</div>
+            </a>
+          @else
+            <a href="{{ url('/repartidor') }}" class="opcion-card">
+              <div class="opcion-icon"><i class="fas fa-motorcycle" style="color: #3498db;"></i></div>
+              <div class="opcion-titulo">Sé Repartidor</div>
+              <div class="opcion-desc">Gana dinero entregando pedidos</div>
+            </a>
+          @endif
+
+          @if ($tieneRestaurante)
+            <a href="{{ url('/seleccion-restaurante') }}" class="opcion-card">
+              <div class="opcion-icon"><i class="fas fa-store" style="color: #e67e22;"></i></div>
+              <div class="opcion-titulo">Mi Restaurante</div>
+              <div class="opcion-desc">Administrar menú y pedidos</div>
+            </a>
+          @else
+            <a href="{{ url('/restaurante') }}" class="opcion-card">
+              <div class="opcion-icon"><i class="fas fa-store" style="color: #e67e22;"></i></div>
+              <div class="opcion-titulo">Registra tu Restaurante</div>
+              <div class="opcion-desc">Vende tu comida en Urban Eats</div>
+            </a>
+          @endif
         </div>
       </div>
 
@@ -162,7 +179,7 @@
   </div>
 
   <footer>
-    <p>&copy; 2026 Urban Eats – Proyecto Formativo SENA. Comida saludable para todos.</p>
+    <p>&copy; 2026 Urban Eats – Proyecto Formativo SENA. Comida para todos.</p>
   </footer>
 
   <script src="{{ asset('js/app.js') }}"></script>

@@ -13,7 +13,10 @@
 
 @include('partials.navbar')
 @if(request('error'))
-  <p style="color:red;">El pago no pudo completarse</p>
+  <div style="max-width:1000px;margin:1rem auto;padding:1rem 1.5rem;background:#fef2f2;border:1px solid #fca5a5;border-radius:0.75rem;color:#b91c1c;display:flex;align-items:center;gap:0.75rem;">
+    <i class="fas fa-exclamation-circle" style="font-size:1.25rem;"></i>
+    <span>Tu pago no pudo completarse. Por favor intenta con otro método de pago.</span>
+  </div>
 @endif
 
 
