@@ -83,10 +83,9 @@ const renderPaymentBrick = async (bricksBuilder) => {
        */
       },
       onSubmit: ({ selectedPaymentMethod, formData }) => {
-        console.log(formData);
-        console.log("CLICK EN PAGAR");
-        console.log(formData);
-       // callback llamado al hacer clic en el botón enviar datos
+        //console.log(formData);
+        //console.log("CLICK EN PAGAR");
+        // callback llamado al hacer clic en el botón enviar datos
         return new Promise((resolve, reject) => {
           fetch("/process_payment", {
             method: "POST",

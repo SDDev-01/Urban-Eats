@@ -19,7 +19,7 @@ class PagoController extends Controller
         return view('pago');
     }
     Public function iniciarPago(Request $request){
-        dd($request->all());
+        //dd($request->all());
         //codigocliente
         $CodigoUsuario = session('CodigoUsuario');
         $Usuario = Usuario::find($CodigoUsuario);
@@ -45,23 +45,23 @@ class PagoController extends Controller
         $request_options->setCustomHeaders(["X-Idempotency-Key" => Str::uuid()->toString()]);
         
         //datos del brick mercado pago
-        $data = $request->all();
+        //$data = $request->all();
 
         $payment = $client->create([
-        "transaction_amount" => (float) $data['transaction_amount'],
-        "token" => $data['token'],
-        "description" => "pedido Urban Eats",
-        "installments" => $data['installments'],
-        "payment_method_id" => $data['payment_method_id'],
-        "issuer_id" => $data['issuer_id'],
-        "payer" => [
-            "email" => $data['payer']['email'],
-            "identification" => [
-            "type" => $data['payer']['identification']['type'],
-            "number" => $data['payer']['identification']['number']
-            ]
-        ]
-        ], $request_options);
+            "transaction_amount" => (float) $request->input('transaction_amount'),
+            "token" => $request->input('token'),
+            "description" => "pedido Urban Eats",
+            "installments" => (int) $request->input('installments'),
+            "payment_method_id" => $request->input('payment_method_id'),
+            "issuer_id" => $request->input('issuer_id'),
+            "payer" => [
+                "email" => $request->input('payer.email'),
+                    "identification" => [
+                        "type" => $request->input('payer.identification.type'),
+                        "number" => $request->input('payer.identification.number'),
+                    ]
+                ]
+            ]);
         return response()->json([
             "status" => $payment->status,
             "id" => $payment->id

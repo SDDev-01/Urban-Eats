@@ -275,7 +275,7 @@ COLLATE = utf8mb4_unicode_ci;
 CREATE TABLE IF NOT EXISTS `urbaneats`.`pago` (
   `CodigoPago` INT(11) NOT NULL AUTO_INCREMENT,
   `CodigoCliente` INT(11) NOT NULL,
-  `CodigoEnvio` INT(11) NOT NULL,
+  `CodigoEnvio` INT(11),
   `Monto` DECIMAL(10,2) NULL DEFAULT NULL,
   `FechaPago` DATE NULL DEFAULT NULL,
   `HoraPago` TIME NULL DEFAULT NULL,
