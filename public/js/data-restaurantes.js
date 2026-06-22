@@ -1,6 +1,6 @@
 /* ============================
    URBAN EATS - Datos de Restaurantes
-   Base de datos temporal en localStorage
+   Datos estáticos de prueba (serán reemplazados por datos de la BD)
    ============================ */
 
 // 4 Restaurantes de prueba
@@ -407,16 +407,3 @@ function obtenerRestaurantes() {
 function obtenerProductos() {
   return productos;
 }
-
-// Cargar datos en localStorage (simulando BD)
-function inicializarDatosRestaurantes() {
-  if (!localStorage.getItem('ue_restaurantes')) {
-    localStorage.setItem('ue_restaurantes', JSON.stringify(restaurantes));
-  }
-  if (!localStorage.getItem('ue_productos')) {
-    localStorage.setItem('ue_productos', JSON.stringify(productos));
-  }
-}
-
-// Inicializar datos al cargar el script
-inicializarDatosRestaurantes();

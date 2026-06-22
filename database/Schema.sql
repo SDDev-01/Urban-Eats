@@ -63,6 +63,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `urbaneats`.`plato` (
   `CodigoPlato` INT(11) NOT NULL AUTO_INCREMENT,
+  `CodigoMenu` INT(11) NULL DEFAULT NULL,
   `Nombre` VARCHAR(150) NULL DEFAULT NULL,
   `Descripcion` VARCHAR(300) NULL DEFAULT NULL,
   `Precio` DECIMAL(10,2) NULL DEFAULT NULL,
@@ -178,10 +179,8 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`restaurante` (
   `CodigoCiudad` INT(11) NOT NULL,
   `CodigoGerente` INT(11) NOT NULL,
   `Nombre` VARCHAR(150) NULL DEFAULT NULL,
-  `Ubicacion` VARCHAR(200) NULL DEFAULT NULL,
+  `Direccion` VARCHAR(200) NULL DEFAULT NULL,
   `Horario` VARCHAR(100) NULL DEFAULT NULL,
-  `Latitud` DECIMAL(10,8) NULL DEFAULT NULL,
-  `Longitud` DECIMAL(10,8) NULL DEFAULT NULL,
   PRIMARY KEY (`CodigoRestaurante`),
   INDEX `CodigoCiudad` (`CodigoCiudad` ASC),
   INDEX `CodigoGerente` (`CodigoGerente` ASC),
@@ -303,7 +302,7 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`pedido` (
   `CodigoEnvio` INT(11) NOT NULL,
   `CodigoRestaurante` INT(11) NOT NULL,
   `FechaPedido` DATE NULL DEFAULT NULL,
-  `Estado` ENUM('En Proceso', 'Entregado', 'Cancelado') NOT NULL,
+  `Estado` ENUM('Iniciando', 'En Proceso', 'Entregado', 'Cancelado') NOT NULL,
   PRIMARY KEY (`CodigoPedido`),
   UNIQUE INDEX `CodigoEnvio` (`CodigoEnvio` ASC),
   INDEX `CodigoRestaurante` (`CodigoRestaurante` ASC),
@@ -318,20 +317,35 @@ DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
 
 
+-- FK de plato → menu (se agrega al final porque plato se crea antes que menu)
+-- ALTER TABLE `urbaneats`.`plato`
+--   ADD INDEX `CodigoMenu` (`CodigoMenu` ASC),
+--   ADD CONSTRAINT `plato_ibfk_menu`
+--     FOREIGN KEY (`CodigoMenu`) REFERENCES `urbaneats`.`menu` (`CodigoMenu`);
+
+
 -- -----------------------------------------------------
--- Table `urbaneats`.`plato_menu`
+-- Table `urbaneats`.`detalle_pedido`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `urbaneats`.`plato_menu` (
-  `CodigoMenu` INT(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `urbaneats`.`detalle_pedido` (
+  `CodigoDetalle` INT(11) NOT NULL AUTO_INCREMENT,
+  `CodigoPedido` INT(11) NOT NULL,
   `CodigoPlato` INT(11) NOT NULL,
-  PRIMARY KEY (`CodigoMenu`, `CodigoPlato`),
+  `Cantidad` INT NOT NULL,
+  `PrecioUnitario` DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (`CodigoDetalle`),
+  INDEX `CodigoPedido` (`CodigoPedido` ASC),
   INDEX `CodigoPlato` (`CodigoPlato` ASC),
-  CONSTRAINT `plato_menu_ibfk_1`
-    FOREIGN KEY (`CodigoMenu`)
-    REFERENCES `urbaneats`.`menu` (`CodigoMenu`),
-  CONSTRAINT `plato_menu_ibfk_2`
+  CONSTRAINT `detalle_pedido_ibfk_1`
+    FOREIGN KEY (`CodigoPedido`)
+    REFERENCES `urbaneats`.`pedido` (`CodigoPedido`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `detalle_pedido_ibfk_2`
     FOREIGN KEY (`CodigoPlato`)
-    REFERENCES `urbaneats`.`plato` (`CodigoPlato`))
+    REFERENCES `urbaneats`.`plato` (`CodigoPlato`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
@@ -532,11 +546,20 @@ AFTER INSERT ON `urbaneats`.`envio`
 FOR EACH ROW
 BEGIN
     INSERT INTO pedido (CodigoEnvio, CodigoRestaurante, FechaPedido, Estado)
-    VALUES (NEW.CodigoEnvio, NEW.CodigoRestaurante, CURDATE(), 'En Proceso');
+    VALUES (NEW.CodigoEnvio, NEW.CodigoRestaurante, CURDATE(), 'Iniciando');
 END$$
 
 
 DELIMITER ;
+
+-- FK plato → menu (definida al final porque plato se crea antes que menu)
+ALTER TABLE `urbaneats`.`plato`
+  ADD INDEX `CodigoMenu_idx` (`CodigoMenu` ASC),
+  ADD CONSTRAINT `plato_ibfk_menu`
+    FOREIGN KEY (`CodigoMenu`)
+    REFERENCES `urbaneats`.`menu` (`CodigoMenu`)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

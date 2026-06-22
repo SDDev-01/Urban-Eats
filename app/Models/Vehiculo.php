@@ -7,22 +7,27 @@ use Illuminate\Database\Eloquent\Model;
 class Vehiculo extends Model
 {
     protected $table = 'vehiculo';
+
     protected $primaryKey = 'Placa';
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
+
     public $timestamps = false;
 
     protected $fillable = [
+        'Placa',
         'CodigoRepartidor',
-        'Licencia',
         'TipoVehiculo',
         'SeguroVehiculo',
-        'SOAT'
+        'SOAT',
     ];
 
-    //cordinalidad
+    // cordinalidad
 
-    public function repartidor(){
-        return $this->belongsTo(Repartidor::class,'CodigoRepartidor');
+    public function repartidor()
+    {
+        return $this->belongsTo(Repartidor::class, 'CodigoRepartidor');
     }
-
-    
 }

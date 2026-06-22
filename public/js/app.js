@@ -14,33 +14,6 @@
   });
 })();
 
-// ---- NAVBAR: mostrar nombre de usuario ----
-(function mostrarUsuario() {
-  const spanNombre = document.getElementById('navbar-nombre');
-  if (!spanNombre) return;
-
-  // Primero intenta leer del cliente registrado en el módulo cliente
-/*   const cliente  = JSON.parse(localStorage.getItem('ue_cliente') || 'null');
-  const usuario  = JSON.parse(localStorage.getItem('ue_usuario') || 'null'); */
-
-  if (cliente && cliente.nombres) {
-    spanNombre.textContent = cliente.nombres + (cliente.apellidos ? ' ' + cliente.apellidos.split(' ')[0] : '');
-  } else if (usuario) {
-    spanNombre.textContent = usuario.nombre || usuario.email.split('@')[0];
-  } else {
-    spanNombre.textContent = 'Usuario';
-  }
-})();
-
-// ---- NAVBAR: Cerrar sesión ----
-const btnSalir = document.getElementById('btn-salir');
-if (btnSalir) {
-  btnSalir.addEventListener('click', () => {
-/*     localStorage.removeItem('ue_sesion'); */
-    window.location.href = 'login.php';
-  });
-}
-
 // ---- TOAST ----
 function mostrarToast(mensaje, icono = 'fa-check-circle') {
   let contenedor = document.getElementById('toast-container');
@@ -94,7 +67,7 @@ actualizarBadgeCarrito();
 const formLogin = document.getElementById('form-login');
 if (formLogin) {
   formLogin.addEventListener('submit', (e) => {
-    //e.preventDefault();
+    e.preventDefault();
     const email = document.getElementById('email-login');
     const password = document.getElementById('password-login');
     const errEmail = document.getElementById('error-email-login');
@@ -120,20 +93,7 @@ if (formLogin) {
     }
 
     if (valido) {
-      // Guardar sesión simulada
-/*       const usuario = JSON.parse(localStorage.getItem('ue_usuario') || 'null'); */
-/*       if (usuario && usuario.email === email.value.trim()) {
-        localStorage.setItem('ue_sesion', 'activa');
-        mostrarToast('Inicio de sesión exitoso. Redirigiendo...');
-        setTimeout(() => { window.location.href = 'catalogo.html'; }, 1200);
-      } else {
-        // Cualquier email/contraseña pasa (modo demo)
-        const datosDemo = { nombre: email.value.split('@')[0], email: email.value.trim() };
-        localStorage.setItem('ue_usuario', JSON.stringify(datosDemo));
-        localStorage.setItem('ue_sesion', 'activa');
-        mostrarToast('Bienvenido a Urban Eats!');
-        setTimeout(() => { window.location.href = 'catalogo.html'; }, 1200);
-      } */
+      formLogin.submit();
     }
   });
 }
@@ -142,7 +102,7 @@ if (formLogin) {
 const formRegistro = document.getElementById('form-registro');
 if (formRegistro) {
   formRegistro.addEventListener('submit', (e) => {
-    //e.preventDefault();
+    e.preventDefault();
 
     const campos = {
       nombres: document.getElementById('reg-nombres'),
@@ -189,30 +149,7 @@ if (formRegistro) {
     }
 
     if (valido) {
-      // Datos del usuario para login (no se guarda la contraseña en texto plano)
-      const usuario = {
-        nombres: campos.nombres.value.trim(),
-        apellidos: campos.apellidos.value.trim(),
-        nombre: campos.nombres.value.trim() + ' ' + campos.apellidos.value.trim(),
-        email: campos.email.value.trim(),
-      };
-      
-      // Datos del cliente (perfil completo)
-      const cliente = {
-        nombres: campos.nombres.value.trim(),
-        apellidos: campos.apellidos.value.trim(),
-        email: campos.email.value.trim(),
-        telefono: campos.telefono.value.trim(),
-        direccion: campos.direccion.value.trim(),
-      };
-      
-      // Guardar en ambos lugares
-/*       localStorage.setItem('ue_usuario', JSON.stringify(usuario));
-      localStorage.setItem('ue_cliente', JSON.stringify(cliente));
-      localStorage.setItem('ue_sesion', 'activa'); */
-      
-      mostrarToast('¡Cuenta creada exitosamente!');
-      setTimeout(() => { window.location.href = 'catalogo.html'; }, 1400);
+      formRegistro.submit();
     }
   });
 
