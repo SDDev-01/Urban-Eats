@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Urban Eats – Comida Saludable 24/7</title>
+  <title>Urban Eats – Tu Comida 24/7</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -31,15 +31,15 @@
     <div class="banner-slides" id="banner-slides">
       <!-- Slide 1 -->
       <div class="banner-slide">
-        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&h=400&fit=crop" alt="Comida saludable">
+        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&h=400&fit=crop" alt="Comida para todos">
         <div class="banner-text">
-          <h2>Comida Saludable 24/7</h2>
+          <h2>Comida para Todos 24/7</h2>
           <p>Perfecta para trabajadores, estudiantes y personas activas</p>
         </div>
       </div>
       <!-- Slide 2 -->
       <div class="banner-slide">
-        <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&h=400&fit=crop" alt="Ensaladas frescas">
+        <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&h=400&fit=crop" alt="Comida fresca">
         <div class="banner-text">
           <h2>Ingredientes 100% Frescos</h2>
           <p>Seleccionamos lo mejor para tu alimentación</p>
@@ -47,7 +47,7 @@
       </div>
       <!-- Slide 3 -->
       <div class="banner-slide">
-        <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=1200&h=400&fit=crop" alt="Bowls nutritivos">
+        <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=1200&h=400&fit=crop" alt="Entrega rápida">
         <div class="banner-text">
           <h2>Entrega Rápida</h2>
           <p>Tu comida en minutos, donde estés en Bogotá</p>
@@ -55,10 +55,10 @@
       </div>
       <!-- Slide 4 -->
       <div class="banner-slide">
-        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1200&h=400&fit=crop" alt="Pizza saludable">
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1200&h=400&fit=crop" alt="Pizza">
         <div class="banner-text">
           <h2>Variedad de Opciones</h2>
-          <p>Encuentra tu comida favorita sin culpa</p>
+          <p>Encuentra tu comida favorita y pídela ahora</p>
         </div>
       </div>
     </div>
@@ -78,7 +78,7 @@
   <!-- Features -->
   <section class="features">
     <h2>¿Por qué elegir Urban Eats?</h2>
-    <p class="sub">Diseñado para quienes cuidan su alimentación sin importar la hora</p>
+    <p class="sub">Diseñado para quienes disfrutan comer bien sin importar la hora</p>
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon"><i class="fas fa-clock"></i></div>
@@ -86,9 +86,9 @@
         <p>Servicio disponible toda la noche para trabajadores y estudiantes nocturnos.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon"><i class="fas fa-leaf"></i></div>
-        <h3>100% Saludable</h3>
-        <p>Todos nuestros productos están hechos con ingredientes frescos y naturales.</p>
+        <div class="feature-icon"><i class="fas fa-utensils"></i></div>
+        <h3>Para Todos los Gustos</h3>
+        <p>Variedad de restaurantes y platos para que siempre encuentres lo que se te antoja.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon"><i class="fas fa-motorcycle"></i></div>
@@ -127,15 +127,15 @@
 
   <!-- CTA -->
   <section class="cta-section">
-    <h2>¿Listo para comer saludable?</h2>
-    <p>Únete a cientos de personas que ya confían en Urban Eats para su alimentación nocturna.</p>
+    <h2>¿Listo para pedir tu comida?</h2>
+    <p>Únete a cientos de personas que ya confían en Urban Eats para su comida favorita.</p>
     <a href="{{ url('/registro') }}" class="btn btn-verde" style="font-size:1rem; padding:0.85rem 2rem;">
       <i class="fas fa-arrow-right"></i> Comenzar Ahora
     </a>
   </section>
 
   <footer>
-    <p>&copy; 2026 Urban Eats – Proyecto Formativo SENA. Comida saludable disponible 24/7 en Bogotá.</p>
+    <p>&copy; 2026 Urban Eats – Proyecto Formativo SENA. Comida disponible 24/7 en Bogotá.</p>
   </footer>
 
   <script src="{{ asset('js/index.js') }}"></script>

@@ -17,9 +17,12 @@ class PerfilController extends Controller
             return $redireccion;
         }
 
-        $usuario = Usuario::with(['telefono', 'direccion'])->find(session('CodigoUsuario'));
+        $usuario = Usuario::with(['telefono', 'direccion', 'gerente.restaurante', 'repartidor'])->find(session('CodigoUsuario'));
 
-        return view('perfil', compact('usuario'));
+        $tieneRestaurante = $usuario->gerente?->restaurante->isNotEmpty() ?? false;
+        $esRepartidor = $usuario->repartidor !== null;
+
+        return view('perfil', compact('usuario', 'tieneRestaurante', 'esRepartidor'));
     }
 
     public function actualizar(Request $request): RedirectResponse

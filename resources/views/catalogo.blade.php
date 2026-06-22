@@ -18,15 +18,15 @@
     <div class="banner-slides" id="banner-slides">
       <!-- Slide 1 -->
       <div class="banner-slide">
-        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&h=400&fit=crop" alt="Comida saludable">
+        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&h=400&fit=crop" alt="Comida para todos">
         <div class="banner-text">
-          <h2 class="titulo-con-numeros">Comida Saludable 24/7</h2>
+          <h2 class="titulo-con-numeros">Comida para Todos 24/7</h2>
           <p>Perfecta para trabajadores, estudiantes y personas activas</p>
         </div>
       </div>
       <!-- Slide 2 -->
       <div class="banner-slide">
-        <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&h=400&fit=crop" alt="Ensaladas frescas">
+        <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&h=400&fit=crop" alt="Comida fresca">
         <div class="banner-text">
           <h2 class="titulo-con-numeros">Ingredientes 100% Frescos</h2>
           <p>Seleccionamos lo mejor para tu alimentación</p>
@@ -42,10 +42,10 @@
       </div>
       <!-- Slide 4 -->
       <div class="banner-slide">
-        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1200&h=400&fit=crop" alt="Pizza saludable">
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1200&h=400&fit=crop" alt="Pizza">
         <div class="banner-text">
           <h2>Variedad de Opciones</h2>
-          <p>Encuentra tu comida favorita sin culpa</p>
+          <p>Encuentra tu comida favorita y pídela ahora</p>
         </div>
       </div>
     </div>
@@ -101,7 +101,7 @@
   </div>
 
   <footer>
-    <p>&copy; 2026 Urban Eats – Proyecto Formativo SENA. Comida saludable para todos.</p>
+    <p>&copy; 2026 Urban Eats – Proyecto Formativo SENA. Comida para todos.</p>
   </footer>
 
   <div id="toast-container"></div>

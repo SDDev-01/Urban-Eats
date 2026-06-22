@@ -201,7 +201,7 @@ COLLATE = utf8mb4_unicode_ci;
 CREATE TABLE IF NOT EXISTS `urbaneats`.`envio` (
   `CodigoEnvio` INT(11) NOT NULL AUTO_INCREMENT,
   `CodigoCliente` INT(11) NOT NULL,
-  `CodigoRepartidor` INT(11) NOT NULL,
+  `CodigoRepartidor` INT(11),
   `CodigoRestaurante` INT(11) NOT NULL,
   `Descripcion` VARCHAR(300) NULL DEFAULT NULL,
   `FechaEnvio` DATE NULL DEFAULT NULL,
@@ -275,11 +275,11 @@ COLLATE = utf8mb4_unicode_ci;
 CREATE TABLE IF NOT EXISTS `urbaneats`.`pago` (
   `CodigoPago` INT(11) NOT NULL AUTO_INCREMENT,
   `CodigoCliente` INT(11) NOT NULL,
-  `CodigoEnvio` INT(11) NOT NULL,
+  `CodigoEnvio` INT(11),
   `Monto` DECIMAL(10,2) NULL DEFAULT NULL,
   `FechaPago` DATE NULL DEFAULT NULL,
   `HoraPago` TIME NULL DEFAULT NULL,
-  `EstadoPago` ENUM('Aceptado', 'Rechazado') NULL DEFAULT NULL,
+  `EstadoPago` ENUM('pending','approved','rejected','in_process','authorized','cancelled','refunded','charged_back') NOT NULL DEFAULT 'pending',
   PRIMARY KEY (`CodigoPago`),
   INDEX `CodigoCliente` (`CodigoCliente` ASC),
   INDEX `CodigoEnvio` (`CodigoEnvio` ASC),

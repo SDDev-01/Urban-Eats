@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gerente;
-use App\Models\Repartidor;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -34,9 +33,7 @@ class LoginController extends Controller
                 return redirect('/seleccion-rol');
             }
 
-            $esRepartidor = Repartidor::where('CodigoUsuario', $usuario->CodigoUsuario)->exists();
-
-            return $esRepartidor ? redirect('/perfilRepartidor') : redirect('/catalogo');
+            return redirect('/catalogo');
         } else {
             // salio mal
             return back()->with('error', 'Correo o contraseña incorrectos');
