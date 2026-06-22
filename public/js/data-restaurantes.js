@@ -11,6 +11,7 @@ const restaurantes = [
     ubicacion: "Calle 72 #10-34, Bogotá",
     horario: "8:00 AM - 10:00 PM",
     logo: "🥗",
+    emojisComida: ["🥦", "🍅", "🥕", "🥒", "🌿"],
     descripcion: "Especialistas en comida saludable y bowls nutritivos. Ingredientes 100% orgánicos.",
     color: "#d5f5e3"
   },
@@ -20,6 +21,7 @@ const restaurantes = [
     ubicacion: "Carrera 15 #85-23, Bogotá",
     horario: "7:00 AM - 9:00 PM",
     logo: "🍲",
+    emojisComida: ["🥤", "🍹", "🫐", "🥑", "💪"],
     descripcion: "Los mejores bowls de la ciudad. Perfecto para deportistas y vida activa.",
     color: "#fef9e7"
   },
@@ -29,6 +31,7 @@ const restaurantes = [
     ubicacion: "Calle 100 #18-45, Bogotá",
     horario: "9:00 AM - 11:00 PM",
     logo: "🥑",
+    emojisComida: ["🍓", "🥞", "🥣", "🌯", "🍳"],
     descripcion: "Desayunos energéticos y snacks saludables. Tu mejor opción para empezar el día.",
     color: "#e8f4fd"
   },
@@ -38,6 +41,7 @@ const restaurantes = [
     ubicacion: "Avenida 19 #104-55, Bogotá",
     horario: "10:00 AM - 10:00 PM",
     logo: "🍗",
+    emojisComida: ["🥩", "🐟", "🌯", "🥦", "🍋"],
     descripcion: "Platos principales balanceados con proteína de calidad. Comida fitness deliciosa.",
     color: "#fdecea"
   }

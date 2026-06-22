@@ -15,9 +15,15 @@ function renderizarRestaurantes() {
     const color = PALETA[i % PALETA.length];
     const card = document.createElement('div');
     card.className = 'restaurante-card';
+    const emojisHtml = (restaurante.emojisComida || []).map((emoji, i) =>
+      `<span class="emoji-decorativo emoji-pos-${i}">${emoji}</span>`
+    ).join('');
+
     card.innerHTML = `
-      <div class="restaurante-header" style="background: ${color};">
-        <span style="font-size: 2.5rem;">🍽️</span>
+      <div class="restaurante-header" style="background: ${restaurante.color};">
+        ${emojisHtml}
+        <span class="restaurante-logo-principal">${restaurante.logo}</span>
+
         <span class="restaurante-badge">Abierto</span>
       </div>
       <div class="restaurante-body">

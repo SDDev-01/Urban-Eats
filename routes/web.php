@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CatalogoController;
+use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\MenuController;
@@ -15,9 +16,6 @@ use App\Http\Controllers\RestauranteDetalleController;
 use App\Http\Controllers\SeleccionRolController;
 use App\Http\Controllers\PagoController;
 use Illuminate\Support\Facades\Route;
-
-// por ahora estaticas, si despues tomamos datos entonces ahi si usamos route:get o post
-// get es cuando entran a la pagina, y post es cuando dan a enviar
 
 // vistas estaticas
 Route::view('/', 'index');
@@ -60,6 +58,9 @@ Route::delete('/perfilRestaurante/plato/{id}', [PerfilRestauranteController::cla
 Route::get('/menu', [MenuController::class, 'mostrarFormulario']);
 Route::post('/menu', [MenuController::class, 'crearMenu']);
 
+// chatbot
+Route::post('/chatbot', [ChatbotController::class, 'responder']);
+
 //repartidor
 Route::get('/repartidor', [RepartidorController::class, 'mostrarFormulario']);
 Route::post('/repartidor', [RepartidorController::class, 'registrar']);
@@ -78,3 +79,4 @@ Route::get('/pago', [PagoController::class, 'mostrarPagina']);
 
 //mercadopago
 Route::post('/process_payment', [PagoController::class, 'iniciarPago']);
+

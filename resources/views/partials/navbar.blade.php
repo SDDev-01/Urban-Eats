@@ -1,3 +1,7 @@
+    <!-- CHATBOT: estilos y meta CSRF -->
+    <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <!-- NAVBAR -->
     <nav class="navbar">
     <a href="{{ url('/catalogo') }}" class="navbar-logo">
@@ -17,3 +21,8 @@
         </a>
     </div>
     </nav>
+
+    <!-- CHATBOT SCRIPTS (cargados una sola vez) -->
+    @once
+        <script src="{{ asset('js/chatbot.js') }}" defer></script>
+    @endonce
