@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\PerfilController;
 
 //por ahora estaticas, si despues tomamos datos entonces ahi si usamos route:get o post
@@ -36,3 +37,6 @@ Route::post('/logout',[LogoutController::class, 'logout']);
 
 //perfil
 Route::get('/perfil',[PerfilController::class, 'MostrarDatos']);
+
+//chatbot
+Route::post('/chatbot',[ChatbotController::class, 'responder']);
