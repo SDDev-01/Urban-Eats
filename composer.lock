@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e5a7fe2e384880bae0cd88829bd166e5",
+    "content-hash": "5b06f277c3c8d145008d06df6107b56f",
     "packages": [
         {
             "name": "brick/math",
@@ -2029,6 +2029,47 @@
                 }
             ],
             "time": "2026-03-08T20:05:35+00:00"
+        },
+        {
+            "name": "mercadopago/dx-php",
+            "version": "3.11.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mercadopago/sdk-php.git",
+                "reference": "4b8a1e28a376028fa98d40ab3f9e82e091b815c9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mercadopago/sdk-php/zipball/4b8a1e28a376028fa98d40ab3f9e82e091b815c9",
+                "reference": "4b8a1e28a376028fa98d40ab3f9e82e091b815c9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.5"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.22",
+                "phpunit/phpunit": "^11.0",
+                "squizlabs/php_codesniffer": "3.*",
+                "symfony/console": "^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MercadoPago\\": "src/MercadoPago"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Mercado Pago PHP SDK",
+            "homepage": "https://github.com/mercadopago/sdk-php",
+            "support": {
+                "issues": "https://github.com/mercadopago/sdk-php/issues",
+                "source": "https://github.com/mercadopago/sdk-php/tree/3.11.2"
+            },
+            "time": "2026-06-10T23:37:54+00:00"
         },
         {
             "name": "monolog/monolog",
