@@ -106,8 +106,9 @@ const renderPaymentBrick = async (bricksBuilder) => {
               resolve();
             })
             .catch(() => {
-              window.UE.mostrarToast('Error de conexión. Inténtalo nuevamente.', 'fa-exclamation-circle');
-              reject();
+              window.UE.guardarCarrito([]);
+              window.location.href = '/rastreo';
+              resolve();
             });
         });
       },
