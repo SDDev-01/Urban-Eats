@@ -88,7 +88,10 @@ const renderPaymentBrick = async (bricksBuilder) => {
         return new Promise((resolve, reject) => {
           fetch("/process_payment", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+            },
             body: JSON.stringify({ ...formData, items: window.UE.obtenerCarrito() }),
           })
             .then(res => res.json())

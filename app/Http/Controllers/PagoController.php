@@ -10,6 +10,7 @@ use App\Models\Transaccion;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use MercadoPago\Client\Common\RequestOptions;
 use MercadoPago\Client\Payment\PaymentClient;
@@ -46,6 +47,9 @@ class PagoController extends Controller
 
         $accessToken = config('services.mercadopago.access_token');
         MercadoPagoConfig::setAccessToken($accessToken);
+        if (app()->isLocal()) {
+            MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
+        }
 
         $client = new PaymentClient;
         $requestOptions = new RequestOptions;
@@ -90,35 +94,42 @@ class PagoController extends Controller
             }
 
             if ($codigoRestaurante) {
-                DB::transaction(function () use ($CodigoCliente, $codigoRestaurante, $items, $pago) {
-                    $envio = Envio::create([
-                        'CodigoCliente' => $CodigoCliente,
-                        'CodigoRepartidor' => 1,
-                        'CodigoRestaurante' => $codigoRestaurante,
-                        'Descripcion' => 'Pedido Urban Eats',
-                        'FechaEnvio' => now()->toDateString(),
-                        'HoraEntrega' => now()->addMinutes(35)->format('H:i:s'),
-                    ]);
-
-                    $pedido = $envio->pedido()->create([
-                        'CodigoRestaurante' => $codigoRestaurante,
-                        'FechaPedido' => now()->toDateString(),
-                        'Estado' => 'Iniciando',
-                    ]);
-
-                    foreach ($items as $item) {
-                        DetallePedido::create([
-                            'CodigoPedido' => $pedido->CodigoPedido,
-                            'CodigoPlato' => $item['id'],
-                            'Cantidad' => (int) ($item['cantidad'] ?? 1),
-                            'PrecioUnitario' => (float) ($item['precio'] ?? 0),
+                try {
+                    DB::transaction(function () use ($CodigoCliente, $codigoRestaurante, $items, $pago) {
+                        $envio = Envio::create([
+                            'CodigoCliente' => $CodigoCliente,
+                            'CodigoRepartidor' => 1,
+                            'CodigoRestaurante' => $codigoRestaurante,
+                            'Descripcion' => 'Pedido Urban Eats',
+                            'FechaEnvio' => now()->toDateString(),
+                            'HoraEntrega' => now()->addMinutes(35)->format('H:i:s'),
                         ]);
-                    }
 
-                    $pago->update(['CodigoEnvio' => $envio->CodigoEnvio]);
+                        $pedido = $envio->pedido()->create([
+                            'CodigoRestaurante' => $codigoRestaurante,
+                            'FechaPedido' => now()->toDateString(),
+                            'Estado' => 'Iniciando',
+                        ]);
 
-                    session(['pedido_activo' => $pedido->CodigoPedido]);
-                });
+                        foreach ($items as $item) {
+                            DetallePedido::create([
+                                'CodigoPedido' => $pedido->CodigoPedido,
+                                'CodigoPlato' => $item['id'],
+                                'Cantidad' => (int) ($item['cantidad'] ?? 1),
+                                'PrecioUnitario' => (float) ($item['precio'] ?? 0),
+                            ]);
+                        }
+
+                        $pago->update(['CodigoEnvio' => $envio->CodigoEnvio]);
+
+                        session(['pedido_activo' => $pedido->CodigoPedido]);
+                    });
+                } catch (\Exception $e) {
+                    Log::error('Error creando pedido tras pago: '.$e->getMessage(), [
+                        'items' => $items,
+                        'codigoRestaurante' => $codigoRestaurante,
+                    ]);
+                }
             }
         }
 
