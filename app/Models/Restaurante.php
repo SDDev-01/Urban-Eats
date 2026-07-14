@@ -18,6 +18,7 @@ class Restaurante extends Model
         'Nombre',
         'Direccion',
         'Horario',
+        'Imagen',
     ];
 
     // cardinalidad
