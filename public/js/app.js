@@ -141,6 +141,19 @@ if (formRegistro) {
       valido = false;
     }
 
+    // Validar que nombres y apellidos no contengan números
+    const regexSoloLetras = /^[\p{L}\s\-'\.]+$/u;
+    if (campos.nombres && campos.nombres.value.trim() && !regexSoloLetras.test(campos.nombres.value.trim())) {
+      const err = document.getElementById('error-nombres');
+      if (err) err.textContent = 'El nombre no debe contener números.';
+      valido = false;
+    }
+    if (campos.apellidos && campos.apellidos.value.trim() && !regexSoloLetras.test(campos.apellidos.value.trim())) {
+      const err = document.getElementById('error-apellidos');
+      if (err) err.textContent = 'El apellido no debe contener números.';
+      valido = false;
+    }
+
     // Validar contraseña (mínimo 4 caracteres, igual que el login)
     if (campos.password && campos.password.value.length < 4) {
       const err = document.getElementById('error-password');

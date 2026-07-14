@@ -2,27 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Direccion;
+use App\Models\Telefono;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Usuario;
-use App\Models\Telefono;
-use App\Models\Direccion;
 
 class RegistroController extends Controller
 {
-    public function mostrarPagina(){
+    public function mostrarPagina()
+    {
         return view('registro');
     }
 
-    public function Registrarse(Request $request){
-        //validacion interna
+    public function Registrarse(Request $request)
+    {
+        // validacion interna
         $request->validate([
-            'Nombres' => 'required',
-            'Apellidos' => 'required',
+            'Nombres' => ['required', 'regex:/^[\pL\s\-\'\.]+$/u'],
+            'Apellidos' => ['required', 'regex:/^[\pL\s\-\'\.]+$/u'],
             'Correo' => 'required|email|unique:usuario,Correo',
             'Telefono' => 'required',
             'Password' => 'required|min:8',
-            'Direccion' => 'required'
+            'Direccion' => 'required',
         ]);
 
         $nombres = $request->input('Nombres');
@@ -36,24 +38,24 @@ class RegistroController extends Controller
             'Correo' => $correo,
             'Password' => $password,
             'Nombres' => $nombres,
-            'Apellidos' => $apellidos
+            'Apellidos' => $apellidos,
         ]);
 
         $codigoUsuario = $usuario->CodigoUsuario;
 
         Telefono::create([
             'Telefono' => $telefono,
-            'CodigoUsuario' => $codigoUsuario
+            'CodigoUsuario' => $codigoUsuario,
         ]);
 
         Direccion::create([
             'Direccion' => $direccion,
-            'CodigoUsuario' => $codigoUsuario
+            'CodigoUsuario' => $codigoUsuario,
         ]);
 
         session([
             'CodigoUsuario' => $usuario->CodigoUsuario,
-            'Nombres' => $usuario->Nombres
+            'Nombres' => $usuario->Nombres,
         ]);
 
         return redirect('/catalogo');

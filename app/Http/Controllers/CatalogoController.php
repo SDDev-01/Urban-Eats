@@ -18,7 +18,7 @@ class CatalogoController extends Controller
                         'categoria' => $p->TipoComida ?? $menu->Categoria,
                         'descripcion' => $p->Descripcion ?? '',
                         'precio' => (float) ($p->Precio ?? 0),
-                        'restauranteId' => $restaurante->CodigoRestaurante,
+                        'restaurante_id' => $restaurante->CodigoRestaurante,
                         'restauranteNombre' => $restaurante->Nombre,
                     ]);
                 });

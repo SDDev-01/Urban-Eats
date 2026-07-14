@@ -29,7 +29,7 @@
     <div class="pago-layout">
       <!--sacar variable public key de ENV-->
       <script>
-        window.MP_PUBLIC_KEY = "{{ env('MERCADOPAGO_PUBLIC_KEY') }}";
+        window.MP_PUBLIC_KEY = "{{ config('services.mercadopago.public_key') }}";
       </script>
       <!-- Columna izquierda: mercado pago -->
       <script src="https://sdk.mercadopago.com/js/v2"></script>
