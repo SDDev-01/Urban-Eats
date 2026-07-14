@@ -18,6 +18,7 @@ class RestauranteController extends Controller
             'nombre' => $r->Nombre,
             'direccion' => $r->Direccion ?? '',
             'horario' => $r->Horario ?? '',
+            'imagen' => $r->Imagen ? asset('images/restaurantes/'.rawurlencode($r->Imagen)) : null,
         ]);
 
         return view('restaurantes', compact('restaurantesJS'));

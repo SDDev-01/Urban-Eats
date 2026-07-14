@@ -19,11 +19,13 @@ function renderizarRestaurantes() {
       `<span class="emoji-decorativo emoji-pos-${i}">${emoji}</span>`
     ).join('');
 
-    card.innerHTML = `
-      <div class="restaurante-header" style="background: ${restaurante.color};">
-        ${emojisHtml}
-        <span class="restaurante-logo-principal">${restaurante.logo}</span>
+    const headerContent = restaurante.imagen
+      ? `<img src="${restaurante.imagen}" alt="${restaurante.nombre}" style="width:100%;height:100%;object-fit:cover;display:block;">`
+      : `${emojisHtml}<span class="restaurante-logo-principal">${restaurante.logo || '🍽️'}</span>`;
 
+    card.innerHTML = `
+      <div class="restaurante-header" style="${restaurante.imagen ? '' : `background: ${restaurante.color};`}">
+        ${headerContent}
         <span class="restaurante-badge">Abierto</span>
       </div>
       <div class="restaurante-body">
