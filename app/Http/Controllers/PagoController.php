@@ -25,6 +25,8 @@ class PagoController extends Controller
 
     public function iniciarPago(Request $request)
     {
+        set_time_limit(120);
+
         $CodigoUsuario = session('CodigoUsuario');
         $Usuario = Usuario::find($CodigoUsuario);
 
@@ -128,6 +130,13 @@ class PagoController extends Controller
                     Log::error('Error creando pedido tras pago: '.$e->getMessage(), [
                         'items' => $items,
                         'codigoRestaurante' => $codigoRestaurante,
+                        'exception' => get_class($e),
+                    ]);
+
+                    return response()->json([
+                        'status' => $mpFallback ? 'in_process' : $paymentStatus,
+                        'id' => $paymentId,
+                        'mensaje_error' => 'Tu pago fue procesado pero hubo un error registrando el pedido. Contacta soporte.',
                     ]);
                 }
             }
