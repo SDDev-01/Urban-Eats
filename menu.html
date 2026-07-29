@@ -42,38 +42,45 @@
 
     <div class="form-page-header">
       <h2><i class="fas fa-utensils"></i> Crear Menú</h2>
-      <p>Crea una categoría de menú para <strong>{{ $restaurante->Nombre }}</strong> y agrega sus platos.</p>
+      <!-- TEMPORAL: Laravel mostraba aquí el nombre del restaurante ($restaurante->Nombre) del gerente autenticado -->
+      <p>Crea una categoría de menú para <strong>tu restaurante</strong> y agrega sus platos.</p>
     </div>
 
     <div class="form-card">
       <div class="form-card-body">
 
-        <form id="form-menu" action="menu.html" method="POST">
-          @csrf
+        <!-- TEMPORAL:
+             Laravel enviaba este formulario por POST al backend para crear
+             una categoría de menú y sus platos (incluía @csrf y old()
+             para conservar los valores si la validación fallaba).
 
-          {{-- Categoría del menú --}}
+             Cuando implementemos Java/Python, este formulario deberá
+             conectarse nuevamente con el backend mediante JavaScript/API.
+        -->
+        <form id="form-menu">
+
+          <!-- Categoría del menú -->
           <div class="campo">
             <label for="m-categoria">Categoría del menú</label>
             <input type="text" id="m-categoria" name="Categoria"
-                   placeholder="Ej: Desayunos, Almuerzos, Bebidas…"
-                   value="{{ old('Categoria') }}">
+                   placeholder="Ej: Desayunos, Almuerzos, Bebidas…">
             <span class="error" id="err-m-categoria"></span>
           </div>
 
           <hr class="divisor">
 
-          {{-- Nuevos platos --}}
+          <!-- Nuevos platos -->
           <p class="seccion-titulo"><i class="fas fa-plus-circle"></i> Agregar nuevos platos</p>
 
           <div id="nuevos-platos-wrap">
-            {{-- Las filas se insertan aquí con JS --}}
+            <!-- Las filas se insertan aquí con JS -->
           </div>
 
           <button type="button" class="btn-agregar-plato" id="btn-agregar-plato">
             <i class="fas fa-plus"></i> Agregar plato
           </button>
 
-          {{-- Template oculto --}}
+          <!-- Template oculto -->
           <template id="tpl-plato">
             <div class="plato-fila">
               <button type="button" class="btn-quitar-plato" title="Quitar">

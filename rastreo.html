@@ -2,7 +2,6 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>Seguimiento – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/styles.css">
@@ -55,7 +54,7 @@
       <!-- Columna derecha: timer, pasos, resumen -->
       <div>
 
-        {{-- ── ESTADO: BUSCANDO REPARTIDOR ─── --}}
+        <!-- ── ESTADO: BUSCANDO REPARTIDOR ─── -->
         <div id="estado-buscando" style="display:none;">
           <div class="timer-card" style="background: linear-gradient(135deg,#fff3e0,#ffe0b2);">
             <div><i class="fas fa-search" style="color:#e65100;animation:spin 2s linear infinite;"></i></div>
@@ -78,7 +77,7 @@
           </div>
         </div>
 
-        {{-- ── ESTADO: CANCELADO ─────────────── --}}
+        <!-- ── ESTADO: CANCELADO ─────────────── -->
         <div id="estado-cancelado" style="display:none;">
           <div class="timer-card" style="background: linear-gradient(135deg,#ffebee,#ffcdd2);">
             <div><i class="fas fa-times-circle" style="color:var(--principal);"></i></div>
@@ -101,7 +100,7 @@
           </div>
         </div>
 
-        {{-- ── ESTADO: EN PROCESO / ENTREGADO ── --}}
+        <!-- ── ESTADO: EN PROCESO / ENTREGADO ── -->
         <div id="estado-encamino">
           <div class="timer-card">
             <div><i class="fas fa-clock"></i></div>
@@ -141,7 +140,15 @@
   <footer><p>&copy; 2026 Urban Eats – Proyecto Formativo SENA</p></footer>
   <div id="toast-container"></div>
   <script src="js/app.js"></script>
-  <script>window.PEDIDO_BD = @json($pedidoData);</script>
+  <!-- TEMPORAL:
+       Laravel inyectaba aquí los datos del pedido activo (@json($pedidoData))
+       obtenidos desde el backend. Si no había pedido, rastreo.js cae de
+       vuelta al carrito guardado en localStorage.
+
+       Cuando implementemos Java/Python, esta variable deberá poblarse
+       nuevamente con los datos del pedido obtenidos desde el backend.
+  -->
+  <script>window.PEDIDO_BD = null;</script>
   <script src="js/rastreo.js"></script>
 </body>
 </html>

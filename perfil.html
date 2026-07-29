@@ -45,7 +45,8 @@
         <div class="perfil-avatar">
           <i class="fas fa-user"></i>
         </div>
-        <h1 class="perfil-nombre" id="perfil-nombre">{{ $usuario->Nombres }}</h1>
+        <!-- TEMPORAL: Laravel mostraba aquí $usuario->Nombres del usuario autenticado -->
+        <h1 class="perfil-nombre" id="perfil-nombre">Usuario</h1>
         <p class="perfil-tipo">Cliente de Urban Eats</p>
       </div>
 
@@ -54,28 +55,37 @@
         <h3><i class="fas fa-id-card"></i> Información Personal</h3>
 
 
-        {{-- Vista de datos --}}
+        <!-- TEMPORAL:
+             Laravel mostraba aquí los datos reales del usuario autenticado
+             ($usuario->Nombres, Apellidos, Correo) y su teléfono/dirección
+             obtenidos de tablas relacionadas ($usuario->telefono,
+             $usuario->direccion).
+
+             Cuando implementemos Java/Python, esta sección deberá
+             volver a llenarse dinámicamente con los datos del usuario
+             obtenidos desde el backend.
+        -->
         <div id="perfil-vista">
           <div class="perfil-info-grid">
             <div class="perfil-info-item">
               <span class="perfil-info-label">Nombres</span>
-              <span class="perfil-info-value">{{ $usuario->Nombres }}</span>
+              <span class="perfil-info-value">Usuario</span>
             </div>
             <div class="perfil-info-item">
               <span class="perfil-info-label">Apellidos</span>
-              <span class="perfil-info-value">{{ $usuario->Apellidos }}</span>
+              <span class="perfil-info-value">—</span>
             </div>
             <div class="perfil-info-item">
               <span class="perfil-info-label">Email</span>
-              <span class="perfil-info-value">{{ $usuario->Correo }}</span>
+              <span class="perfil-info-value">—</span>
             </div>
             <div class="perfil-info-item">
               <span class="perfil-info-label">Teléfono</span>
-              <span class="perfil-info-value">{{ $usuario->telefono->first()?->Telefono ?? '—' }}</span>
+              <span class="perfil-info-value">—</span>
             </div>
             <div class="perfil-info-item full">
               <span class="perfil-info-label">Dirección</span>
-              <span class="perfil-info-value">{{ $usuario->direccion->first()?->Direccion ?? '—' }}</span>
+              <span class="perfil-info-value">—</span>
             </div>
           </div>
           <div style="margin-top:1.5rem;">
@@ -85,29 +95,32 @@
           </div>
         </div>
 
-        {{-- Formulario de edición --}}
+        <!-- TEMPORAL:
+             Laravel enviaba este formulario por PATCH al backend para
+             actualizar los datos del usuario (incluía @csrf, @method('PATCH')
+             y old() para conservar los valores si la validación fallaba,
+             precargados con los datos actuales de $usuario).
+
+             Cuando implementemos Java/Python, este formulario deberá
+             conectarse nuevamente con el backend mediante JavaScript/API.
+        -->
         <div id="perfil-edicion" style="display:none;">
-          <form action="perfil.html" method="POST">
-            @csrf
-            @method('PATCH')
-
-
-
+          <form>
             <div class="form-grid">
               <div class="campo">
                 <label>Nombres <span style="color:red">*</span></label>
-                <input type="text" name="Nombres" value="{{ old('Nombres', $usuario->Nombres) }}" required>
+                <input type="text" name="Nombres" required>
               </div>
               <div class="campo">
                 <label>Apellidos <span style="color:red">*</span></label>
-                <input type="text" name="Apellidos" value="{{ old('Apellidos', $usuario->Apellidos) }}" required>
+                <input type="text" name="Apellidos" required>
               </div>
             </div>
             <div class="campo">
               <label>Email <span style="color:red">*</span></label>
               <div class="campo-icono">
                 <i class="fas fa-envelope"></i>
-                <input type="email" name="Correo" value="{{ old('Correo', $usuario->Correo) }}" required>
+                <input type="email" name="Correo" required>
               </div>
             </div>
             <div class="campo">
@@ -115,7 +128,6 @@
               <div class="campo-icono">
                 <i class="fas fa-phone"></i>
                 <input type="text" name="Telefono" maxlength="10"
-                       value="{{ old('Telefono', $usuario->telefono->first()?->Telefono) }}"
                        placeholder="10 dígitos">
               </div>
             </div>
@@ -124,7 +136,6 @@
               <div class="campo-icono">
                 <i class="fas fa-map-marker-alt"></i>
                 <input type="text" name="Direccion"
-                       value="{{ old('Direccion', $usuario->direccion->first()?->Direccion) }}"
                        placeholder="Tu dirección de entrega">
               </div>
             </div>
@@ -173,9 +184,15 @@
       </div>
 
 <!-- Cerrar sesión -->
+      <!-- TEMPORAL:
+           Laravel enviaba este formulario por POST al backend para
+           cerrar la sesión del usuario (incluía @csrf).
+
+           Cuando implementemos Java/Python, este botón deberá
+           conectarse nuevamente con el backend mediante JavaScript/API.
+      -->
       <div class="perfil-card perfil-logout">
-        <form action="logout.html" method="POST">
-          @csrf
+        <form>
           <button type="submit" class="btn btn-verde btn-grande">
             <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
           </button>

@@ -2,7 +2,6 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>Mi Perfil – Repartidor Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/styles.css">
@@ -39,7 +38,15 @@
 
 <div class="rep-pagina">
 
-  {{-- ── HERO ─────────────────────────────── --}}
+  <!-- TEMPORAL:
+       Laravel mostraba aquí el nombre, correo y vehículo (tipo, placa,
+       SOAT, seguro) del repartidor autenticado ($repartidor->usuario,
+       $repartidor->vehiculo).
+
+       Cuando implementemos Java/Python, esta sección deberá volver a
+       llenarse dinámicamente con los datos del repartidor obtenidos
+       desde el backend.
+  -->
   <div class="rep-hero">
     <div class="rep-hero-inner">
       <div class="rep-avatar">
@@ -47,185 +54,163 @@
       </div>
       <div class="rep-hero-info">
         <div class="rep-hero-nombre">
-          {{ $repartidor->usuario->Nombres ?? '' }} {{ $repartidor->usuario->Apellidos ?? '' }}
+          Usuario
         </div>
         <div class="rep-hero-email">
-          <i class="fas fa-envelope"></i> {{ $repartidor->usuario->Correo ?? '' }}
+          <i class="fas fa-envelope"></i>
         </div>
-        @if ($repartidor->vehiculo->isNotEmpty())
-          @php $v = $repartidor->vehiculo->first(); @endphp
-          <span class="rep-hero-vehiculo">
-            <i class="fas fa-motorcycle"></i>
-            {{ $v->TipoVehiculo }} · {{ $v->Placa }}
-            @if ($v->SOAT) &nbsp;·&nbsp; SOAT: {{ $v->SOAT }} @endif
-            @if ($v->SeguroVehiculo) &nbsp;·&nbsp; Seguro: {{ $v->SeguroVehiculo }} @endif
-          </span>
-        @endif
+        <span class="rep-hero-vehiculo">
+          <i class="fas fa-motorcycle"></i>
+          Moto · ABC-123
+        </span>
       </div>
     </div>
   </div>
 
   <div class="rep-contenido">
 
-    @if (session('exito'))
-      <div class="msg-verificacion msg-exito" style="margin-bottom:1.5rem;">
-        <i class="fas fa-check-circle"></i> {{ session('exito') }}
-      </div>
-    @endif
+    <!-- TEMPORAL:
+         Laravel mostraba aquí un mensaje flash (session('exito')) tras
+         tomar/entregar/cancelar un pedido.
 
-    {{-- ── STATS ─────────────────────────────── --}}
+         Cuando implementemos Java/Python, este mensaje deberá volver a
+         mostrarse dinámicamente según la respuesta del backend.
+    -->
+
+    <!-- TEMPORAL:
+         Laravel mostraba aquí el conteo real de pedidos en camino
+         ($pedidosEnCurso->count()), disponibles ($pedidosDisponibles->count())
+         y entregados ($pedidosRealizados->count()) del repartidor.
+
+         Cuando implementemos Java/Python, estos contadores deberán
+         calcularse dinámicamente con los datos obtenidos desde el backend.
+    -->
     <div class="rep-stats">
       <div class="stat-card">
-        <div class="stat-numero">{{ $pedidosEnCurso->count() }}</div>
+        <div class="stat-numero">0</div>
         <div class="stat-label">En camino</div>
       </div>
       <div class="stat-card">
-        <div class="stat-numero">{{ $pedidosDisponibles->count() }}</div>
+        <div class="stat-numero">0</div>
         <div class="stat-label">Disponibles</div>
       </div>
       <div class="stat-card">
-        <div class="stat-numero">{{ $pedidosRealizados->count() }}</div>
+        <div class="stat-numero">0</div>
         <div class="stat-label">Entregados</div>
       </div>
     </div>
 
-    {{-- ── EN CAMINO ─────────────────────────── --}}
+    <!-- TEMPORAL:
+         Laravel recorría ($pedidosEnCurso as $envio) los envíos que el
+         repartidor tiene actualmente en camino, mostrando por cada uno:
+         restaurante, número de pedido, fecha, hora estimada de entrega,
+         lista de platos (con cantidades) y el total calculado. Cada
+         tarjeta tenía un formulario PATCH ("Marcar entregado"). Si no
+         había pedidos en camino mostraba un mensaje vacío.
+
+         Cuando implementemos Java/Python, esta lista deberá generarse
+         dinámicamente con los envíos del repartidor obtenidos desde el
+         backend, y "Marcar entregado" deberá conectarse nuevamente
+         mediante JavaScript/API.
+    -->
     <div class="rep-seccion">
       <div class="rep-seccion-titulo">
         <i class="fas fa-shipping-fast"></i> En camino
       </div>
 
-      @forelse ($pedidosEnCurso as $envio)
-        <div class="pedido-card">
-          <div class="pedido-icono naranja">
-            <i class="fas fa-shipping-fast"></i>
-          </div>
-          <div class="pedido-info">
-            <div class="pedido-restaurante">
-              {{ $envio->pedido->restaurante->Nombre ?? 'Restaurante' }}
-            </div>
-            <div class="pedido-meta">
-              Pedido #{{ $envio->pedido->CodigoPedido }}
-              &nbsp;·&nbsp; {{ $envio->FechaEnvio }}
-              &nbsp;·&nbsp; Entrega estimada: {{ $envio->HoraEntrega ?? '—' }}
-            </div>
-            @if ($envio->pedido->detalles->isNotEmpty())
-              <div class="pedido-items">
-                @foreach ($envio->pedido->detalles as $det)
-                  {{ $det->Cantidad }}× {{ $det->plato->Nombre ?? '—' }}@if (!$loop->last), @endif
-                @endforeach
-              </div>
-            @endif
-            <div class="pedido-total">
-              Total: ${{ number_format($envio->pedido->detalles->sum(fn($d) => $d->Cantidad * $d->PrecioUnitario), 0, ',', '.') }}
-            </div>
-          </div>
-          <div class="pedido-acciones">
-            <form action="{{ url('/repartidor/entregar/' . $envio->CodigoEnvio) }}" method="POST">
-              @csrf
-              @method('PATCH')
-              <button type="submit" class="btn btn-verde" style="white-space:nowrap;">
-                <i class="fas fa-check"></i> Marcar entregado
-              </button>
-            </form>
-          </div>
-        </div>
-      @empty
-        <div class="rep-vacio">
+      <div class="pedido-card">
+        <div class="pedido-icono naranja">
           <i class="fas fa-shipping-fast"></i>
-          <p>No tienes pedidos en camino ahora mismo.</p>
         </div>
-      @endforelse
+        <div class="pedido-info">
+          <div class="pedido-restaurante">Green Kitchen</div>
+          <div class="pedido-meta">
+            Pedido #1001 &nbsp;·&nbsp; Hoy &nbsp;·&nbsp; Entrega estimada: —
+          </div>
+          <div class="pedido-items">1× Bandeja Paisa</div>
+          <div class="pedido-total">Total: $18.000</div>
+        </div>
+        <div class="pedido-acciones">
+          <button type="button" class="btn btn-verde" style="white-space:nowrap;">
+            <i class="fas fa-check"></i> Marcar entregado
+          </button>
+        </div>
+      </div>
     </div>
 
-    {{-- ── DISPONIBLES ───────────────────────── --}}
+    <!-- TEMPORAL:
+         Laravel recorría ($pedidosDisponibles as $envio) los envíos sin
+         repartidor asignado, mostrando restaurante, número de pedido,
+         fecha, platos y total, con un formulario POST ("Tomar pedido")
+         y un botón "Cancelar". Si no había pedidos disponibles mostraba
+         un mensaje vacío.
+
+         Cuando implementemos Java/Python, esta lista deberá generarse
+         dinámicamente con los pedidos disponibles obtenidos desde el
+         backend, y "Tomar pedido" deberá conectarse nuevamente mediante
+         JavaScript/API. El botón "Cancelar" ya usa fetch() en el script
+         de esta página, pero apunta a un endpoint que todavía no existe.
+    -->
     <div class="rep-seccion">
       <div class="rep-seccion-titulo">
         <i class="fas fa-bell"></i> Pedidos disponibles
       </div>
 
-      @forelse ($pedidosDisponibles as $envio)
-        <div class="pedido-card" data-pedido="{{ $envio->pedido->CodigoPedido }}">
-          <div class="pedido-icono verde">
-            <i class="fas fa-box-open"></i>
-          </div>
-          <div class="pedido-info">
-            <div class="pedido-restaurante">
-              {{ $envio->pedido->restaurante->Nombre ?? 'Restaurante' }}
-            </div>
-            <div class="pedido-meta">
-              Pedido #{{ $envio->pedido->CodigoPedido }}
-              &nbsp;·&nbsp; {{ $envio->FechaEnvio }}
-            </div>
-            @if ($envio->pedido->detalles->isNotEmpty())
-              <div class="pedido-items">
-                @foreach ($envio->pedido->detalles as $det)
-                  {{ $det->Cantidad }}× {{ $det->plato->Nombre ?? '—' }}@if (!$loop->last), @endif
-                @endforeach
-              </div>
-            @endif
-            <div class="pedido-total">
-              Total: ${{ number_format($envio->pedido->detalles->sum(fn($d) => $d->Cantidad * $d->PrecioUnitario), 0, ',', '.') }}
-            </div>
-          </div>
-          <div class="pedido-acciones" style="display:flex;flex-direction:column;gap:0.5rem;">
-            <form action="{{ url('/repartidor/tomar/' . $envio->CodigoEnvio) }}" method="POST">
-              @csrf
-              <button type="submit" class="btn btn-verde" style="white-space:nowrap;width:100%;">
-                <i class="fas fa-hand-paper"></i> Tomar pedido
-              </button>
-            </form>
-            <button type="button"
-                    class="btn btn-gris btn-cancelar-disponible"
-                    data-pedido="{{ $envio->pedido->CodigoPedido }}"
-                    style="white-space:nowrap;width:100%;">
-              <i class="fas fa-times-circle"></i> Cancelar
-            </button>
-          </div>
+      <div class="pedido-card" data-pedido="1002">
+        <div class="pedido-icono verde">
+          <i class="fas fa-box-open"></i>
         </div>
-      @empty
-        <div class="rep-vacio">
-          <i class="fas fa-bell-slash"></i>
-          <p>No hay pedidos disponibles en este momento.</p>
+        <div class="pedido-info">
+          <div class="pedido-restaurante">Green Kitchen</div>
+          <div class="pedido-meta">Pedido #1002 &nbsp;·&nbsp; Hoy</div>
+          <div class="pedido-items">2× Ensalada César</div>
+          <div class="pedido-total">Total: $24.000</div>
         </div>
-      @endforelse
+        <div class="pedido-acciones" style="display:flex;flex-direction:column;gap:0.5rem;">
+          <button type="button" class="btn btn-verde" style="white-space:nowrap;width:100%;">
+            <i class="fas fa-hand-paper"></i> Tomar pedido
+          </button>
+          <button type="button"
+                  class="btn btn-gris btn-cancelar-disponible"
+                  data-pedido="1002"
+                  style="white-space:nowrap;width:100%;">
+            <i class="fas fa-times-circle"></i> Cancelar
+          </button>
+        </div>
+      </div>
     </div>
 
-    {{-- ── HISTORIAL ─────────────────────────── --}}
+    <!-- TEMPORAL:
+         Laravel recorría ($pedidosRealizados as $envio) el historial de
+         entregas del repartidor, mostrando restaurante, platos, fecha
+         y estado ("Entregado") en una tabla. Si no había entregas
+         mostraba un mensaje vacío.
+
+         Cuando implementemos Java/Python, esta tabla deberá generarse
+         dinámicamente con el historial de entregas obtenido desde el
+         backend.
+    -->
     <div class="rep-seccion">
       <div class="rep-seccion-titulo">
         <i class="fas fa-history"></i> Historial de entregas
       </div>
 
-      @if ($pedidosRealizados->isNotEmpty())
-        <div class="historial-tabla">
-          <div class="historial-fila header">
-            <span>Restaurante</span>
-            <span>Platos</span>
-            <span class="col-fecha">Fecha</span>
-            <span class="col-estado">Estado</span>
-          </div>
-          @foreach ($pedidosRealizados as $envio)
-            <div class="historial-fila">
-              <span>{{ $envio->pedido->restaurante->Nombre ?? '—' }}</span>
-              <span>
-                @foreach ($envio->pedido->detalles as $det)
-                  {{ $det->Cantidad }}× {{ $det->plato->Nombre ?? '—' }}@if (!$loop->last), @endif
-                @endforeach
-              </span>
-              <span class="col-fecha">{{ $envio->FechaEnvio }}</span>
-              <span class="col-estado">
-                <span class="badge-entregado">Entregado</span>
-              </span>
-            </div>
-          @endforeach
+      <div class="historial-tabla">
+        <div class="historial-fila header">
+          <span>Restaurante</span>
+          <span>Platos</span>
+          <span class="col-fecha">Fecha</span>
+          <span class="col-estado">Estado</span>
         </div>
-      @else
-        <div class="rep-vacio">
-          <i class="fas fa-history"></i>
-          <p>Aún no has realizado ninguna entrega.</p>
+        <div class="historial-fila">
+          <span>Green Kitchen</span>
+          <span>1× Bandeja Paisa</span>
+          <span class="col-fecha">Hoy</span>
+          <span class="col-estado">
+            <span class="badge-entregado">Entregado</span>
+          </span>
         </div>
-      @endif
+      </div>
     </div>
 
   </div>

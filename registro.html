@@ -17,8 +17,14 @@
       <p>Únete a Urban Eats y disfruta comida saludable</p>
     </div>
 
-    <form id="form-registro" action="registro.html" method="POST">
-      @csrf
+    <!-- TEMPORAL:
+         Laravel enviaba este formulario por POST al backend para crear
+         un nuevo usuario (incluía @csrf para protección CSRF).
+
+         Cuando implementemos Java/Python, este formulario deberá
+         conectarse nuevamente con el backend mediante JavaScript/API.
+    -->
+    <form id="form-registro">
       <div class="form-grid">
         <div class="campo">
           <label for="reg-nombres">Nombres</label>

@@ -114,7 +114,8 @@
       <img src="images/Logo.png" alt="Urban Eats">
     </div>
 
-    <p class="seleccion-saludo">Bienvenido, {{ session('Nombres') }}</p>
+    <!-- TEMPORAL: Laravel mostraba aquí session('Nombres') con el nombre real del usuario autenticado -->
+    <p class="seleccion-saludo">Bienvenido, Usuario</p>
     <h1 class="seleccion-titulo">¿Cómo deseas ingresar?</h1>
 
     <div class="seleccion-opciones">
@@ -126,7 +127,7 @@
         </div>
       </a>
 
-      <a href="seleccion-restaurante.html" class="opcion-card">
+      <a href="seleccionRestaurante.html" class="opcion-card">
         <div class="opcion-icono"><i class="fas fa-store"></i></div>
         <div>
           <div class="opcion-nombre">Como gerente</div>

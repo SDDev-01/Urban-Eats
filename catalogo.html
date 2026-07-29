@@ -132,7 +132,15 @@
   
   <script src="js/banner.js"></script>
   <script src="js/app.js"></script>
-  <script>window.PRODUCTOS_CATALOGO = @json($productosJS);</script>
+  <!-- TEMPORAL:
+       Laravel inyectaba aquí los productos del catálogo (@json($productosJS))
+       obtenidos desde el backend. Sin datos, catalogo.js cae de vuelta a
+       una lista vacía.
+
+       Cuando implementemos Java/Python, esta variable deberá poblarse
+       nuevamente con los productos obtenidos desde el backend.
+  -->
+  <script>window.PRODUCTOS_CATALOGO = null;</script>
   <script src="js/catalogo.js"></script>
 </body>
 </html>

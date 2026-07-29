@@ -41,25 +41,22 @@
 
     <div class="form-page-header">
       <h2><i class="fas fa-motorcycle"></i> Registro de Repartidor</h2>
-      <p>Hola, <strong>{{ session('Nombres') }}</strong>. Ingresa los datos de tu vehículo para comenzar a repartir.</p>
+      <!-- TEMPORAL: Laravel mostraba aquí session('Nombres') con el nombre real del usuario autenticado -->
+      <p>Hola, <strong>Usuario</strong>. Ingresa los datos de tu vehículo para comenzar a repartir.</p>
     </div>
-
-    @if ($errors->any())
-      <div class="msg-verificacion msg-error" style="margin-bottom:1.2rem;">
-        <i class="fas fa-exclamation-triangle"></i>
-        <ul style="margin:0;padding-left:1rem;">
-          @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-          @endforeach
-        </ul>
-      </div>
-    @endif
 
     <div class="form-card">
       <div class="form-card-body">
 
-        <form id="form-repartidor" action="repartidor.html" method="POST">
-          @csrf
+        <!-- TEMPORAL:
+             Laravel enviaba este formulario por POST al backend para
+             registrar al repartidor (incluía @csrf, old() y los mensajes
+             de $errors provenientes de la validación del servidor).
+
+             Cuando implementemos Java/Python, este formulario deberá
+             conectarse nuevamente con el backend mediante JavaScript/API.
+        -->
+        <form id="form-repartidor">
 
           <div class="seccion-sep">
             <i class="fas fa-motorcycle"></i> Datos del Vehículo
@@ -70,20 +67,19 @@
               <label for="rp-vehiculo">Tipo de vehículo <span style="color:red">*</span></label>
               <select id="rp-vehiculo" name="TipoVehiculo">
                 <option value="">Seleccionar...</option>
-                <option value="Moto" {{ old('TipoVehiculo') === 'Moto' ? 'selected' : '' }}>Moto</option>
-                <option value="Bicicleta" {{ old('TipoVehiculo') === 'Bicicleta' ? 'selected' : '' }}>Bicicleta</option>
-                <option value="Bici" {{ old('TipoVehiculo') === 'Bici' ? 'selected' : '' }}>Bici</option>
-                <option value="Carro" {{ old('TipoVehiculo') === 'Carro' ? 'selected' : '' }}>Carro</option>
+                <option value="Moto">Moto</option>
+                <option value="Bicicleta">Bicicleta</option>
+                <option value="Bici">Bici</option>
+                <option value="Carro">Carro</option>
               </select>
-              <span class="error">{{ $errors->first('TipoVehiculo') }}</span>
+              <span class="error"></span>
             </div>
             <div class="campo">
               <label for="rp-placa">Placa <span style="color:red">*</span></label>
               <input type="text" id="rp-placa" name="Placa"
                      placeholder="ABC-123"
-                     value="{{ old('Placa') }}"
                      style="text-transform:uppercase;">
-              <span class="error">{{ $errors->first('Placa') }}</span>
+              <span class="error"></span>
             </div>
           </div>
 
@@ -92,10 +88,9 @@
             <div class="campo-icono">
               <i class="fas fa-file-alt"></i>
               <input type="text" id="rp-soat" name="SOAT"
-                     placeholder="SOA-987654"
-                     value="{{ old('SOAT') }}">
+                     placeholder="SOA-987654">
             </div>
-            <span class="error">{{ $errors->first('SOAT') }}</span>
+            <span class="error"></span>
           </div>
 
           <div class="campo">
@@ -103,10 +98,9 @@
             <div class="campo-icono">
               <i class="fas fa-shield-alt"></i>
               <input type="text" id="rp-seguro" name="SeguroVehiculo"
-                     placeholder="Aseguradora / N° póliza"
-                     value="{{ old('SeguroVehiculo') }}">
+                     placeholder="Aseguradora / N° póliza">
             </div>
-            <span class="error">{{ $errors->first('SeguroVehiculo') }}</span>
+            <span class="error"></span>
           </div>
 
           <div class="form-btn-wrap" style="margin-top:1.5rem;">

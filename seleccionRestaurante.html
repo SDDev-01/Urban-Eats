@@ -136,22 +136,25 @@
     <p class="seleccion-subtitulo">Modo gerente</p>
     <h1 class="seleccion-titulo">¿Cuál restaurante manejarás hoy?</h1>
 
+    <!-- TEMPORAL:
+         Laravel recorría ($restaurantes) los restaurantes que administra
+         el gerente autenticado, generando un botón por cada uno (con un
+         formulario POST + @csrf que enviaba el CodigoRestaurante para
+         seleccionarlo) y mostrando su Nombre y, si existía, su Direccion.
+
+         Cuando implementemos Java/Python, esta lista deberá generarse
+         dinámicamente con los restaurantes del gerente obtenidos desde
+         el backend, y la selección deberá enviarse mediante JavaScript/API.
+    -->
     <div class="restaurantes-lista">
-      @foreach ($restaurantes as $restaurante)
-        <form action="{{ url('/seleccion-restaurante/' . $restaurante->CodigoRestaurante) }}" method="POST">
-          @csrf
-          <button type="submit" class="restaurante-opcion">
-            <div class="restaurante-icono"><i class="fas fa-store"></i></div>
-            <div class="restaurante-info">
-              <div class="restaurante-nombre">{{ $restaurante->Nombre }}</div>
-              @if($restaurante->Direccion)
-                <div class="restaurante-direccion"><i class="fas fa-map-marker-alt"></i> {{ $restaurante->Direccion }}</div>
-              @endif
-            </div>
-            <i class="fas fa-chevron-right restaurante-flecha"></i>
-          </button>
-        </form>
-      @endforeach
+      <button type="button" class="restaurante-opcion">
+        <div class="restaurante-icono"><i class="fas fa-store"></i></div>
+        <div class="restaurante-info">
+          <div class="restaurante-nombre">Green Kitchen</div>
+          <div class="restaurante-direccion"><i class="fas fa-map-marker-alt"></i> Calle 72 # 5-80, Bogotá</div>
+        </div>
+        <i class="fas fa-chevron-right restaurante-flecha"></i>
+      </button>
     </div>
 
     <div class="restaurantes-lista" style="margin-top:0.85rem;">
@@ -167,7 +170,7 @@
       </a>
     </div>
 
-    <a href="seleccion-rol.html" class="btn-volver">
+    <a href="seleccionRol.html" class="btn-volver">
       <i class="fas fa-arrow-left"></i> Volver
     </a>
   </div>

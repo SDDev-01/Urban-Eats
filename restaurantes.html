@@ -57,7 +57,15 @@
   <div id="toast-container"></div>
   
   <script src="js/app.js"></script>
-  <script>window.RESTAURANTES_BD = @json($restaurantesJS);</script>
+  <!-- TEMPORAL:
+       Laravel inyectaba aquí la lista de restaurantes (@json($restaurantesJS))
+       obtenida desde el backend. Sin datos, restaurantes.js cae de vuelta
+       a una lista vacía.
+
+       Cuando implementemos Java/Python, esta variable deberá poblarse
+       nuevamente con los restaurantes obtenidos desde el backend.
+  -->
+  <script>window.RESTAURANTES_BD = null;</script>
   <script src="js/restaurantes.js"></script>
 </body>
 </html>
