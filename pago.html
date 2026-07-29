@@ -5,19 +5,38 @@
   <title>Pago – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+  <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="{{ asset('css/pago.css') }}">
+  <link rel="stylesheet" href="css/pago.css">
 </head>
 <body>
 
-@include('partials.navbar')
-@if(request('error'))
-  <div style="max-width:1000px;margin:1rem auto;padding:1rem 1.5rem;background:#fef2f2;border:1px solid #fca5a5;border-radius:0.75rem;color:#b91c1c;display:flex;align-items:center;gap:0.75rem;">
-    <i class="fas fa-exclamation-circle" style="font-size:1.25rem;"></i>
-    <span>Tu pago no pudo completarse. Por favor intenta con otro método de pago.</span>
-  </div>
-@endif
+    <!-- CHATBOT: estilos y meta CSRF -->
+    <link rel="stylesheet" href="css/chatbot.css">
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+    <a href="catalogo.html" class="navbar-logo">
+        <img src="images/Logo.png" alt="Urban Eats">
+        <span>Urban Eats</span>
+    </a>
+    <div class="navbar-links">
+        <a href="restaurantes.html" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
+    </div>
+    <div class="navbar-right">
+        <a href="perfil.html" class="navbar-usuario" style="text-decoration:none;">
+        <i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span>
+        </a>
+        <a href="carrito.html" class="btn-carrito" aria-label="Ver carrito">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="carrito-badge" id="carrito-badge">0</span>
+        </a>
+    </div>
+    </nav>
+
+    <!-- CHATBOT SCRIPTS (cargados una sola vez) -->
+        <script src="js/chatbot.js" defer></script>
+
 
 
   <div class="pagina">
@@ -27,10 +46,11 @@
     </div>
 
     <div class="pago-layout">
-      <!--sacar variable public key de ENV-->
-      <script>
-        window.MP_PUBLIC_KEY = "{{ config('services.mercadopago.public_key') }}";
-      </script>
+    <!-- Mercado Pago: usar la Public Key configurada para el entorno -->
+     <!-- IMPORTANTE: como esto es hrml puro pues no hay nada q lea la llave, por eso esta asi, por ende lo cambiaremos despues-->
+    <script>
+        window.MP_PUBLIC_KEY = "TU_PUBLIC_KEY";
+    </script>
       <!-- Columna izquierda: mercado pago -->
       <script src="https://sdk.mercadopago.com/js/v2"></script>
       <!--contenedor del brick-->
@@ -68,7 +88,7 @@
 
   <footer><p>&copy; 2026 Urban Eats – Proyecto Formativo SENA</p></footer>
   <div id="toast-container"></div>
-  <script src="{{ asset('js/app.js') }}"></script>
-  <script src="{{ asset('js/pago.js') }}"></script>
+  <script src="js/app.js"></script>
+  <script src="js/pago.js"></script>
 </body>
 </html>

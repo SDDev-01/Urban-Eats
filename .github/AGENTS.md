@@ -149,14 +149,62 @@ All views use Blade syntax. Key conventions:
 </form>
 
 {{-- Reutilizar componentes compartidos --}}
-@include('partials.navbar')
+    <!-- CHATBOT: estilos y meta CSRF -->
+    <link rel="stylesheet" href="css/chatbot.css">
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+    <a href="catalogo.html" class="navbar-logo">
+        <img src="images/Logo.png" alt="Urban Eats">
+        <span>Urban Eats</span>
+    </a>
+    <div class="navbar-links">
+        <a href="restaurantes.html" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
+    </div>
+    <div class="navbar-right">
+        <a href="perfil.html" class="navbar-usuario" style="text-decoration:none;">
+        <i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span>
+        </a>
+        <a href="carrito.html" class="btn-carrito" aria-label="Ver carrito">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="carrito-badge" id="carrito-badge">0</span>
+        </a>
+    </div>
+    </nav>
+
+    <!-- CHATBOT SCRIPTS (cargados una sola vez) -->
+        <script src="js/chatbot.js" defer></script>
 ```
 
 ### Navbar reutilizable
 The navbar has been extracted to a shared Blade partial to avoid duplication. **All future changes to the navbar must be made in that partial file only** — never copy-paste navbar HTML into individual views.
 
 ```blade
-@include('partials.navbar')
+    <!-- CHATBOT: estilos y meta CSRF -->
+    <link rel="stylesheet" href="css/chatbot.css">
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+    <a href="catalogo.html" class="navbar-logo">
+        <img src="images/Logo.png" alt="Urban Eats">
+        <span>Urban Eats</span>
+    </a>
+    <div class="navbar-links">
+        <a href="restaurantes.html" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
+    </div>
+    <div class="navbar-right">
+        <a href="perfil.html" class="navbar-usuario" style="text-decoration:none;">
+        <i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span>
+        </a>
+        <a href="carrito.html" class="btn-carrito" aria-label="Ver carrito">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="carrito-badge" id="carrito-badge">0</span>
+        </a>
+    </div>
+    </nav>
+
+    <!-- CHATBOT SCRIPTS (cargados una sola vez) -->
+        <script src="js/chatbot.js" defer></script>
 ```
 
 ### Eloquent Models & Relationships

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>¿Cómo deseas ingresar? – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+  <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body {
@@ -111,14 +111,14 @@
 <body>
   <div class="seleccion-wrap">
     <div class="seleccion-logo">
-      <img src="{{ asset('images/Logo.png') }}" alt="Urban Eats">
+      <img src="images/Logo.png" alt="Urban Eats">
     </div>
 
     <p class="seleccion-saludo">Bienvenido, {{ session('Nombres') }}</p>
     <h1 class="seleccion-titulo">¿Cómo deseas ingresar?</h1>
 
     <div class="seleccion-opciones">
-      <a href="{{ url('/catalogo') }}" class="opcion-card">
+      <a href="catalogo.html" class="opcion-card">
         <div class="opcion-icono"><i class="fas fa-user"></i></div>
         <div>
           <div class="opcion-nombre">Como usuario</div>
@@ -126,7 +126,7 @@
         </div>
       </a>
 
-      <a href="{{ url('/seleccion-restaurante') }}" class="opcion-card">
+      <a href="seleccion-restaurante.html" class="opcion-card">
         <div class="opcion-icono"><i class="fas fa-store"></i></div>
         <div>
           <div class="opcion-nombre">Como gerente</div>

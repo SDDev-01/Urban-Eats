@@ -4,13 +4,37 @@
   <meta charset="UTF-8">
   <title>Mi Restaurante – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/perfil-restaurante.css') }}">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/perfil-restaurante.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
-@include('partials.navbar')
+    <!-- CHATBOT: estilos y meta CSRF -->
+    <link rel="stylesheet" href="css/chatbot.css">
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+    <a href="catalogo.html" class="navbar-logo">
+        <img src="images/Logo.png" alt="Urban Eats">
+        <span>Urban Eats</span>
+    </a>
+    <div class="navbar-links">
+        <a href="restaurantes.html" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
+    </div>
+    <div class="navbar-right">
+        <a href="perfil.html" class="navbar-usuario" style="text-decoration:none;">
+        <i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span>
+        </a>
+        <a href="carrito.html" class="btn-carrito" aria-label="Ver carrito">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="carrito-badge" id="carrito-badge">0</span>
+        </a>
+    </div>
+    </nav>
+
+    <!-- CHATBOT SCRIPTS (cargados una sola vez) -->
+        <script src="js/chatbot.js" defer></script>
 
   <div class="pagina">
 
@@ -36,7 +60,7 @@
         </div>
 
         <div class="rest-estado-wrap">
-          <a href="{{ url('/menu') }}" class="btn btn-verde" style="margin-bottom:0.5rem;">
+          <a href="menu.html" class="btn btn-verde" style="margin-bottom:0.5rem;">
             <i class="fas fa-utensils"></i> Crear Menú
           </a>
           <button class="rest-toggle-estado" id="btn-estado">
@@ -223,7 +247,7 @@
           @endif
         </div>
       @empty
-        <p class="tabla-vacia-msg">Este restaurante aún no tiene menús registrados. <a href="{{ url('/menu') }}">Crear menú</a></p>
+        <p class="tabla-vacia-msg">Este restaurante aún no tiene menús registrados. <a href="menu.html">Crear menú</a></p>
       @endforelse
     </div>
 
@@ -232,7 +256,7 @@
       <div class="gestion-bloque">
         <h2 class="gestion-titulo"><i class="fas fa-plus-circle"></i> Agregar Plato</h2>
 
-        <form action="{{ url('/perfilRestaurante/plato') }}" method="POST" class="form-plato-rapido">
+        <form action="perfilRestaurante/plato.html" method="POST" class="form-plato-rapido">
           @csrf
 
           <div class="campo">
@@ -291,8 +315,8 @@
     <p>&copy; 2026 Urban Eats – Proyecto Formativo SENA. Comida saludable para todos.</p>
   </footer>
 
-  <script src="{{ asset('js/app.js') }}"></script>
+  <script src="js/app.js"></script>
   <script>window.PEDIDOS_BD = @json($pedidosJS);</script>
-  <script src="{{ asset('js/perfil-restaurante.js') }}"></script>
+  <script src="js/perfil-restaurante.js"></script>
 </body>
 </html>
