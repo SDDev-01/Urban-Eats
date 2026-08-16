@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro – Urban Eats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/registro.css">
+</head>
+<body>
+
+  <div class="registro-card">
+    <div class="registro-header">
+      <div class="registro-logo"><img src="images/Logo.png" alt="Urban Eats"></div>
+      <h1>Crear Cuenta</h1>
+      <p>Únete a Urban Eats y disfruta comida saludable</p>
+    </div>
+
+    <!-- TEMPORAL:
+         Laravel enviaba este formulario por POST al backend para crear
+         un nuevo usuario (incluía @csrf para protección CSRF).
+
+         Cuando implementemos Java/Python, este formulario deberá
+         conectarse nuevamente con el backend mediante JavaScript/API.
+    -->
+    <form id="form-registro">
+      <div class="form-grid">
+        <div class="campo">
+          <label for="reg-nombres">Nombres</label>
+          <input type="text" id="reg-nombres" name="Nombres" placeholder="Juan">
+          <span class="error" id="error-nombres"></span>
+        </div>
+        <div class="campo">
+          <label for="reg-apellidos">Apellidos</label>
+          <input type="text" id="reg-apellidos" name="Apellidos" placeholder="Pérez">
+          <span class="error" id="error-apellidos"></span>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="reg-email">Correo electrónico</label>
+        <div class="campo-icono">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="reg-email" name="Correo" placeholder="tu@email.com">
+        </div>
+        <span class="error" id="error-email"></span>
+      </div>
+
+      <div class="form-grid">
+        <div class="campo">
+          <label for="reg-telefono">Teléfono</label>
+          <div class="campo-icono">
+            <i class="fas fa-phone"></i>
+            <input type="tel" id="reg-telefono" name="Telefono" placeholder="300 123 4567" maxlength="10" pattern="[0-9]*" inputmode="numeric">
+          </div>
+          <span class="error" id="error-telefono"></span>
+        </div>
+        <div class="campo">
+          <label for="reg-password">Contraseña</label>
+          <div class="campo-icono">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="reg-password" name="Password" placeholder="Mínimo 4 caracteres">
+          </div>
+          <span class="error" id="error-password"></span>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="reg-direccion">Dirección de entrega</label>
+        <div class="campo-icono">
+          <i class="fas fa-map-marker-alt"></i>
+          <input type="text" id="reg-direccion" name="Direccion" placeholder="Calle 45 # 12-30, Bogotá">
+        </div>
+        <span class="error" id="error-direccion"></span>
+      </div>
+
+      <button type="submit" class="btn-registro">
+        <i class="fas fa-user-check"></i> Crear Cuenta
+      </button>
+
+      <div class="reg-footer">
+        ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
+      </div>
+    </form>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="js/app.js"></script>
+</body>
+</html>
