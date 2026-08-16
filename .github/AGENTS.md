@@ -177,8 +177,7 @@ All views use Blade syntax. Key conventions:
 ```
 
 ### Navbar reutilizable
-The navbar has been extracted to a shared Blade partial to avoid duplication. **All future changes to the navbar must be made in that partial file only** — never copy-paste navbar HTML into individual views.
-
+Legacy: el navbar vivía en un partial Blade (`resources/views/partials/navbar.blade.php`). En los templates Spring Boot (`src/main/resources/templates`) hoy está duplicado; idealmente extráelo a un fragmento Thymeleaf para evitar copy/paste.
 ```blade
     <!-- CHATBOT: estilos y meta CSRF -->
     <link rel="stylesheet" href="css/chatbot.css">
