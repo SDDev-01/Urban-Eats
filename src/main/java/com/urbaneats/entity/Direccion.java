@@ -1,5 +1,6 @@
 package com.urbaneats.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,9 +16,11 @@ import lombok.Data;
 public class Direccion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer CodigoDireccion;
+    @Column(name = "CodigoDireccion")
+    private Integer codigoDireccion;
 
-    private String Direccion;
+    @Column(name = "Direccion")
+    private String direccion;
 
     @ManyToOne
     @JoinColumn(name = "CodigoUsuario")

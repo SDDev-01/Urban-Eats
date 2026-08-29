@@ -21,14 +21,17 @@ public class Usuario {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer CodigoUsuario;
+    @Column(name = "CodigoUsuario")
+    private Integer codigoUsuario;
     
-    @Column(nullable = false, unique = true)
-    private String Correo;
-    @Column(nullable = false)
-    private String Password;
-    private String Nombres;
-    private String Apellidos;
+    @Column(nullable = false, unique = true, name = "Correo")
+    private String correo;
+    @Column(nullable = false, name = "Password")
+    private String password;
+    @Column(name = "Nombres")
+    private String nombres;
+    @Column(name = "Apellidos")
+    private String apellidos;
 
     @ManyToMany
     @JoinTable(
@@ -44,13 +47,13 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario")
     private List<Telefono> telefonos;
 
-    @OneToOne
+    @OneToOne(mappedBy = "usuario")
     private Gerente gerente;
     
-    @OneToOne
+    @OneToOne(mappedBy = "usuario")
     private Repartidor repartidor;
 
-    @OneToOne
+    @OneToOne(mappedBy = "usuario")
     private Cliente cliente;
 
 }

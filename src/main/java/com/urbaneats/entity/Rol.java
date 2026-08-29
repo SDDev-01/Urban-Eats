@@ -1,6 +1,8 @@
 package com.urbaneats.entity;
 
 import java.util.List;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,10 +18,13 @@ public class Rol {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer CodigoRol;
+    @Column(name = "CodigoRol")
+    private Integer codigoRol;
 
-    private String NombreRol;
-    private String DescripcionRol;
+    @Column(name = "NombreRol")
+    private String nombreRol;
+    @Column(name = "DescripcionRol")
+    private String descripcionRol;
 
     @ManyToMany(mappedBy = "roles")
     private List<Usuario> usuarios;
