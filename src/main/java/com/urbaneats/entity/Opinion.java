@@ -1,7 +1,13 @@
 package com.urbaneats.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "Opiniones")
 public class Opinion {
@@ -21,45 +27,8 @@ public class Opinion {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    public Opinion() {
-    }
-
-    public Opinion(Integer opinionId, Integer calificacion, String comentario, Usuario usuario) {
-        this.opinionId = opinionId;
-        this.calificacion = calificacion;
-        this.comentario = comentario;
-        this.usuario = usuario;
-    }
-
-    public Integer getOpinionId() {
-        return opinionId;
-    }
-
-    public void setOpinionId(Integer opinionId) {
-        this.opinionId = opinionId;
-    }
-
-    public Integer getCalificacion() {
-        return calificacion;
-    }
-
-    public void setCalificacion(Integer calificacion) {
-        this.calificacion = calificacion;
-    }
-
-    public String getComentario() {
-        return comentario;
-    }
-
-    public void setComentario(String comentario) {
-        this.comentario = comentario;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
+    // Cardinalidad
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 }

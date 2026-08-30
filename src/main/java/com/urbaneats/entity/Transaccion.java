@@ -1,8 +1,14 @@
 package com.urbaneats.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "Transacciones")
 public class Transaccion {
@@ -20,46 +26,4 @@ public class Transaccion {
     @ManyToOne
     @JoinColumn(name = "pago_id", nullable = false)
     private Pago pago;
-
-    public Transaccion() {
-    }
-
-    public Transaccion(String transaccionId, LocalDateTime fechaTransaccion, String resultado, Pago pago) {
-        this.transaccionId = transaccionId;
-        this.fechaTransaccion = fechaTransaccion;
-        this.resultado = resultado;
-        this.pago = pago;
-    }
-
-    public String getTransaccionId() {
-        return transaccionId;
-    }
-
-    public void setTransaccionId(String transaccionId) {
-        this.transaccionId = transaccionId;
-    }
-
-    public LocalDateTime getFechaTransaccion() {
-        return fechaTransaccion;
-    }
-
-    public void setFechaTransaccion(LocalDateTime fechaTransaccion) {
-        this.fechaTransaccion = fechaTransaccion;
-    }
-
-    public String getResultado() {
-        return resultado;
-    }
-
-    public void setResultado(String resultado) {
-        this.resultado = resultado;
-    }
-
-    public Pago getPago() {
-        return pago;
-    }
-
-    public void setPago(Pago pago) {
-        this.pago = pago;
-    }
 }

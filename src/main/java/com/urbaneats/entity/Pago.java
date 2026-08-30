@@ -1,8 +1,14 @@
 package com.urbaneats.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "Pagos")
 public class Pago {
@@ -20,46 +26,11 @@ public class Pago {
 
     @Column(name = "estado_pago", nullable = false, length = 50)
     private String estadoPago;
+// Cardinalidades
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
 
-    public Pago() {
-    }
-
-    public Pago(Integer pagoId, String metodoPago, BigDecimal monto, String estadoPago) {
-        this.pagoId = pagoId;
-        this.metodoPago = metodoPago;
-        this.monto = monto;
-        this.estadoPago = estadoPago;
-    }
-
-    public Integer getPagoId() {
-        return pagoId;
-    }
-
-    public void setPagoId(Integer pagoId) {
-        this.pagoId = pagoId;
-    }
-
-    public String getMetodoPago() {
-        return metodoPago;
-    }
-
-    public void setMetodoPago(String metodoPago) {
-        this.metodoPago = metodoPago;
-    }
-
-    public BigDecimal getMonto() {
-        return monto;
-    }
-
-    public void setMonto(BigDecimal monto) {
-        this.monto = monto;
-    }
-
-    public String getEstadoPago() {
-        return estadoPago;
-    }
-
-    public void setEstadoPago(String estadoPago) {
-        this.estadoPago = estadoPago;
-    }
+    @OneToOne(mappedBy = "pago", cascade = CascadeType.ALL)
+    private Transaccion transaccion;
 }

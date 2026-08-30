@@ -1,7 +1,20 @@
 package com.urbaneats.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "Alergenos")
 public class Alergeno {
@@ -16,37 +29,9 @@ public class Alergeno {
 
     @Column(name = "descripcion", columnDefinition = "TEXT")
     private String descripcion;
-
-    public Alergeno() {
-    }
-
-    public Alergeno(Integer alergenoId, String nombre, String descripcion) {
-        this.alergenoId = alergenoId;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-    }
-
-    public Integer getAlergenoId() {
-        return alergenoId;
-    }
-
-    public void setAlergenoId(Integer alergenoId) {
-        this.alergenoId = alergenoId;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
+    
+    // Cardinalidad
+    @ManyToOne
+    @JoinColumn(name = "plato_id")
+    private Plato plato;
 }
