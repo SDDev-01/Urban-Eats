@@ -1,9 +1,10 @@
 package com.urbaneats.dao;
 
-import com.urbaneats.domain.Pedido;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface PedidoDao extends JpaRepository<Pedido, Long> {
+
+import com.urbaneats.entity.Pedido;
+
+
+public interface PedidoDao extends JpaRepository<Pedido, Integer> {
 }
