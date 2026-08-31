@@ -1,15 +1,12 @@
 package com.urbaneats.entity;
 
 import jakarta.persistence.*;
-import java.io.Serializable;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "detalle_pedido")
-public class DetallePedido implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class DetallePedido  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

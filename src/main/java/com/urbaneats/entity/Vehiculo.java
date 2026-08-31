@@ -1,14 +1,12 @@
 package com.urbaneats.entity;
 
 import jakarta.persistence.*;
-import java.io.Serializable;
 import lombok.Data;
 @Data
 @Entity
 @Table(name = "vehiculo")
-public class Vehiculo implements Serializable {
+public class Vehiculo  {
 
-    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
