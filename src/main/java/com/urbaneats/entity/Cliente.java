@@ -2,6 +2,7 @@ package com.urbaneats.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import java.util.List;
 @Data
 @Entity
 @Table(name = "cliente")
@@ -28,4 +29,6 @@ public class Cliente {
 
     @Column(length = 255)
     private String direccion;
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    private List<Pedido> pedidos;
  }

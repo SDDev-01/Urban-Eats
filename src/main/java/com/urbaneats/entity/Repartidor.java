@@ -2,6 +2,7 @@ package com.urbaneats.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import java.util.List;
 @Data
 @Entity
 @Table(name = "repartidor")
@@ -27,5 +28,10 @@ public class Repartidor  {
 
     @Column(nullable = false, length = 50)
     private String estado; // Ej: Disponible, Ocupado, Inactivo
+    @OneToOne(mappedBy = "repartidor", cascade = CascadeType.ALL)
+    private Vehiculo vehiculo;
+
+    @OneToMany(mappedBy = "repartidor", cascade = CascadeType.ALL)
+    private List<Envio> envios;
 
 }

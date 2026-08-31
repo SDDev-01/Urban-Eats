@@ -3,6 +3,7 @@ package com.urbaneats.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.Data;
+import java.util.List;
 @Data
 @Entity
 @Table(name = "pedido")
@@ -28,5 +29,10 @@ public class Pedido  {
 
     @Column(nullable = false)
     private Double total;
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    private List<DetallePedido> detalles;
+
+    @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
+    private Envio envio;
 
 }
