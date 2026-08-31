@@ -14,10 +14,6 @@ public class Envio  {
     @Column(name = "id_envio")
     private Integer idEnvio;
 
-    @OneToOne
-    @JoinColumn(name = "id_pedido", nullable = false)
-    private Pedido pedido;
-
     @ManyToOne
     @JoinColumn(name = "id_repartidor")
     private Repartidor repartidor;
@@ -27,5 +23,7 @@ public class Envio  {
 
     @Column(name = "fecha_entrega")
     private LocalDateTime fechaEntrega;
-
+  @OneToOne
+    @JoinColumn(name = "id_pedido", nullable = false)
+    private Pedido pedido;
     }

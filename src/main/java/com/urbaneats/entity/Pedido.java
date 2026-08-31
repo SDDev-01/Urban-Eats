@@ -16,11 +16,6 @@ public class Pedido  {
     @Column(name = "id_pedido")
     private Integer idPedido;
 
-    // Relación ManyToOne con Cliente (Muchos pedidos pueden pertenecer a un cliente)
-    @ManyToOne
-    @JoinColumn(name = "id_cliente", nullable = false)
-    private Cliente cliente;
-
     @Column(name = "fecha_pedido", nullable = false)
     private LocalDateTime fechaPedido;
 
@@ -34,5 +29,9 @@ public class Pedido  {
 
     @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
     private Envio envio;
-
+    
+ // Relación ManyToOne con Cliente (Muchos pedidos pueden pertenecer a un cliente)
+    @ManyToOne
+    @JoinColumn(name = "id_cliente", nullable = false)
+    private Cliente cliente;
 }

@@ -13,10 +13,6 @@ public class Vehiculo  {
     @Column(name = "id_vehiculo")
     private Integer idVehiculo;
 
-    // Relación OneToOne o ManyToOne con Repartidor
-    @OneToOne
-    @JoinColumn(name = "id_repartidor", nullable = false)
-    private Repartidor repartidor;
 
     @Column(nullable = false, length = 50)
     private String tipo; // Ej: Motocicleta, Bicicleta, Automóvil
@@ -26,5 +22,9 @@ public class Vehiculo  {
 
     @Column(length = 100)
     private String modelo;
+  // Relación OneToOne o ManyToOne con Repartidor
+    @OneToOne
+    @JoinColumn(name = "id_repartidor", nullable = false)
+    private Repartidor repartidor;
 
 }
