@@ -37,6 +37,9 @@ public class RolService implements IRolService {
     @Override
     @Transactional
     public Rol guardar(Rol rol) {
+        if (rol == null || rol.getNombreRol() == null || rol.getNombreRol().isBlank()) {
+            throw new IllegalArgumentException("El nombre del rol es obligatorio");
+        }
         if (existePorNombre(rol.getNombreRol())) {
             throw new IllegalArgumentException("Ya existe un rol con el nombre: " + rol.getNombreRol());
         }
