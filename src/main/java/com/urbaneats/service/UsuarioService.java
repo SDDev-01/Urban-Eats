@@ -39,6 +39,12 @@ public class UsuarioService implements IUsuarioService {
     @Override
     @Transactional
     public Usuario guardar(Usuario usuario) {
+        if (usuario == null || usuario.getCorreo() == null || usuario.getCorreo().isBlank()) {
+            throw new IllegalArgumentException("El correo es obligatorio");
+        }
+        if (usuario.getPassword() == null || usuario.getPassword().isBlank()) {
+            throw new IllegalArgumentException("La contraseña es obligatoria");
+        }
         if (existePorCorreo(usuario.getCorreo())) {
             throw new IllegalArgumentException("Ya existe un usuario con el correo: " + usuario.getCorreo());
         }
