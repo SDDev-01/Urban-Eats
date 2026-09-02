@@ -81,8 +81,8 @@ public class UsuarioService implements IUsuarioService {
         if (!usuarioRepository.existsById(id)) {
             throw new IllegalArgumentException("Usuario no encontrado con ID: " + id);
         }
-        // Cascada: al eliminar usuario, JPA elimina automáticamente teléfonos y direcciones
-        // gracias a orphanRemoval o CascadeType si lo configuras en la entidad
+        // Nota: si existen teléfonos/direcciones asociados, la eliminación puede fallar por restricciones FK
+        // a menos que se configure CascadeType.REMOVE/orphanRemoval en la entidad o se eliminen explícitamente.
         usuarioRepository.deleteById(id);
     }
 
