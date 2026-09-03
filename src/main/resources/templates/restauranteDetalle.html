@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Restaurante – Urban Eats</title>
@@ -39,23 +39,75 @@
 
   <div style="padding-top: var(--navbar-height);">
     <!-- HEADER DEL RESTAURANTE -->
-    <div class="restaurante-hero" id="restaurante-hero">
-      <!-- Se genera dinámicamente con JS -->
+    <div class="restaurante-hero" id="restaurante-hero"
+         th:attr="data-id=${restaurante.codigoRestaurante}">
+      <div class="restaurante-logo-grande" style="background: rgba(255,255,255,0.25);">🍽️</div>
+      <div class="restaurante-info-hero">
+        <h1 th:text="${restaurante.nombre}">Nombre del restaurante</h1>
+        <div class="restaurante-detalles">
+          <div class="restaurante-detalle-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span th:text="${restaurante.direccion} ?: '—'">Dirección</span>
+          </div>
+          <div class="restaurante-detalle-item">
+            <i class="fas fa-clock"></i>
+            <span th:text="${restaurante.horario} ?: '—'">Horario</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- BOTÓN VOLVER -->
     <div class="volver-section">
-      <a href="restaurantes.html" class="btn-volver">
+      <a th:href="@{/restaurantes}" href="restaurantes.html" class="btn-volver">
         <i class="fas fa-arrow-left"></i> Volver a Restaurantes
       </a>
     </div>
 
-    <!-- FILTROS DE CATEGORÍAS (generados dinámicamente por JS) -->
-    <div class="filtros-wrap"></div>
+    <!-- FILTROS DE CATEGORÍAS (generados en el servidor) -->
+    <div class="filtros-wrap">
+      <button class="btn-filtro activo" data-categoria="todos">Todos</button>
+      <button class="btn-filtro"
+              th:each="categoria : ${categorias}"
+              th:attr="data-categoria=${categoria}"
+              th:text="${categoria}">Categoría</button>
+    </div>
 
-    <!-- GRID DE PRODUCTOS -->
+    <!-- GRID DE PRODUCTOS (renderizado por Thymeleaf) -->
     <div class="productos-grid" id="productos-grid">
-      <!-- Se genera dinámicamente con JS -->
+
+      <p th:if="${#lists.isEmpty(platos)}"
+         style="text-align:center;color:var(--texto-gris);padding:3rem;grid-column:1/-1;">
+        No hay productos disponibles.
+      </p>
+
+      <div class="producto-card"
+           th:each="plato : ${platos}"
+           th:attr="data-categoria=${plato.menu != null ? plato.menu.categoria : ''}">
+        <div class="producto-img-wrap">
+          <span class="producto-emoji"
+                style="display:flex; font-size:3rem; align-items:center; justify-content:center; height:100%;">🍽️</span>
+        </div>
+        <div class="producto-body">
+          <div class="producto-categoria"
+               th:text="${plato.menu != null ? plato.menu.categoria : '—'}">Categoría</div>
+          <div class="producto-nombre" th:text="${plato.nombre}">Nombre del plato</div>
+          <div class="producto-desc" th:text="${plato.descripcion}">Descripción</div>
+          <div class="producto-footer">
+            <span class="producto-precio"
+                  th:text="'$' + ${#numbers.formatInteger(plato.precio, 0, 'POINT')} + ' COP'">$0 COP</span>
+            <button class="btn-ver"
+                    th:attr="data-id=${plato.codigoPlato},
+                             data-nombre=${plato.nombre},
+                             data-descripcion=${plato.descripcion},
+                             data-precio=${plato.precio},
+                             data-categoria=${plato.menu != null ? plato.menu.categoria : ''}">
+              Ver detalles
+            </button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -95,19 +147,9 @@
   <div id="toast-container"></div>
   
   <script src="js/app.js"></script>
-  <!-- TEMPORAL:
-       Laravel inyectaba aquí el restaurante (@json($restauranteJS)) y sus
-       productos (@json($productosJS)) obtenidos desde el backend según el
-       restaurante visitado. Sin datos, restaurante-detalle.js redirige a
-       la lista de restaurantes.
-
-       Cuando implementemos Java/Python, estas variables deberán poblarse
-       nuevamente con los datos del restaurante obtenidos desde el backend.
-  -->
-  <script>
-    window.RESTAURANTE_BD = null;
-    window.PRODUCTOS_BD   = null;
-  </script>
+  <!-- El restaurante y sus platos ya vienen renderizados por Thymeleaf desde
+       RestauranteDetalleController. restaurante-detalle.js solo se encarga de
+       los filtros, el modal y el carrito. -->
   <script src="js/restaurante-detalle.js"></script>
 </body>
 </html>
