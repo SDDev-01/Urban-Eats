@@ -23,7 +23,12 @@ public class Transaccion {
     @Column(name = "resultado", nullable = false, length = 50)
     private String resultado;
 
-    @ManyToOne
     @JoinColumn(name = "pago_id", nullable = false)
     private Pago pago;
+        
+    //Cardinalidad
+    @OneToOne
+    @JoinColumn(name = "pago_id", nullable = false, unique = true)
+    private Pago pago;
+
 }

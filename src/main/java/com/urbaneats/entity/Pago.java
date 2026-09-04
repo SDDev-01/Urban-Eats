@@ -26,7 +26,8 @@ public class Pago {
 
     @Column(name = "estado_pago", nullable = false, length = 50)
     private String estadoPago;
-// Cardinalidades
+
+    // Cardinalidades
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
