@@ -1,20 +1,43 @@
 package com.urbaneats.controller;
 
+import com.urbaneats.service.IPedidoService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @Controller
 @RequestMapping("/pedidos")
 public class PedidoController {
 
-    @GetMapping
-    public String index() {
-        return "cliente/pedidos";
+    private final IPedidoService pedidoService;
+
+    public PedidoController(IPedidoService pedidoService) {
+        this.pedidoService = pedidoService;
     }
 
-    @GetMapping("/crear")
-    public String crear() {
-        return "cliente/crear-pedido";
+    
+    @PostMapping("/confirmar")
+    @ResponseBody
+    public ResponseEntity<?> confirmar(@RequestBody Map<String, Object> payload) {
+    
+        return ResponseEntity.ok(Map.of("redirect", "/rastreo"));
+    }
+
+  
+    @GetMapping("/{id}/estado")
+    @ResponseBody
+    public ResponseEntity<?> estado(@PathVariable Integer id) {
+
+        return ResponseEntity.ok(Map.of("estado", "Iniciando"));
+    }
+
+  
+    @PostMapping("/{id}/cancelar")
+    @ResponseBody
+    public ResponseEntity<?> cancelar(@PathVariable Integer id) {
+   
+        return ResponseEntity.ok(Map.of("ok", true));
     }
 }
