@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 public class Transaccion {
 
     @Id
-    @Column(name = "transaccion_id", length = 100)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "transaccion_id")
     private String transaccionId;
 
     @Column(name = "fecha_transaccion", nullable = false)
@@ -22,9 +23,6 @@ public class Transaccion {
 
     @Column(name = "resultado", nullable = false, length = 50)
     private String resultado;
-
-    @JoinColumn(name = "pago_id", nullable = false)
-    private Pago pago;
         
     //Cardinalidad
     @OneToOne
