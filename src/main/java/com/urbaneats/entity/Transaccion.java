@@ -16,7 +16,7 @@ public class Transaccion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "transaccion_id")
-    private String transaccionId;
+    private Integer transaccionId;
 
     @Column(name = "fecha_transaccion", nullable = false)
     private LocalDateTime fechaTransaccion;

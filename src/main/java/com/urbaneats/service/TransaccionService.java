@@ -20,7 +20,7 @@ public class TransaccionService implements ITransaccionService {
     }
 
     @Override
-    public Transaccion obtenerPorId(String id) {
+    public Transaccion obtenerPorId(Integer id) {
         return transaccionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transacción no encontrada con el ID: " + id));
     }
@@ -31,13 +31,13 @@ public class TransaccionService implements ITransaccionService {
     }
 
     @Override
-    public Transaccion actualizar(String id, Transaccion transaccion) {
+    public Transaccion actualizar(Integer id, Transaccion transaccion) {
         Transaccion existente = obtenerPorId(id);
         return transaccionRepository.save(existente);
     }
 
     @Override
-    public void eliminar(String id) {
+    public void eliminar(Integer id) {
         transaccionRepository.deleteById(id);
     }
 }

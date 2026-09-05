@@ -5,8 +5,8 @@ import java.util.List;
 
 public interface ITransaccionService {
     List<Transaccion> obtenerTodos();
-    Transaccion obtenerPorId(String id);
+    Transaccion obtenerPorId(Integer id);
     Transaccion guardar(Transaccion transaccion);
-    Transaccion actualizar(String id, Transaccion transaccion);
-    void eliminar(String id);
+    Transaccion actualizar(Integer id, Transaccion transaccion);
+    void eliminar(Integer id);
 }
