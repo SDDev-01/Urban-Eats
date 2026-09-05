@@ -43,6 +43,18 @@ public class UsuarioService implements IUsuarioService {
     @Override
     @Transactional
     public Usuario guardar(Usuario usuario) {
+        if (usuario == null) {
+            throw new IllegalArgumentException("El usuario no puede ser nulo");
+        }
+
+        if (usuario.getCorreo() == null || usuario.getCorreo().isBlank()) {
+            throw new IllegalArgumentException("El correo no puede estar vacío");
+        }
+
+        if (usuario.getPassword() == null || usuario.getPassword().isBlank()) {
+            throw new IllegalArgumentException("La contraseña no puede estar vacía");
+        }
+
         if (existePorCorreo(usuario.getCorreo())) {
             throw new IllegalArgumentException("Ya existe un usuario con el correo: " + usuario.getCorreo());
         }
