@@ -113,7 +113,7 @@ public class RegistroController {
             return "redirect:/catalogo";
 
         } catch (Exception e) {
-            redirect.addFlashAttribute("error", "Error al registrar: " + e.getMessage());
+            redirect.addFlashAttribute("error", "Error al registrar. Intenta nuevamente.");
             return "redirect:/registro";
         }
     }
