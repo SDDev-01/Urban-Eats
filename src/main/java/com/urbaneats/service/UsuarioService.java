@@ -1,6 +1,8 @@
 package com.urbaneats.service;
 
+import com.urbaneats.entity.Rol;
 import com.urbaneats.entity.Usuario;
+import com.urbaneats.dao.RolRepository;
 import com.urbaneats.dao.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -9,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,6 +19,7 @@ import java.util.Optional;
 public class UsuarioService implements IUsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final RolRepository rolRepository;  // <-- instancia inyectada (minúscula)
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -39,16 +43,29 @@ public class UsuarioService implements IUsuarioService {
     @Override
     @Transactional
     public Usuario guardar(Usuario usuario) {
-        if (usuario == null || usuario.getCorreo() == null || usuario.getCorreo().isBlank()) {
-            throw new IllegalArgumentException("El correo es obligatorio");
+        if (usuario == null) {
+            throw new IllegalArgumentException("El usuario no puede ser nulo");
         }
+
+        if (usuario.getCorreo() == null || usuario.getCorreo().isBlank()) {
+            throw new IllegalArgumentException("El correo no puede estar vacío");
+        }
+
         if (usuario.getPassword() == null || usuario.getPassword().isBlank()) {
-            throw new IllegalArgumentException("La contraseña es obligatoria");
+            throw new IllegalArgumentException("La contraseña no puede estar vacía");
         }
+
         if (existePorCorreo(usuario.getCorreo())) {
             throw new IllegalArgumentException("Ya existe un usuario con el correo: " + usuario.getCorreo());
         }
+
+        // CORREGIDO: usar la instancia rolRepository (minúscula), no la clase RolRepository
+        Rol rolCliente = rolRepository.findByNombreRol("Cliente")
+            .orElseThrow(() -> new IllegalStateException("Rol Cliente no encontrado en la base de datos"));
+
+        usuario.setRoles(List.of(rolCliente));
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+
         return usuarioRepository.save(usuario);
     }
 
@@ -58,7 +75,6 @@ public class UsuarioService implements IUsuarioService {
         Usuario existente = usuarioRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con ID: " + id));
 
-        // Si cambia el correo, validar que no exista otro con ese correo
         if (!existente.getCorreo().equals(usuario.getCorreo()) && existePorCorreo(usuario.getCorreo())) {
             throw new IllegalArgumentException("Ya existe un usuario con el correo: " + usuario.getCorreo());
         }
@@ -67,7 +83,6 @@ public class UsuarioService implements IUsuarioService {
         existente.setNombres(usuario.getNombres());
         existente.setApellidos(usuario.getApellidos());
 
-        // Solo actualiza password si se envía una nueva
         if (usuario.getPassword() != null && !usuario.getPassword().isEmpty()) {
             existente.setPassword(passwordEncoder.encode(usuario.getPassword()));
         }
@@ -81,8 +96,6 @@ public class UsuarioService implements IUsuarioService {
         if (!usuarioRepository.existsById(id)) {
             throw new IllegalArgumentException("Usuario no encontrado con ID: " + id);
         }
-        // Nota: si existen teléfonos/direcciones asociados, la eliminación puede fallar por restricciones FK
-        // a menos que se configure CascadeType.REMOVE/orphanRemoval en la entidad o se eliminen explícitamente.
         usuarioRepository.deleteById(id);
     }
 

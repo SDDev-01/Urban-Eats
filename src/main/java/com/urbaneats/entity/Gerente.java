@@ -14,8 +14,8 @@ public class Gerente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "gerente_id")
-    private Integer gerenteId;
+    @Column(name = "CodigoGerente")
+    private Integer codigoGerente;
 
     @Column(name = "departamento", nullable = false, length = 100)
     private String departamento;
@@ -23,6 +23,6 @@ public class Gerente {
 
     //cardinalidad
     @OneToOne
-    @JoinColumn(name = "usuario_id", nullable = false, unique = true)
+    @JoinColumn(name = "CodigoUsuario", nullable = false, unique = true)
     private Usuario usuario;
 }
