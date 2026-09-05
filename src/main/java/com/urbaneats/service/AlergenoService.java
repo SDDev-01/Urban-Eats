@@ -1,5 +1,6 @@
 package com.urbaneats.service;
-import com.urbaneats.dao.AlergenoRepository; 
+
+import com.urbaneats.dao.AlergenoRepository;
 import com.urbaneats.entity.Alergeno;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
