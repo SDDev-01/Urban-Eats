@@ -20,13 +20,9 @@ public class Gerente {
     @Column(name = "departamento", nullable = false, length = 100)
     private String departamento;
 
-    @OneToOne
-    @JoinColumn(name = "usuario_id", nullable = false, unique = true)
-    private Usuario usuario;
 
     //cardinalidad
     @OneToOne
     @JoinColumn(name = "usuario_id", nullable = false, unique = true)
     private Usuario usuario;
-}
 }

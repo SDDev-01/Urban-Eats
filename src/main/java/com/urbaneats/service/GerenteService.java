@@ -5,15 +5,12 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.urbaneats.dao.gerenterepository.IGerenteDao;
 import com.urbaneats.entity.Gerente;
 
 @Service
 public class GerenteService implements IGerenteService {
 
     private final GerenteRepository gerenteRepository;
-    @Autowired
-    private IGerenteService gerenteDao;
 
     GerenteService(GerenteRepository gerenteRepository) {
         this.gerenteRepository = gerenteRepository;
@@ -30,12 +27,12 @@ public class GerenteService implements IGerenteService {
     }
 
     @Override
-    public Optional<Gerente> buscarPorId(Long id) {
+    public Optional<Gerente> buscarPorId(Integer id) {
         return gerenteRepository.findById(id);
     }
 
     @Override
-    public void eliminar(Long id) {
+    public void eliminar(Integer id) {
         gerenteRepository.deleteById(id);
     }
 }
