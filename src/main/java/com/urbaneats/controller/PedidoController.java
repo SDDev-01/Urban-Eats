@@ -11,10 +11,7 @@ import java.util.Map;
 @RequestMapping("/pedidos")
 public class PedidoController {
 
-    private final IPedidoService pedidoService;
-
     public PedidoController(IPedidoService pedidoService) {
-        this.pedidoService = pedidoService;
     }
 
     
