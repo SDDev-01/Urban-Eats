@@ -1,7 +1,7 @@
 package com.urbaneats.service;
 
 import com.urbaneats.entity.DetallePedido;
-import com.urbaneats.dao.DetallePedidoDao;
+import com.urbaneats.dao.DetallePedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
 public class DetallePedidoService implements IDetallePedidoService {
 
     @Autowired
-    private DetallePedidoDao detallePedidoDao;
+    private DetallePedidoRepository detallePedidoDao;
 
     @Override
     public List<DetallePedido> listarTodos() {

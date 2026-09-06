@@ -1,7 +1,7 @@
 package com.urbaneats.service;
 
 import com.urbaneats.entity.Envio;
-import com.urbaneats.dao.EnvioDao;
+import com.urbaneats.dao.EnvioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
 public class EnvioService implements IEnvioService {
 
     @Autowired
-    private EnvioDao envioDao;
+    private EnvioRepository envioDao;
 
     @Override
     public List<Envio> listarTodos() {
