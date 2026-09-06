@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-UrbanEatsApplication<urban-eats>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.urbaneats.UrbanEatsApplication",
+            "projectName": "urban-eats",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
