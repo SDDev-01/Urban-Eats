@@ -23,7 +23,7 @@ public class RastreoController {
         Integer codigoPedido = (Integer) session.getAttribute("pedido_activo");
 
         if (codigoPedido != null) {
-            Pedido pedido = pedidoService.obtenerPorId(codigoPedido);
+            Pedido pedido = pedidoService.buscarPorId(codigoPedido).orElse(null);
 
             if (pedido != null) {
                 double total = pedido.getDetalles().stream()
