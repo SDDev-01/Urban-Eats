@@ -1,34 +1,39 @@
 package com.urbaneats.entity;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.Data;
-import java.util.List;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+/**
+ * Entidad de la tabla Cliente.
+ * En el Schema.sql la tabla solo tiene CodigoCliente y CodigoUsuario:
+ * los datos personales (nombres, correo, telefono) viven en Usuario.
+ */
 @Data
 @Entity
-@Table(name = "cliente")
+@Table(name = "Cliente")
 public class Cliente {
-
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_cliente")
-    private Integer idCliente;
+    @Column(name = "CodigoCliente", nullable = false)
+    private Integer codigoCliente;
 
-    @Column(nullable = false, length = 100)
-    private String nombre;
+    // ----- Relaciones -----
 
-    @Column(nullable = false, length = 100)
-    private String apellido;
+    /** Un cliente corresponde a un usuario del sistema. */
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "CodigoUsuario", nullable = false, unique = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Usuario usuario;
 
-    @Column(nullable = false, unique = true, length = 150)
-    private String correo;
-
-    @Column(length = 20)
-    private String telefono;
-
-    @Column(length = 255)
-    private String direccion;
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    private List<Pedido> pedidos;
- }
+    /** Los envios que se hicieron a este cliente. */
+    @OneToMany(mappedBy = "cliente")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<Envio> envios;
+}

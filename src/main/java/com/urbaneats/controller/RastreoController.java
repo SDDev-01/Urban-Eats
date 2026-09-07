@@ -1,5 +1,7 @@
 package com.urbaneats.controller;
 
+import java.math.BigDecimal;
+
 import com.urbaneats.entity.Pedido;
 import com.urbaneats.service.IPedidoService;
 import jakarta.servlet.http.HttpSession;
@@ -26,9 +28,11 @@ public class RastreoController {
             Pedido pedido = pedidoService.buscarPorId(codigoPedido).orElse(null);
 
             if (pedido != null) {
-                double total = pedido.getDetalles().stream()
-                        .mapToDouble(detalle -> detalle.getCantidad() * detalle.getPrecioUnitario())
-                        .sum();
+                // PrecioUnitario es DECIMAL en la base, por eso se suma con BigDecimal.
+                BigDecimal total = pedido.getDetalles().stream()
+                        .map(detalle -> detalle.getPrecioUnitario()
+                                .multiply(BigDecimal.valueOf(detalle.getCantidad())))
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
 
                 model.addAttribute("pedidoData", pedido);
                 model.addAttribute("totalPedido", total);

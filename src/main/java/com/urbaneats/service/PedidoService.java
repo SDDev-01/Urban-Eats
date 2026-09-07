@@ -32,7 +32,7 @@ public class PedidoService implements IPedidoService {
     @Override
     public Pedido actualizar(Integer id, Pedido pedido) {
         if (pedidoDao.existsById(id)) {
-            pedido.setIdPedido(id);
+            pedido.setCodigoPedido(id);
             return pedidoDao.save(pedido);
         }
         return null;

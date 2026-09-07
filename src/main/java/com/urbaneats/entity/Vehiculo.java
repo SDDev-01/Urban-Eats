@@ -2,29 +2,37 @@ package com.urbaneats.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+/**
+ * Entidad de la tabla Vehiculo.
+ * La llave primaria es la Placa, no un codigo autoincremental.
+ */
 @Data
 @Entity
-@Table(name = "vehiculo")
-public class Vehiculo  {
-
+@Table(name = "Vehiculo")
+public class Vehiculo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_vehiculo")
-    private Integer idVehiculo;
-
-
-    @Column(nullable = false, length = 50)
-    private String tipo; // Ej: Motocicleta, Bicicleta, Automóvil
-
-    @Column(nullable = false, unique = true, length = 20)
+    @Column(name = "Placa", nullable = false, length = 20)
     private String placa;
 
-    @Column(length = 100)
-    private String modelo;
-  // Relación OneToOne o ManyToOne con Repartidor
-    @OneToOne
-    @JoinColumn(name = "id_repartidor", nullable = false)
-    private Repartidor repartidor;
+    @Column(name = "TipoVehiculo", nullable = false, length = 20)
+    private String tipoVehiculo;
 
+    @Column(name = "SeguroVehiculo", length = 100)
+    private String seguroVehiculo;
+
+    @Column(name = "SOAT", length = 100)
+    private String soat;
+
+    // ----- Relaciones -----
+
+    /** El repartidor duenio del vehiculo. En el Schema.sql admite NULL. */
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CodigoRepartidor")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Repartidor repartidor;
 }

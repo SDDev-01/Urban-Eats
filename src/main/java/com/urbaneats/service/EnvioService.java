@@ -32,7 +32,7 @@ public class EnvioService implements IEnvioService {
     @Override
     public Envio actualizar(Integer id, Envio envio) {
         if (envioDao.existsById(id)) {
-            envio.setIdEnvio(id);
+            envio.setCodigoEnvio(id);
             return envioDao.save(envio);
         }
         return null;

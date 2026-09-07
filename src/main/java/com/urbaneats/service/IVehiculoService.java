@@ -6,8 +6,8 @@ import java.util.Optional;
 
 public interface IVehiculoService {
     List<Vehiculo> listarTodos();
-    Optional<Vehiculo> buscarPorId(Integer id);
+    Optional<Vehiculo> buscarPorId(String placa);
     Vehiculo guardar(Vehiculo vehiculo);
-    Vehiculo actualizar(Integer id, Vehiculo vehiculo);
-    void eliminar(Integer id);
+    Vehiculo actualizar(String placa, Vehiculo vehiculo);
+    void eliminar(String placa);
 }

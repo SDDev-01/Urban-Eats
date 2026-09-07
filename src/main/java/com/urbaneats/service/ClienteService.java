@@ -33,7 +33,7 @@ public class ClienteService implements IClienteService {
     public Cliente actualizar(Integer id, Cliente cliente) {
         if (clienteDao.existsById(id)) {
             // Asignamos el id del parámetro para asegurar que actualice el registro correcto
-            cliente.setIdCliente(id); 
+            cliente.setCodigoCliente(id); 
             return clienteDao.save(cliente);
         }
         return null;

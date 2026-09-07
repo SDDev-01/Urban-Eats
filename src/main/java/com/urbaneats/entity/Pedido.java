@@ -1,37 +1,54 @@
 package com.urbaneats.entity;
 
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import lombok.Data;
+import java.time.LocalDate;
 import java.util.List;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+/**
+ * Entidad de la tabla Pedido.
+ * En el Schema.sql no hay columna de total ni de cliente: el total se calcula
+ * sumando el detalle, y el cliente se alcanza a traves del envio.
+ */
 @Data
 @Entity
-@Table(name = "pedido")
-public class Pedido  {
-
-
+@Table(name = "Pedido")
+public class Pedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_pedido")
-    private Integer idPedido;
+    @Column(name = "CodigoPedido", nullable = false)
+    private Integer codigoPedido;
 
-    @Column(name = "fecha_pedido", nullable = false)
-    private LocalDateTime fechaPedido;
+    @Column(name = "FechaPedido")
+    private LocalDate fechaPedido;
 
-    @Column(nullable = false, length = 50)
-    private String estado; // Ej: Pendiente, En camino, Entregado
+    /** Valores del ENUM en BD: Iniciando, En Proceso, Entregado, Cancelado. */
+    @Column(name = "Estado", nullable = false, length = 20)
+    private String estado;
 
-    @Column(nullable = false)
-    private Double total;
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
-    private List<DetallePedido> detalles;
+    // ----- Relaciones -----
 
-    @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
+    /** El envio del pedido. La llave foranea vive en esta tabla y es unica. */
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "CodigoEnvio", nullable = false, unique = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Envio envio;
-    
- // Relación ManyToOne con Cliente (Muchos pedidos pueden pertenecer a un cliente)
-    @ManyToOne
-    @JoinColumn(name = "id_cliente", nullable = false)
-    private Cliente cliente;
+
+    /** El restaurante al que se le hizo el pedido. */
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "CodigoRestaurante", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Restaurante restaurante;
+
+    /** Las lineas del pedido: que plato, cuantos y a que precio. */
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<DetallePedido> detalles;
 }

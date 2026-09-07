@@ -20,8 +20,8 @@ public class VehiculoService implements IVehiculoService {
     }
 
     @Override
-    public Optional<Vehiculo> buscarPorId(Integer id) {
-        return vehiculoDao.findById(id);
+    public Optional<Vehiculo> buscarPorId(String placa) {
+        return vehiculoDao.findById(placa);
     }
 
     @Override
@@ -30,16 +30,16 @@ public class VehiculoService implements IVehiculoService {
     }
 
     @Override
-    public Vehiculo actualizar(Integer id, Vehiculo vehiculo) {
-        if (vehiculoDao.existsById(id)) {
-            vehiculo.setIdVehiculo(id);
+    public Vehiculo actualizar(String placa, Vehiculo vehiculo) {
+        if (vehiculoDao.existsById(placa)) {
+            vehiculo.setPlaca(placa);
             return vehiculoDao.save(vehiculo);
         }
         return null;
     }
 
     @Override
-    public void eliminar(Integer id) {
-        vehiculoDao.deleteById(id);
+    public void eliminar(String placa) {
+        vehiculoDao.deleteById(placa);
     }
 }
