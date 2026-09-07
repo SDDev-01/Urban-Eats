@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>¿Cómo deseas ingresar? – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body {
@@ -111,15 +111,14 @@
 <body>
   <div class="seleccion-wrap">
     <div class="seleccion-logo">
-      <img src="images/Logo.png" alt="Urban Eats">
+      <img th:src="@{/images/Logo.png}" alt="Urban Eats">
     </div>
 
-    <!-- TEMPORAL: Laravel mostraba aquí session('Nombres') con el nombre real del usuario autenticado -->
-    <p class="seleccion-saludo">Bienvenido, Usuario</p>
+    <p class="seleccion-saludo" th:text="'Bienvenido, ' + ${#authentication.principal.nombres}">Bienvenido, Usuario</p>
     <h1 class="seleccion-titulo">¿Cómo deseas ingresar?</h1>
 
     <div class="seleccion-opciones">
-      <a href="catalogo.html" class="opcion-card">
+      <a th:href="@{/catalogo}" class="opcion-card">
         <div class="opcion-icono"><i class="fas fa-user"></i></div>
         <div>
           <div class="opcion-nombre">Como usuario</div>
@@ -127,7 +126,7 @@
         </div>
       </a>
 
-      <a href="seleccionRestaurante.html" class="opcion-card">
+      <a th:href="@{/seleccion-restaurante}" class="opcion-card">
         <div class="opcion-icono"><i class="fas fa-store"></i></div>
         <div>
           <div class="opcion-nombre">Como gerente</div>

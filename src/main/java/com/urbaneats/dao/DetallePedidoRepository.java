@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.urbaneats.entity.DetallePedido;
 
 
-public interface DetallePedidoDao extends JpaRepository<DetallePedido, Integer> {
+public interface DetallePedidoRepository extends JpaRepository<DetallePedido, Integer> {
 }
