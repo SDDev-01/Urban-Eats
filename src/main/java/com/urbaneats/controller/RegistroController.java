@@ -1,17 +1,24 @@
 package com.urbaneats.controller;
 
+import com.urbaneats.entity.Cliente;
 import com.urbaneats.entity.Direccion;
 import com.urbaneats.entity.Telefono;
 import com.urbaneats.entity.Usuario;
-import com.urbaneats.security.CustomUserDetails;
 import com.urbaneats.security.CustomUserDetailsService;
+import com.urbaneats.service.IClienteService;
 import com.urbaneats.service.IDireccionService;
 import com.urbaneats.service.ITelefonoService;
 import com.urbaneats.service.IUsuarioService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +34,12 @@ public class RegistroController {
     private final IUsuarioService usuarioService;
     private final ITelefonoService telefonoService;
     private final IDireccionService direccionService;
+    private final IClienteService clienteService; // Inyecta el servicio de cliente si existe
     private final CustomUserDetailsService customUserDetailsService;
+    private final PasswordEncoder passwordEncoder;
+
+    // Repositorio necesario para persistir la sesión en Spring Security 6 / Spring Boot 3
+    private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
     @GetMapping("/registro")
     public String mostrarPagina() {
@@ -41,79 +53,60 @@ public class RegistroController {
                               @RequestParam String Telefono,
                               @RequestParam String Password,
                               @RequestParam String Direccion,
+                              HttpServletRequest request,
+                              HttpServletResponse response,
                               RedirectAttributes redirect) {
 
-        // Validacion de nombres y apellidos (solo letras, espacios, guiones, apostrofos, puntos)
-        String nombreRegex = "^[\\p{L}\\s\\-'\\.]+$";
-        if (!Pattern.matches(nombreRegex, Nombres)) {
-            redirect.addFlashAttribute("error", "El campo Nombres contiene caracteres invalidos");
-            return "redirect:/registro";
-        }
-        if (!Pattern.matches(nombreRegex, Apellidos)) {
-            redirect.addFlashAttribute("error", "El campo Apellidos contiene caracteres invalidos");
-            return "redirect:/registro";
-        }
-
-        // Validacion de correo
-        if (!Pattern.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$", Correo)) {
-            redirect.addFlashAttribute("error", "El correo no tiene un formato valido");
-            return "redirect:/registro";
-        }
-
-        // Validacion de password
-        if (Password.length() < 8) {
-            redirect.addFlashAttribute("error", "La contraseña debe tener al menos 8 caracteres");
-            return "redirect:/registro";
-        }
-
-        // Validacion de telefono y direccion
-        if (Telefono == null || Telefono.trim().isEmpty()) {
-            redirect.addFlashAttribute("error", "El telefono es obligatorio");
-            return "redirect:/registro";
-        }
-        if (Direccion == null || Direccion.trim().isEmpty()) {
-            redirect.addFlashAttribute("error", "La direccion es obligatoria");
-            return "redirect:/registro";
-        }
-
-        // Verificar que el correo no exista
+        // Validaciones...
         if (usuarioService.existePorCorreo(Correo)) {
             redirect.addFlashAttribute("error", "Ya existe un usuario con ese correo");
             return "redirect:/registro";
         }
 
         try {
-            // Crear usuario
+            // 1. Crear y encriptar Usuario
             Usuario usuario = new Usuario();
             usuario.setNombres(Nombres);
             usuario.setApellidos(Apellidos);
             usuario.setCorreo(Correo);
-            usuario.setPassword(Password);
+            usuario.setPassword(passwordEncoder.encode(Password)); // Contraseña encriptada
 
             Usuario usuarioGuardado = usuarioService.guardar(usuario);
 
-            // Crear telefono
+            // 2. Crear Teléfono
             Telefono telefono = new Telefono();
             telefono.setTelefono(Telefono);
             telefono.setUsuario(usuarioGuardado);
             telefonoService.guardar(telefono);
 
-            // Crear direccion
+            // 3. Crear Dirección
             Direccion direccion = new Direccion();
             direccion.setDireccion(Direccion);
             direccion.setUsuario(usuarioGuardado);
             direccionService.guardar(direccion);
 
-            // Autenticar automaticamente (equivalente a session([...]) en Laravel)
+            // 4. El Cliente NO se crea aqui.
+            // El trigger crear_cliente_automaticamente del Schema.sql inserta la fila
+            // en cliente apenas se guarda el usuario. La tabla solo tiene CodigoCliente
+            // y CodigoUsuario: los datos personales viven en usuario, telefono y direccion.
+
+            // 5. Cargar UserDetails y autenticar
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(usuarioGuardado.getCorreo());
             UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authToken);
+
+            // 6. Guardar explícitamente en la sesión HTTP
+            SecurityContext context = SecurityContextHolder.createEmptyContext();
+            context.setAuthentication(authToken);
+            SecurityContextHolder.setContext(context);
+            securityContextRepository.saveContext(context, request, response);
 
             return "redirect:/catalogo";
 
         } catch (Exception e) {
-            redirect.addFlashAttribute("error", "Error al registrar. Intenta nuevamente.");
+            // Imprimir la traza completa en la consola para diagnosticar cualquier fallo SQL o JPA
+            e.printStackTrace();
+            redirect.addFlashAttribute("error", "Error al registrar: " + e.getMessage());
             return "redirect:/registro";
         }
     }

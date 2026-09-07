@@ -14,8 +14,8 @@ public class Opinion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "opinion_id")
-    private Integer opinionId;
+    @Column(name = "CodigoOpinion")
+    private Integer codigoOpinion;
 
     @Column(name = "calificacion", nullable = false)
     private Integer calificacion;

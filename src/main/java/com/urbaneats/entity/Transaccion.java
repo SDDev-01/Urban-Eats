@@ -15,18 +15,18 @@ public class Transaccion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "transaccion_id")
-    private String transaccionId;
+    @Column(name = "TransaccionID")
+    private String transaccionID;
 
-    @Column(name = "fecha_transaccion", nullable = false)
+    @Column(name = "FechaTransaccion", nullable = false)
     private LocalDateTime fechaTransaccion;
 
-    @Column(name = "resultado", nullable = false, length = 50)
+    @Column(name = "Resultado", nullable = false, length = 50)
     private String resultado;
         
     //Cardinalidad
     @OneToOne
-    @JoinColumn(name = "pago_id", nullable = false, unique = true)
+    @JoinColumn(name = "CodigoPago", nullable = false, unique = true)
     private Pago pago;
 
 }

@@ -21,17 +21,17 @@ public class Alergeno {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "alergeno_id")
+    @Column(name = "CodigoAlergeno")
     private Integer alergenoId;
 
-    @Column(name = "nombre", nullable = false, length = 100)
+    @Column(name = "Nombre", nullable = false, length = 100)
     private String nombre;
 
-    @Column(name = "descripcion", columnDefinition = "TEXT")
+    @Column(name = "Descripcion", columnDefinition = "TEXT")
     private String descripcion;
     
     // Cardinalidad
     @ManyToOne
-    @JoinColumn(name = "plato_id")
+    @JoinColumn(name = "CodigoPlato")
     private Plato plato;
 }

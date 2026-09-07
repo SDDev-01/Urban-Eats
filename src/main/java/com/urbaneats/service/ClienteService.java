@@ -1,7 +1,7 @@
 package com.urbaneats.service;
 
 import com.urbaneats.entity.Cliente;
-import com.urbaneats.dao.ClienteDao;
+import com.urbaneats.dao.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
 public class ClienteService implements IClienteService {
 
     @Autowired
-    private ClienteDao clienteDao;
+    private ClienteRepository clienteDao;
 
     @Override
     public List<Cliente> listarTodos() {

@@ -1,91 +1,88 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Mi Perfil – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="css/pago.css">
-  <link rel="stylesheet" href="css/perfil.css">
+  <link rel="stylesheet" th:href="@{/css/pago.css}">
+  <link rel="stylesheet" th:href="@{/css/perfil.css}">
 </head>
 <body>
 
-      <!-- CHATBOT: estilos y meta CSRF -->
-    <link rel="stylesheet" href="css/chatbot.css">
+  <link rel="stylesheet" th:href="@{/css/chatbot.css}">
 
-    <!-- NAVBAR -->
-    <nav class="navbar">
-    <a href="catalogo.html" class="navbar-logo">
-        <img src="images/Logo.png" alt="Urban Eats">
-        <span>Urban Eats</span>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a th:href="@{/catalogo}" class="navbar-logo">
+      <img th:src="@{/images/Logo.png}" alt="Urban Eats">
+      <span>Urban Eats</span>
     </a>
     <div class="navbar-links">
-        <a href="restaurantes.html" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
+      <a th:href="@{/restaurantes}" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
     </div>
     <div class="navbar-right">
-        <a href="perfil.html" class="navbar-usuario" style="text-decoration:none;">
-        <i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span>
-        </a>
-        <a href="carrito.html" class="btn-carrito" aria-label="Ver carrito">
+      <a th:href="@{/perfil}" class="navbar-usuario" style="text-decoration:none;">
+        <i class="fas fa-user-circle"></i> <span id="navbar-nombre" th:text="${#authentication.principal.nombres}">Usuario</span>
+      </a>
+      <a th:href="@{/carrito}" class="btn-carrito" aria-label="Ver carrito">
         <i class="fas fa-shopping-cart"></i>
         <span class="carrito-badge" id="carrito-badge">0</span>
-        </a>
+      </a>
     </div>
-    </nav>
+  </nav>
 
-    <!-- CHATBOT SCRIPTS (cargados una sola vez) -->
-        <script src="js/chatbot.js" defer></script>
+  <script th:src="@{/js/chatbot.js}" defer></script>
 
   <div class="pagina">
     <div class="perfil-container">
-      
+
       <!-- Cabecera del perfil -->
       <div class="perfil-header">
         <div class="perfil-avatar">
           <i class="fas fa-user"></i>
         </div>
-        <!-- TEMPORAL: Laravel mostraba aquí $usuario->Nombres del usuario autenticado -->
-        <h1 class="perfil-nombre" id="perfil-nombre">Usuario</h1>
+        <h1 class="perfil-nombre" id="perfil-nombre" th:text="${usuario.nombres}">Usuario</h1>
         <p class="perfil-tipo">Cliente de Urban Eats</p>
+      </div>
+
+      <!-- Mensajes flash -->
+      <div th:if="${exito != null}" class="msg-verificacion msg-exito" style="margin-bottom:1.2rem;">
+        <i class="fas fa-check-circle"></i> <span th:text="${exito}">Éxito</span>
+      </div>
+      <div th:if="${error != null}" class="msg-verificacion msg-error" style="margin-bottom:1.2rem;">
+        <i class="fas fa-exclamation-triangle"></i> <span th:text="${error}">Error</span>
       </div>
 
       <!-- Información personal -->
       <div class="perfil-card">
         <h3><i class="fas fa-id-card"></i> Información Personal</h3>
 
-
-        <!-- TEMPORAL:
-             Laravel mostraba aquí los datos reales del usuario autenticado
-             ($usuario->Nombres, Apellidos, Correo) y su teléfono/dirección
-             obtenidos de tablas relacionadas ($usuario->telefono,
-             $usuario->direccion).
-
-             Cuando implementemos Java/Python, esta sección deberá
-             volver a llenarse dinámicamente con los datos del usuario
-             obtenidos desde el backend.
-        -->
+        <!-- Vista de datos -->
         <div id="perfil-vista">
           <div class="perfil-info-grid">
             <div class="perfil-info-item">
               <span class="perfil-info-label">Nombres</span>
-              <span class="perfil-info-value">Usuario</span>
+              <span class="perfil-info-value" th:text="${usuario.nombres}">—</span>
             </div>
             <div class="perfil-info-item">
               <span class="perfil-info-label">Apellidos</span>
-              <span class="perfil-info-value">—</span>
+              <span class="perfil-info-value" th:text="${usuario.apellidos} ?: '—'">—</span>
             </div>
             <div class="perfil-info-item">
               <span class="perfil-info-label">Email</span>
-              <span class="perfil-info-value">—</span>
+              <span class="perfil-info-value" th:text="${usuario.correo}">—</span>
             </div>
             <div class="perfil-info-item">
               <span class="perfil-info-label">Teléfono</span>
-              <span class="perfil-info-value">—</span>
+              <span class="perfil-info-value"
+                    th:text="${usuario.telefonos != null and !usuario.telefonos.isEmpty()} ? ${usuario.telefonos[0].telefono} : '—'">—</span>
             </div>
             <div class="perfil-info-item full">
               <span class="perfil-info-label">Dirección</span>
-              <span class="perfil-info-value">—</span>
+              <span class="perfil-info-value"
+                    th:text="${usuario.direcciones != null and !usuario.direcciones.isEmpty()} ? ${usuario.direcciones[0].direccion} : '—'">—</span>
             </div>
           </div>
           <div style="margin-top:1.5rem;">
@@ -95,39 +92,32 @@
           </div>
         </div>
 
-        <!-- TEMPORAL:
-             Laravel enviaba este formulario por PATCH al backend para
-             actualizar los datos del usuario (incluía @csrf, @method('PATCH')
-             y old() para conservar los valores si la validación fallaba,
-             precargados con los datos actuales de $usuario).
-
-             Cuando implementemos Java/Python, este formulario deberá
-             conectarse nuevamente con el backend mediante JavaScript/API.
-        -->
+        <!-- Formulario de edición -->
         <div id="perfil-edicion" style="display:none;">
-          <form>
+          <form th:action="@{/perfil/actualizar}" method="post">
             <div class="form-grid">
               <div class="campo">
                 <label>Nombres <span style="color:red">*</span></label>
-                <input type="text" name="Nombres" required>
+                <input type="text" name="nombres" th:value="${usuario.nombres}" required>
               </div>
               <div class="campo">
                 <label>Apellidos <span style="color:red">*</span></label>
-                <input type="text" name="Apellidos" required>
+                <input type="text" name="apellidos" th:value="${usuario.apellidos}" required>
               </div>
             </div>
             <div class="campo">
               <label>Email <span style="color:red">*</span></label>
               <div class="campo-icono">
                 <i class="fas fa-envelope"></i>
-                <input type="email" name="Correo" required>
+                <input type="email" name="correo" th:value="${usuario.correo}" required>
               </div>
             </div>
             <div class="campo">
               <label>Teléfono</label>
               <div class="campo-icono">
                 <i class="fas fa-phone"></i>
-                <input type="text" name="Telefono" maxlength="10"
+                <input type="text" name="telefono" maxlength="10"
+                       th:value="${usuario.telefonos != null and !usuario.telefonos.isEmpty()} ? ${usuario.telefonos[0].telefono} : ''"
                        placeholder="10 dígitos">
               </div>
             </div>
@@ -135,7 +125,8 @@
               <label>Dirección</label>
               <div class="campo-icono">
                 <i class="fas fa-map-marker-alt"></i>
-                <input type="text" name="Direccion"
+                <input type="text" name="direccion"
+                       th:value="${usuario.direcciones != null and !usuario.direcciones.isEmpty()} ? ${usuario.direcciones[0].direccion} : ''"
                        placeholder="Tu dirección de entrega">
               </div>
             </div>
@@ -156,43 +147,35 @@
       <div class="perfil-card">
         <h3><i class="fas fa-rocket"></i> ¿Quieres hacer más?</h3>
         <div class="opciones-grid">
-          <!-- TEMPORAL:
-            Laravel mostraba una opción diferente según:
-            - $esRepartidor
-            - $tieneRestaurante
-
-            Cuando implementemos Java/Python, estas opciones
-            deberán mostrarse dinámicamente según el usuario.
-          -->
-
-          <a href="repartidor.html" class="opcion-card">
-            <div class="opcion-icon">
-              <i class="fas fa-motorcycle" style="color: #3498db;"></i>
-            </div>
+          <!-- Repartidor -->
+          <a th:if="${esRepartidor}" th:href="@{/perfilRepartidor}" class="opcion-card">
+            <div class="opcion-icon"><i class="fas fa-motorcycle" style="color: #3498db;"></i></div>
+            <div class="opcion-titulo">Panel Repartidor</div>
+            <div class="opcion-desc">Ver pedidos y gestionar entregas</div>
+          </a>
+          <a th:if="${!esRepartidor}" th:href="@{/repartidor}" class="opcion-card">
+            <div class="opcion-icon"><i class="fas fa-motorcycle" style="color: #3498db;"></i></div>
             <div class="opcion-titulo">Sé Repartidor</div>
             <div class="opcion-desc">Gana dinero entregando pedidos</div>
           </a>
 
-          <a href="restaurante.html" class="opcion-card">
-            <div class="opcion-icon">
-              <i class="fas fa-store" style="color: #e67e22;"></i>
-            </div>
+          <!-- Restaurante -->
+          <a th:if="${tieneRestaurante}" th:href="@{/seleccion-restaurante}" class="opcion-card">
+            <div class="opcion-icon"><i class="fas fa-store" style="color: #e67e22;"></i></div>
+            <div class="opcion-titulo">Mi Restaurante</div>
+            <div class="opcion-desc">Administrar menú y pedidos</div>
+          </a>
+          <a th:if="${!tieneRestaurante}" th:href="@{/restaurante}" class="opcion-card">
+            <div class="opcion-icon"><i class="fas fa-store" style="color: #e67e22;"></i></div>
             <div class="opcion-titulo">Registra tu Restaurante</div>
             <div class="opcion-desc">Vende tu comida en Urban Eats</div>
           </a>
         </div>
       </div>
 
-<!-- Cerrar sesión -->
-      <!-- TEMPORAL:
-           Laravel enviaba este formulario por POST al backend para
-           cerrar la sesión del usuario (incluía @csrf).
-
-           Cuando implementemos Java/Python, este botón deberá
-           conectarse nuevamente con el backend mediante JavaScript/API.
-      -->
+      <!-- Cerrar sesión -->
       <div class="perfil-card perfil-logout">
-        <form>
+        <form th:action="@{/logout}" method="post">
           <button type="submit" class="btn btn-verde btn-grande">
             <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
           </button>
@@ -206,8 +189,8 @@
     <p>&copy; 2026 Urban Eats – Proyecto Formativo SENA. Comida para todos.</p>
   </footer>
 
-  <script src="js/app.js"></script>
-  <script src="js/perfil.js"></script>
+  <script th:src="@{/js/app.js}"></script>
+  <script th:src="@{/js/perfil.js}"></script>
   <script>
     const btnMostrar   = document.getElementById('btn-mostrar-edicion');
     const btnCancelar  = document.getElementById('btn-cancelar-edicion');
@@ -222,7 +205,6 @@
       edicion.style.display = 'none';
       vista.style.display   = 'block';
     });
-
   </script>
 </body>
 </html>

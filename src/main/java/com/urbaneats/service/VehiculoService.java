@@ -1,7 +1,7 @@
 package com.urbaneats.service;
 
 import com.urbaneats.entity.Vehiculo;
-import com.urbaneats.dao.VehiculoDao;
+import com.urbaneats.dao.VehiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
 public class VehiculoService implements IVehiculoService {
 
     @Autowired
-    private VehiculoDao vehiculoDao;
+    private VehiculoRepository vehiculoDao;
 
     @Override
     public List<Vehiculo> listarTodos() {

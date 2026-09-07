@@ -1,7 +1,7 @@
 package com.urbaneats.service;
 
 import com.urbaneats.entity.Repartidor;
-import com.urbaneats.dao.RepartidorDao;
+import com.urbaneats.dao.RepartidorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
 public class RepartidorService implements IRepartidorService {
 
     @Autowired
-    private RepartidorDao repartidorDao;
+    private RepartidorRepository repartidorDao;
 
     @Override
     public List<Repartidor> listarTodos() {
