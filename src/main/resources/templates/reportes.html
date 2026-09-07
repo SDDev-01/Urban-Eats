@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Reporte de platos – Urban Eats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a th:href="@{/catalogo}" href="catalogo.html" class="navbar-logo">
+      <img src="images/Logo.png" alt="Urban Eats">
+      <span>Urban Eats</span>
+    </a>
+    <div class="navbar-links">
+      <a th:href="@{/catalogo}" href="catalogo.html" class="navbar-link"><i class="fas fa-utensils"></i> Catálogo</a>
+      <a th:href="@{/restaurantes}" href="restaurantes.html" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
+    </div>
+  </nav>
+
+  <div style="padding-top: var(--navbar-height);">
+    <div class="form-wrapper" style="max-width:1100px;margin:0 auto;padding:1.5rem;">
+
+      <div class="form-page-header">
+        <h2><i class="fas fa-chart-column"></i> Reporte de platos</h2>
+        <p>Consulta el catálogo combinando restaurante, categoría, disponibilidad y rango de precio.</p>
+      </div>
+
+      <!-- ===================== FILTROS ===================== -->
+      <div class="form-card">
+        <div class="form-card-body">
+          <form method="get" th:action="@{/reportes}">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;">
+
+              <div class="campo">
+                <label for="f-restaurante">Restaurante</label>
+                <select id="f-restaurante" name="codigoRestaurante">
+                  <option value="">Todos</option>
+                  <option th:each="r : ${restaurantes}"
+                          th:value="${r.codigoRestaurante}"
+                          th:text="${r.nombre}"
+                          th:selected="${filtroRestaurante != null and filtroRestaurante == r.codigoRestaurante}">
+                    Restaurante
+                  </option>
+                </select>
+              </div>
+
+              <div class="campo">
+                <label for="f-categoria">Categoría</label>
+                <select id="f-categoria" name="categoria">
+                  <option value="">Todas</option>
+                  <option th:each="c : ${categorias}"
+                          th:value="${c}" th:text="${c}"
+                          th:selected="${c == filtroCategoria}">Categoría</option>
+                </select>
+              </div>
+
+              <div class="campo">
+                <label for="f-disponibilidad">Disponibilidad</label>
+                <select id="f-disponibilidad" name="disponibilidad">
+                  <option value="">Todas</option>
+                  <option th:each="d : ${disponibilidades}"
+                          th:value="${d}" th:text="${d}"
+                          th:selected="${d == filtroDisponibilidad}">Disponibilidad</option>
+                </select>
+              </div>
+
+              <div class="campo">
+                <label for="f-min">Precio desde (COP)</label>
+                <input type="number" id="f-min" name="precioMinimo" step="500" min="0"
+                       th:value="${filtroPrecioMinimo}" placeholder="Ej: 10000">
+              </div>
+
+              <div class="campo">
+                <label for="f-max">Precio hasta (COP)</label>
+                <input type="number" id="f-max" name="precioMaximo" step="500" min="0"
+                       th:value="${filtroPrecioMaximo}" placeholder="Ej: 30000">
+              </div>
+
+            </div>
+
+            <div class="form-btn-wrap" style="margin-top:1rem;display:flex;gap:0.75rem;">
+              <button type="submit" class="btn btn-verde">
+                <i class="fas fa-filter"></i> Generar reporte
+              </button>
+              <a th:href="@{/reportes}" class="btn" style="background:#eee;color:#333;">
+                <i class="fas fa-rotate-left"></i> Limpiar filtros
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ===================== INDICADORES ===================== -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1.5rem 0;">
+        <div class="form-card"><div class="form-card-body" style="text-align:center;">
+          <div style="font-size:0.85rem;color:var(--texto-gris);">Platos encontrados</div>
+          <div style="font-size:1.8rem;font-weight:700;" th:text="${totalResultados}">0</div>
+        </div></div>
+        <div class="form-card"><div class="form-card-body" style="text-align:center;">
+          <div style="font-size:0.85rem;color:var(--texto-gris);">Precio promedio</div>
+          <div style="font-size:1.8rem;font-weight:700;"
+               th:text="${precioPromedio != null} ? '$' + ${#numbers.formatInteger(precioPromedio, 0, 'POINT')} : '—'">—</div>
+        </div></div>
+        <div class="form-card"><div class="form-card-body" style="text-align:center;">
+          <div style="font-size:0.85rem;color:var(--texto-gris);">Precio más bajo</div>
+          <div style="font-size:1.8rem;font-weight:700;"
+               th:text="${precioMenor != null} ? '$' + ${#numbers.formatInteger(precioMenor, 0, 'POINT')} : '—'">—</div>
+        </div></div>
+        <div class="form-card"><div class="form-card-body" style="text-align:center;">
+          <div style="font-size:0.85rem;color:var(--texto-gris);">Precio más alto</div>
+          <div style="font-size:1.8rem;font-weight:700;"
+               th:text="${precioMayor != null} ? '$' + ${#numbers.formatInteger(precioMayor, 0, 'POINT')} : '—'">—</div>
+        </div></div>
+      </div>
+
+      <!-- ===================== RESULTADOS ===================== -->
+      <div class="form-card">
+        <div class="form-card-body">
+
+          <p th:if="${#lists.isEmpty(resultados)}"
+             style="text-align:center;color:var(--texto-gris);padding:2rem;">
+            Ningún plato cumple con los filtros seleccionados.
+          </p>
+
+          <div th:unless="${#lists.isEmpty(resultados)}" style="overflow-x:auto;">
+            <table class="gestion-tabla" style="width:100%;">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Plato</th>
+                  <th>Restaurante</th>
+                  <th>Categoría</th>
+                  <th>Tipo de comida</th>
+                  <th>Precio</th>
+                  <th>Disponibilidad</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="p, i : ${resultados}">
+                  <td th:text="${i.count}">1</td>
+                  <td><strong th:text="${p.nombre}">Plato</strong></td>
+                  <td th:text="${p.menu != null and p.menu.restaurante != null} ? ${p.menu.restaurante.nombre} : '—'">Restaurante</td>
+                  <td th:text="${p.menu != null} ? ${p.menu.categoria} : '—'">Categoría</td>
+                  <td th:text="${p.tipoComida} ?: '—'">Tipo</td>
+                  <td th:text="${p.precio != null} ? '$' + ${#numbers.formatInteger(p.precio, 0, 'POINT')} : '—'">$0</td>
+                  <td th:text="${p.disponibilidad} ?: '—'">Disponibilidad</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Urban Eats – Proyecto Formativo SENA.</p>
+  </footer>
+
+</body>
+</html>
