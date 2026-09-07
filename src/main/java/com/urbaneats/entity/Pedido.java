@@ -13,16 +13,16 @@ public class Pedido  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_pedido")
+    @Column(name = "CodigoPedido")
     private Integer idPedido;
 
-    @Column(name = "fecha_pedido", nullable = false)
+    @Column(name = "FechaPedido", nullable = false)
     private LocalDateTime fechaPedido;
 
-    @Column(nullable = false, length = 50)
+    @Column(name = "Estado", nullable = false, length = 50)
     private String estado; // Ej: Pendiente, En camino, Entregado
 
-    @Column(nullable = false)
+    @Column(name = "Total", nullable = false)
     private Double total;
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<DetallePedido> detalles;
@@ -32,6 +32,6 @@ public class Pedido  {
     
  // Relación ManyToOne con Cliente (Muchos pedidos pueden pertenecer a un cliente)
     @ManyToOne
-    @JoinColumn(name = "id_cliente", nullable = false)
+    @JoinColumn(name = "CodigoCliente", nullable = false)
     private Cliente cliente;
 }

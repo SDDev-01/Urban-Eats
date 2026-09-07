@@ -11,19 +11,19 @@ public class Envio  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_envio")
-    private Integer idEnvio;
+    @Column(name = "CodigoEnvio")
+    private Integer codigoEnvio;
 
     @ManyToOne
-    @JoinColumn(name = "id_repartidor")
+    @JoinColumn(name = "Codigorepartidor")
     private Repartidor repartidor;
 
     @Column(nullable = false, length = 50)
     private String estadoEnvio; // Ej: Asignado, En camino, Entregado
 
-    @Column(name = "fecha_entrega")
+    @Column(name = "FechaEntrega")
     private LocalDateTime fechaEntrega;
   @OneToOne
-    @JoinColumn(name = "id_pedido", nullable = false)
+    @JoinColumn(name = "CodigoPedido", nullable = false)
     private Pedido pedido;
     }

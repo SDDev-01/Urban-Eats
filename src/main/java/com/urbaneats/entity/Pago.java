@@ -15,21 +15,21 @@ public class Pago {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pago_id")
-    private Integer pagoId;
+    @Column(name = "CodigoPago")
+    private Integer codigoPago;
 
-    @Column(name = "metodo_pago", nullable = false, length = 50)
+    @Column(name = "MetodoPago", nullable = false, length = 50)
     private String metodoPago;
 
-    @Column(name = "monto", nullable = false, precision = 10, scale = 2)
+    @Column(name = "Monto", nullable = false, precision = 10, scale = 2)
     private BigDecimal monto;
 
-    @Column(name = "estado_pago", nullable = false, length = 50)
+    @Column(name = "EstadoPago", nullable = false, length = 50)
     private String estadoPago;
 
     // Cardinalidades
     @ManyToOne
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "CodigoUsuario")
     private Usuario usuario;
 
     @OneToOne(mappedBy = "pago", cascade = CascadeType.ALL)

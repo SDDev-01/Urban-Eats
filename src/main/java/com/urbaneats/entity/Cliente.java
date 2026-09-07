@@ -29,6 +29,12 @@ public class Cliente {
 
     @Column(length = 255)
     private String direccion;
+    
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<Pedido> pedidos;
- }
+
+    @OneToOne
+    @JoinColumn(name = "CodigoUsuario") // Asegúrate de que este nombre coincida con tu llave foránea en la base de datos
+    private Usuario usuario;
+
+}
