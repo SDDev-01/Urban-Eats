@@ -69,7 +69,10 @@ public class RegistroController {
             usuario.setNombres(Nombres);
             usuario.setApellidos(Apellidos);
             usuario.setCorreo(Correo);
-            usuario.setPassword(passwordEncoder.encode(Password)); // Contraseña encriptada
+            // La contrasena se pasa en texto plano a proposito: UsuarioService.guardar
+            // es quien la cifra con BCrypt. Si tambien se cifrara aqui quedaria guardada
+            // como encode(encode(clave)) y ningun usuario podria volver a iniciar sesion.
+            usuario.setPassword(Password);
 
             Usuario usuarioGuardado = usuarioService.guardar(usuario);
 
