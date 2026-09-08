@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Restaurantes – Urban Eats</title>
@@ -25,7 +25,7 @@
     </div>
     <div class="navbar-right">
         <a href="/perfil" class="navbar-usuario" style="text-decoration:none;">
-        <i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span>
+        <i class="fas fa-user-circle"></i> <span id="navbar-nombre" th:text="${#authentication.principal instanceof T(com.urbaneats.security.CustomUserDetails)} ? ${#authentication.principal.nombres} : 'Usuario'">Usuario</span>
         </a>
         <a href="/carrito" class="btn-carrito" aria-label="Ver carrito">
         <i class="fas fa-shopping-cart"></i>
@@ -57,15 +57,9 @@
   <div id="toast-container"></div>
   
   <script src="/js/app.js"></script>
-  <!-- TEMPORAL:
-       Laravel inyectaba aquí la lista de restaurantes (@json($restaurantesJS))
-       obtenida desde el backend. Sin datos, restaurantes.js cae de vuelta
-       a una lista vacía.
-
-       Cuando implementemos Java/Python, esta variable deberá poblarse
-       nuevamente con los restaurantes obtenidos desde el backend.
-  -->
-  <script>window.RESTAURANTES_BD = null;</script>
+  <script th:inline="javascript">
+    window.RESTAURANTES_BD = /*[[${restaurantesJson}]]*/ [];
+  </script>
   <script src="/js/restaurantes.js"></script>
 </body>
 </html>

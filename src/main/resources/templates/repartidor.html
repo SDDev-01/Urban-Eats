@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Registro Repartidor – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" th:content="${_csrf.token}">
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="/css/repartidor.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -24,7 +25,7 @@
     </div>
     <div class="navbar-right">
         <a href="/perfil" class="navbar-usuario" style="text-decoration:none;">
-        <i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span>
+        <i class="fas fa-user-circle"></i> <span id="navbar-nombre" th:text="${#authentication.principal instanceof T(com.urbaneats.security.CustomUserDetails)} ? ${#authentication.principal.nombres} : 'Usuario'">Usuario</span>
         </a>
         <a href="/carrito" class="btn-carrito" aria-label="Ver carrito">
         <i class="fas fa-shopping-cart"></i>
@@ -41,22 +42,17 @@
 
     <div class="form-page-header">
       <h2><i class="fas fa-motorcycle"></i> Registro de Repartidor</h2>
-      <!-- TEMPORAL: Laravel mostraba aquí session('Nombres') con el nombre real del usuario autenticado -->
-      <p>Hola, <strong>Usuario</strong>. Ingresa los datos de tu vehículo para comenzar a repartir.</p>
+      <p>Hola, <strong th:text="${nombreUsuario}">Usuario</strong>. Ingresa los datos de tu vehículo para comenzar a repartir.</p>
+    </div>
+
+    <div th:if="${error != null}" class="msg-verificacion msg-error" style="margin-bottom:1.2rem;">
+      <i class="fas fa-exclamation-triangle"></i> <span th:text="${error}">Error</span>
     </div>
 
     <div class="form-card">
       <div class="form-card-body">
 
-        <!-- TEMPORAL:
-             Laravel enviaba este formulario por POST al backend para
-             registrar al repartidor (incluía @csrf, old() y los mensajes
-             de $errors provenientes de la validación del servidor).
-
-             Cuando implementemos Java/Python, este formulario deberá
-             conectarse nuevamente con el backend mediante JavaScript/API.
-        -->
-        <form id="form-repartidor">
+        <form id="form-repartidor" th:action="@{/repartidor}" method="POST">
 
           <div class="seccion-sep">
             <i class="fas fa-motorcycle"></i> Datos del Vehículo
@@ -65,7 +61,7 @@
           <div class="form-grid">
             <div class="campo">
               <label for="rp-vehiculo">Tipo de vehículo <span style="color:red">*</span></label>
-              <select id="rp-vehiculo" name="TipoVehiculo">
+              <select id="rp-vehiculo" name="tipoVehiculo">
                 <option value="">Seleccionar...</option>
                 <option value="Moto">Moto</option>
                 <option value="Bicicleta">Bicicleta</option>
@@ -76,7 +72,7 @@
             </div>
             <div class="campo">
               <label for="rp-placa">Placa <span style="color:red">*</span></label>
-              <input type="text" id="rp-placa" name="Placa"
+              <input type="text" id="rp-placa" name="placa"
                      placeholder="ABC-123"
                      style="text-transform:uppercase;">
               <span class="error"></span>
@@ -87,7 +83,7 @@
             <label for="rp-soat">SOAT (número de póliza)</label>
             <div class="campo-icono">
               <i class="fas fa-file-alt"></i>
-              <input type="text" id="rp-soat" name="SOAT"
+              <input type="text" id="rp-soat" name="soat"
                      placeholder="SOA-987654">
             </div>
             <span class="error"></span>
@@ -97,7 +93,7 @@
             <label for="rp-seguro">Seguro del vehículo</label>
             <div class="campo-icono">
               <i class="fas fa-shield-alt"></i>
-              <input type="text" id="rp-seguro" name="SeguroVehiculo"
+              <input type="text" id="rp-seguro" name="seguroVehiculo"
                      placeholder="Aseguradora / N° póliza">
             </div>
             <span class="error"></span>

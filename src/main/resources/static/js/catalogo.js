@@ -57,6 +57,59 @@ function mostrarVacio(vacio) {
   grid.appendChild(aviso);
 }
 
+/* ---- ORDEN POR PRECIO: reordena las tarjetas ya renderizadas, sin volver a pedirlas al servidor ---- */
+
+let ordenPrecioOrdenOriginal = null;
+
+function iniciarOrdenPrecio() {
+  const btn = document.getElementById('btn-orden-precio');
+  const grid = document.getElementById('productos-grid');
+  if (!btn || !grid) return;
+
+  // Se guarda el orden con el que Thymeleaf renderizó las tarjetas, para poder volver a él.
+  ordenPrecioOrdenOriginal = Array.from(grid.querySelectorAll('.producto-card'));
+
+  btn.addEventListener('click', () => {
+    const siguiente = { none: 'asc', asc: 'desc', desc: 'none' }[btn.dataset.orden];
+    btn.dataset.orden = siguiente;
+    aplicarOrdenPrecio(siguiente);
+    actualizarBotonOrdenPrecio(siguiente);
+  });
+}
+
+function aplicarOrdenPrecio(orden) {
+  const grid = document.getElementById('productos-grid');
+
+  if (orden === 'none') {
+    ordenPrecioOrdenOriginal.forEach(card => grid.appendChild(card));
+    return;
+  }
+
+  const tarjetas = Array.from(grid.querySelectorAll('.producto-card'));
+  tarjetas.sort((a, b) => {
+    const precioA = parseFloat(a.dataset.precio) || 0;
+    const precioB = parseFloat(b.dataset.precio) || 0;
+    return orden === 'asc' ? precioA - precioB : precioB - precioA;
+  });
+  tarjetas.forEach(card => grid.appendChild(card));
+}
+
+function actualizarBotonOrdenPrecio(orden) {
+  const btn = document.getElementById('btn-orden-precio');
+  const icono = btn.querySelector('i');
+  const texto = document.getElementById('btn-orden-precio-texto');
+
+  const config = {
+    none: { icono: 'fa-sort', texto: 'Ordenar por precio', activo: false },
+    asc: { icono: 'fa-sort-amount-up-alt', texto: 'Más barato primero', activo: true },
+    desc: { icono: 'fa-sort-amount-down-alt', texto: 'Más caro primero', activo: true },
+  }[orden];
+
+  icono.className = `fas ${config.icono}`;
+  texto.textContent = config.texto;
+  btn.classList.toggle('activo', config.activo);
+}
+
 /* ---- COLOR DE FONDO: se aplica en cliente porque depende del id ---- */
 
 function pintarFondos() {
@@ -152,6 +205,7 @@ function inicializarCatalogo() {
   pintarFondos();
   iniciarFiltros();
   iniciarBotonesVer();
+  iniciarOrdenPrecio();
 }
 
 if (document.readyState === 'loading') {

@@ -19,7 +19,7 @@ import lombok.ToString;
  * Entidad de la tabla Menu.
  */
 @Entity
-@Table(name = "Menu")
+@Table(name = "menu")
 @Getter
 @Setter
 @NoArgsConstructor

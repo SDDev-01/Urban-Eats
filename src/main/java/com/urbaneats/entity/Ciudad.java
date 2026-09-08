@@ -20,7 +20,7 @@ import lombok.ToString;
  * El codigo NO es autoincremental: se inserta manualmente (codigo DANE).
  */
 @Entity
-@Table(name = "Ciudad")
+@Table(name = "ciudad")
 @Getter
 @Setter
 @NoArgsConstructor

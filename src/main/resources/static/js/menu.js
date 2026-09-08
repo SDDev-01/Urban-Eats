@@ -2,7 +2,6 @@
    URBAN EATS - Menú JS
    ============================ */
 
-let contadorPlatos = 0;
 const wrap = document.getElementById('nuevos-platos-wrap');
 const tpl  = document.getElementById('tpl-plato');
 
@@ -10,16 +9,11 @@ document.getElementById('btn-agregar-plato').addEventListener('click', () => {
   const clone = tpl.content.cloneNode(true);
   const fila  = clone.querySelector('.plato-fila');
 
-  fila.querySelectorAll('[name]').forEach(el => {
-    el.name = el.name.replace('__i__', contadorPlatos);
-  });
-
   fila.querySelector('.btn-quitar-plato').addEventListener('click', () => {
     fila.remove();
   });
 
   wrap.appendChild(fila);
-  contadorPlatos++;
 });
 
 document.getElementById('btn-crear-menu').addEventListener('click', () => {

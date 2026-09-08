@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Mi Restaurante – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" th:content="${_csrf.token}">
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="/css/perfil-restaurante.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -24,7 +25,7 @@
     </div>
     <div class="navbar-right">
         <a href="/perfil" class="navbar-usuario" style="text-decoration:none;">
-        <i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span>
+        <i class="fas fa-user-circle"></i> <span id="navbar-nombre" th:text="${#authentication.principal instanceof T(com.urbaneats.security.CustomUserDetails)} ? ${#authentication.principal.nombres} : 'Usuario'">Usuario</span>
         </a>
         <a href="/carrito" class="btn-carrito" aria-label="Ver carrito">
         <i class="fas fa-shopping-cart"></i>
@@ -51,12 +52,11 @@
           <i class="fas fa-store"></i>
         </div>
 
-        <!-- TEMPORAL: Laravel mostraba aquí $restaurante->Nombre, Horario y Direccion del restaurante del gerente autenticado -->
         <div class="rest-hero-info">
-          <h1 id="rest-nombre">Mi Restaurante</h1>
-          <p id="rest-descripcion"></p>
+          <h1 id="rest-nombre" th:text="${restaurante.nombre} ?: 'Mi Restaurante'">Mi Restaurante</h1>
+          <p id="rest-descripcion" th:text="${restaurante.horario}"></p>
           <div class="rest-meta">
-            <span><i class="fas fa-map-marker-alt"></i> <span id="rest-direccion">Dirección del restaurante</span></span>
+            <span><i class="fas fa-map-marker-alt"></i> <span id="rest-direccion" th:text="${restaurante.direccion} ?: 'Dirección del restaurante'">Dirección del restaurante</span></span>
           </div>
         </div>
 
@@ -178,40 +178,31 @@
   <!-- ===================== MENÚS Y PLATOS ===================== -->
   <div class="gestion-wrap">
 
-    <!-- TEMPORAL:
-         Laravel mostraba aquí un mensaje flash (session('exito')) tras
-         crear/actualizar/eliminar un menú o plato.
+    <div th:if="${exito != null}" class="gestion-alerta gestion-alerta-exito">
+      <i class="fas fa-check-circle"></i> <span th:text="${exito}"></span>
+    </div>
+    <div th:if="${error != null}" class="gestion-alerta gestion-alerta-error">
+      <i class="fas fa-exclamation-triangle"></i> <span th:text="${error}"></span>
+    </div>
 
-         Cuando implementemos Java/Python, este mensaje deberá volver a
-         mostrarse dinámicamente según la respuesta del backend.
-    -->
-
-    <!-- TEMPORAL:
-         Laravel recorría ($menus as $menu) todos los menús del
-         restaurante y, dentro de cada uno, recorría sus platos
-         ($menu->plato), mostrando por cada plato: Nombre, Tipo de
-         Comida, Precio, Disponibilidad, Descripción y dos formularios
-         de acción:
-         - PATCH para actualizar la Disponibilidad al cambiar el select.
-         - DELETE (con confirm()) para eliminar el plato.
-         Si un menú no tenía platos mostraba "Este menú aún no tiene
-         platos." y si el restaurante no tenía menús mostraba un
-         mensaje con enlace a "Crear menú".
-
-         Cuando implementemos Java/Python, esta tabla deberá generarse
-         dinámicamente con los menús y platos obtenidos desde el
-         backend, y las acciones de disponibilidad/eliminar deberán
-         conectarse nuevamente mediante JavaScript/API.
-    -->
     <div class="gestion-bloque">
       <h2 class="gestion-titulo"><i class="fas fa-book-open"></i> Menús y Platos</h2>
 
-      <div class="menu-tabla-wrap">
+      <p th:if="${#lists.isEmpty(menus)}" class="tabla-vacia-msg">
+        Este restaurante aún no tiene menús registrados. <a href="/menu">Crear menú</a>
+      </p>
+
+      <div class="menu-tabla-wrap" th:each="menu : ${menus}">
         <div class="menu-tabla-header">
-          <span><i class="fas fa-tag"></i> Almuerzos</span>
-          <span class="menu-tabla-count">1 plato(s)</span>
+          <span><i class="fas fa-tag"></i> <span th:text="${menu.categoria}"></span></span>
+          <span class="menu-tabla-count" th:text="${#lists.size(platosPorMenu.get(menu))} + ' plato(s)'"></span>
         </div>
-        <div class="tabla-scroll">
+
+        <p th:if="${#lists.isEmpty(platosPorMenu.get(menu))}" class="tabla-vacia-msg">
+          Este menú aún no tiene platos.
+        </p>
+
+        <div class="tabla-scroll" th:unless="${#lists.isEmpty(platosPorMenu.get(menu))}">
           <table class="gestion-tabla">
             <thead>
               <tr>
@@ -225,23 +216,30 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1</td>
-                <td><strong>Bandeja Paisa</strong></td>
-                <td>Plato fuerte</td>
-                <td>$18.000</td>
+              <tr th:each="plato, iter : ${platosPorMenu.get(menu)}">
+                <td th:text="${iter.count}">1</td>
+                <td><strong th:text="${plato.nombre}"></strong></td>
+                <td th:text="${plato.tipoComida} ?: '—'"></td>
+                <td th:text="'$' + ${#numbers.formatDecimal(plato.precio ?: 0, 0, 'POINT', 0, 'COMMA')}"></td>
                 <td>
-                  <select class="select-disponibilidad">
-                    <option value="Disponible" selected>Disponible</option>
-                    <option value="No disponible">No disponible</option>
-                    <option value="Temporalmente agotado">Temp. agotado</option>
-                  </select>
+                  <form th:action="@{'/perfilRestaurante/plato/' + ${plato.codigoPlato} + '/disponibilidad'}"
+                        method="POST" class="form-disponibilidad-inline">
+                    <select name="Disponibilidad" class="select-disponibilidad" onchange="this.form.submit()">
+                      <option value="Disponible" th:selected="${plato.disponibilidad == 'Disponible'}">Disponible</option>
+                      <option value="No disponible" th:selected="${plato.disponibilidad == 'No disponible'}">No disponible</option>
+                      <option value="Temporalmente agotado" th:selected="${plato.disponibilidad == 'Temporalmente agotado'}">Temp. agotado</option>
+                    </select>
+                  </form>
                 </td>
-                <td>—</td>
+                <td th:text="${plato.descripcion} ?: '—'"></td>
                 <td>
-                  <button type="button" class="btn-plato-eliminar" title="Eliminar plato">
-                    <i class="fas fa-trash"></i>
-                  </button>
+                  <form th:action="@{'/perfilRestaurante/plato/' + ${plato.codigoPlato} + '/eliminar'}"
+                        method="POST"
+                        th:attr="onsubmit=|return confirm('¿Eliminar «${plato.nombre}»? Esta acción no se puede deshacer.')|">
+                    <button type="submit" class="btn-plato-eliminar" title="Eliminar plato">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </form>
                 </td>
               </tr>
             </tbody>
@@ -250,27 +248,15 @@
       </div>
     </div>
 
-    <!-- TEMPORAL:
-         Laravel mostraba este formulario de creación rápida de plato
-         solo si el restaurante ya tenía menús ($menus->isNotEmpty()),
-         y llenaba el select de "Menú" recorriendo ($menus as $menu).
-         Enviaba el formulario por POST al backend (incluía @csrf y
-         old() para conservar los valores si la validación fallaba).
-
-         Cuando implementemos Java/Python, el select deberá llenarse
-         dinámicamente con los menús del restaurante y el formulario
-         deberá conectarse nuevamente con el backend mediante
-         JavaScript/API.
-    -->
-    <div class="gestion-bloque">
+    <div class="gestion-bloque" th:if="${!#lists.isEmpty(menus)}">
       <h2 class="gestion-titulo"><i class="fas fa-plus-circle"></i> Agregar Plato</h2>
 
-      <form class="form-plato-rapido">
+      <form th:action="@{/perfilRestaurante/plato}" method="POST" class="form-plato-rapido">
 
         <div class="campo">
           <label for="p-menu">Menú</label>
           <select id="p-menu" name="CodigoMenu">
-            <option value="">Almuerzos</option>
+            <option th:each="menu : ${menus}" th:value="${menu.codigoMenu}" th:text="${menu.categoria}"></option>
           </select>
         </div>
 
@@ -321,15 +307,9 @@
   </footer>
 
   <script src="/js/app.js"></script>
-  <!-- TEMPORAL:
-       Laravel inyectaba aquí los pedidos del restaurante (@json($pedidosJS))
-       obtenidos desde el backend. Sin datos, perfil-restaurante.js cae de
-       vuelta a una lista vacía.
-
-       Cuando implementemos Java/Python, esta variable deberá poblarse
-       nuevamente con los pedidos obtenidos desde el backend.
-  -->
-  <script>window.PEDIDOS_BD = null;</script>
+  <script th:inline="javascript">
+    window.PEDIDOS_BD = /*[[${pedidosJson}]]*/ [];
+  </script>
   <script src="/js/perfil-restaurante.js"></script>
 </body>
 </html>

@@ -1,32 +1,41 @@
 package com.urbaneats.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+/**
+ * Entidad de la tabla Transaccion.
+ * El TransaccionID no se autogenera: es el id que devuelve la pasarela de pago
+ * (MercadoPago) al procesar la transaccion, por eso la PK es un VARCHAR asignado a mano.
+ */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
-@Table(name = "Transacciones")
+@Table(name = "transaccion")
 public class Transaccion {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "TransaccionID")
+    @Column(name = "TransaccionID", length = 50)
     private String transaccionID;
 
-    @Column(name = "FechaTransaccion", nullable = false)
-    private LocalDateTime fechaTransaccion;
+    @Column(name = "MetodoPago", length = 50)
+    private String metodoPago;
 
-    @Column(name = "Resultado", nullable = false, length = 50)
-    private String resultado;
-        
-    //Cardinalidad
+    @Column(name = "BancoNombre", length = 50)
+    private String bancoNombre;
+
+    @Column(name = "CUS", length = 50)
+    private String cus;
+
+    @Column(name = "CodigoRespuesta", length = 50)
+    private String codigoRespuesta;
+
+    // ----- Relaciones -----
+
     @OneToOne
     @JoinColumn(name = "CodigoPago", nullable = false, unique = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Pago pago;
-
 }
