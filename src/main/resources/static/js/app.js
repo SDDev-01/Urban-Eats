@@ -3,12 +3,14 @@
    ============================ */
 
 // ---- NAVBAR: marcar página activa ----
+// Las direcciones ahora son rutas de Spring (/catalogo), no archivos (catalogo.html),
+// asi que se compara la ruta completa y no el ultimo segmento.
 (function marcarActivo() {
-  const pagina = window.location.pathname.split('/').pop();
+  const ruta = window.location.pathname;
   const links = document.querySelectorAll('.navbar-link');
   links.forEach(link => {
     const href = link.getAttribute('href');
-    if (href === pagina || (pagina === '' && href === 'index.html')) {
+    if (href === ruta || (ruta === '/' && href === '/')) {
       link.classList.add('activo');
     }
   });
