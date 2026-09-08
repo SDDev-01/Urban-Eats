@@ -24,12 +24,17 @@
     .hero-badges span { display: flex; align-items: center; gap: 0.4rem; }
 
     /* ---- FILTROS ---- */
+    .filtros-bar {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      padding: 0 2rem 1.5rem;
+    }
     .filtros-wrap {
       display: flex;
       justify-content: center;
       gap: 0.5rem;
       flex-wrap: wrap;
-      padding: 0 2rem 1.5rem;
     }
     .btn-filtro {
       padding: 0.5rem 1.2rem;
@@ -48,6 +53,19 @@
       color: white;
       border-color: var(--terciario);
       font-weight: 600;
+    }
+    .btn-orden-precio {
+      position: absolute;
+      right: 2rem;
+      top: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      white-space: nowrap;
+    }
+    .btn-orden-precio.activo {
+      background: var(--principal);
+      border-color: var(--principal);
     }
 
     /* ---- GRID DE PRODUCTOS ---- */
@@ -255,4 +273,6 @@
     @media (max-width: 600px) {
       .detalle-grid { grid-template-columns: 1fr; }
       .hero h1 { font-size: 1.8rem; }
+      .filtros-bar { flex-direction: column; gap: 0.75rem; }
+      .btn-orden-precio { position: static; }
     }

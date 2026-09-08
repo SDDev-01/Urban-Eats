@@ -89,12 +89,19 @@
   <!-- HERO -->
   <div style="padding-top: var(--navbar-height);">
     <!-- FILTROS (generados en el servidor a partir de las categorias de los menus) -->
-    <div class="filtros-wrap">
-      <button class="btn-filtro activo" data-categoria="todos">Todos</button>
-      <button class="btn-filtro"
-              th:each="categoria : ${categorias}"
-              th:attr="data-categoria=${categoria}"
-              th:text="${categoria}">Categoría</button>
+    <div class="filtros-bar">
+      <div class="filtros-wrap">
+        <button class="btn-filtro activo" data-categoria="todos">Todos</button>
+        <button class="btn-filtro"
+                th:each="categoria : ${categorias}"
+                th:attr="data-categoria=${categoria}"
+                th:text="${categoria}">Categoría</button>
+      </div>
+
+      <!-- Orden por precio: cada clic avanza sin orden -> mas barato -> mas caro -> sin orden -->
+      <button class="btn-filtro btn-orden-precio" id="btn-orden-precio" type="button" data-orden="none">
+        <i class="fas fa-sort"></i> <span id="btn-orden-precio-texto">Ordenar por precio</span>
+      </button>
     </div>
 
     <!-- GRID (renderizado por Thymeleaf) -->
@@ -107,7 +114,7 @@
 
       <div class="producto-card"
            th:each="plato : ${platos}"
-           th:attr="data-categoria=${plato.menu != null ? plato.menu.categoria : ''}">
+           th:attr="data-categoria=${plato.menu != null ? plato.menu.categoria : ''}, data-precio=${plato.precio}">
         <div class="producto-img-wrap">
           <span class="producto-emoji"
                 style="display:flex; font-size:3rem; align-items:center; justify-content:center; height:100%;">🍽️</span>
