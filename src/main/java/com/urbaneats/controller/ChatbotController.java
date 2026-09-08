@@ -7,8 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/chatbot")
 public class ChatbotController {
+
+    private static final int MENSAJE_LONGITUD_MAXIMA = 1000;
 
     private final IChatbotService chatbotService;
 
@@ -16,14 +17,17 @@ public class ChatbotController {
         this.chatbotService = chatbotService;
     }
 
-    @PostMapping("/responder")
+    @PostMapping("/chatbot")
     public ResponseEntity<Map<String, String>> responder(@RequestBody Map<String, String> payload) {
         String mensaje = payload.get("mensaje");
-        
+
         if (mensaje == null || mensaje.trim().isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("respuesta", "El mensaje es obligatorio"));
         }
-        
+        if (mensaje.length() > MENSAJE_LONGITUD_MAXIMA) {
+            return ResponseEntity.badRequest().body(Map.of("respuesta", "El mensaje es demasiado largo"));
+        }
+
         String respuestaTexto = chatbotService.procesarMensaje(mensaje);
         return ResponseEntity.ok(Map.of("respuesta", respuestaTexto));
     }

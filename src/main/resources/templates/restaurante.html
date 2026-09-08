@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Crear Restaurante – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" th:content="${_csrf.token}">
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="/css/restaurante.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -47,15 +48,11 @@
       <div class="form-card">
         <div class="form-card-body">
 
-          <!-- TEMPORAL:
-               Laravel enviaba este formulario por POST al backend para crear
-               un nuevo restaurante (incluía @csrf y old() para conservar
-               los valores ingresados si la validación fallaba).
+          <div th:if="${error != null}" class="msg-verificacion msg-error" style="margin-bottom:1.2rem;">
+            <i class="fas fa-exclamation-triangle"></i> <span th:text="${error}"></span>
+          </div>
 
-               Cuando implementemos Java/Python, este formulario deberá
-               conectarse nuevamente con el backend mediante JavaScript/API.
-          -->
-          <form id="form-restaurante">
+          <form id="form-restaurante" th:action="@{/restaurante}" method="post">
 
             <div class="campo">
               <label for="r-nombre">Nombre del restaurante</label>

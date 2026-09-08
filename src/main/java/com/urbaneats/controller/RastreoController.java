@@ -1,6 +1,7 @@
 package com.urbaneats.controller;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.urbaneats.entity.Pedido;
 import com.urbaneats.service.IPedidoService;
@@ -28,17 +29,37 @@ public class RastreoController {
             Pedido pedido = pedidoService.buscarPorId(codigoPedido).orElse(null);
 
             if (pedido != null) {
-                // PrecioUnitario es DECIMAL en la base, por eso se suma con BigDecimal.
-                BigDecimal total = pedido.getDetalles().stream()
-                        .map(detalle -> detalle.getPrecioUnitario()
-                                .multiply(BigDecimal.valueOf(detalle.getCantidad())))
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-                model.addAttribute("pedidoData", pedido);
-                model.addAttribute("totalPedido", total);
+                model.addAttribute("pedidoData", aRastreoData(pedido));
             }
         }
 
         return "rastreo";
+    }
+
+    private PedidoRastreoData aRastreoData(Pedido pedido) {
+        List<PedidoRastreoItem> items = pedido.getDetalles().stream()
+                .map(detalle -> {
+                    // PrecioUnitario es DECIMAL en la base, por eso se multiplica con BigDecimal.
+                    BigDecimal subtotal = detalle.getPrecioUnitario().multiply(BigDecimal.valueOf(detalle.getCantidad()));
+                    return new PedidoRastreoItem(
+                            detalle.getPlato() != null ? detalle.getPlato().getNombre() : "",
+                            detalle.getPlato() != null ? detalle.getPlato().getDescripcion() : "",
+                            detalle.getCantidad(),
+                            detalle.getPrecioUnitario(),
+                            subtotal
+                    );
+                })
+                .toList();
+
+        BigDecimal total = items.stream().map(PedidoRastreoItem::subtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return new PedidoRastreoData(
+                pedido.getCodigoPedido(),
+                pedido.getEstado(),
+                pedido.getFechaPedido() != null ? pedido.getFechaPedido().toString() : null,
+                pedido.getRestaurante() != null ? pedido.getRestaurante().getNombre() : "",
+                items,
+                total
+        );
     }
 }

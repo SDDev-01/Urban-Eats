@@ -1,14 +1,20 @@
 package com.urbaneats.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import java.math.BigDecimal;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+/**
+ * Entidad de la tabla Pago.
+ * En el Schema.sql el pago pertenece a un cliente y puede quedar ligado
+ * a un envio una vez se arma el pedido (por eso CodigoEnvio admite NULL).
+ */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "pago")
 public class Pago {
@@ -18,20 +24,37 @@ public class Pago {
     @Column(name = "CodigoPago")
     private Integer codigoPago;
 
-    @Column(name = "MetodoPago", nullable = false, length = 50)
-    private String metodoPago;
-
-    @Column(name = "Monto", nullable = false, precision = 10, scale = 2)
+    @Column(name = "Monto", precision = 10, scale = 2)
     private BigDecimal monto;
 
+    @Column(name = "FechaPago")
+    private LocalDate fechaPago;
+
+    @Column(name = "HoraPago")
+    private LocalTime horaPago;
+
+    /** Valores del ENUM en BD: pending, approved, rejected, in_process, authorized, cancelled, refunded, charged_back. */
     @Column(name = "EstadoPago", nullable = false, length = 50)
     private String estadoPago;
 
-    // Cardinalidades
-    @ManyToOne
-    @JoinColumn(name = "CodigoUsuario")
-    private Usuario usuario;
+    // ----- Relaciones -----
+
+    /** El cliente que realiza el pago. */
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "CodigoCliente", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Cliente cliente;
+
+    /** El envio que este pago cubre. Es NULL mientras el pedido aun no se arma. */
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CodigoEnvio")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Envio envio;
 
     @OneToOne(mappedBy = "pago", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Transaccion transaccion;
 }

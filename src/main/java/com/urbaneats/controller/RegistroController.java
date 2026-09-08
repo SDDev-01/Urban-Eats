@@ -31,6 +31,9 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class RegistroController {
 
+    /** Letras (incl. tildes/ñ), espacios, guiones, apostrofes y puntos. Igual que la validacion de Laravel. */
+    private static final Pattern NOMBRE_VALIDO = Pattern.compile("^[\\p{L}\\s\\-'.]+$");
+
     private final IUsuarioService usuarioService;
     private final ITelefonoService telefonoService;
     private final IDireccionService direccionService;
@@ -60,6 +63,18 @@ public class RegistroController {
         // Validaciones...
         if (usuarioService.existePorCorreo(Correo)) {
             redirect.addFlashAttribute("error", "Ya existe un usuario con ese correo");
+            return "redirect:/registro";
+        }
+        if (Password == null || Password.length() < 8) {
+            redirect.addFlashAttribute("error", "La contraseña debe tener al menos 8 caracteres");
+            return "redirect:/registro";
+        }
+        if (!NOMBRE_VALIDO.matcher(Nombres).matches()) {
+            redirect.addFlashAttribute("error", "El nombre solo puede contener letras y espacios");
+            return "redirect:/registro";
+        }
+        if (!NOMBRE_VALIDO.matcher(Apellidos).matches()) {
+            redirect.addFlashAttribute("error", "El apellido solo puede contener letras y espacios");
             return "redirect:/registro";
         }
 

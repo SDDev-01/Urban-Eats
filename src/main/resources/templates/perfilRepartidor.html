@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
+  <meta name="csrf-token" th:content="${_csrf.token}">
   <title>Mi Perfil – Repartidor Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/css/styles.css">
@@ -38,30 +39,23 @@
 
 <div class="rep-pagina">
 
-  <!-- TEMPORAL:
-       Laravel mostraba aquí el nombre, correo y vehículo (tipo, placa,
-       SOAT, seguro) del repartidor autenticado ($repartidor->usuario,
-       $repartidor->vehiculo).
-
-       Cuando implementemos Java/Python, esta sección deberá volver a
-       llenarse dinámicamente con los datos del repartidor obtenidos
-       desde el backend.
-  -->
   <div class="rep-hero">
     <div class="rep-hero-inner">
       <div class="rep-avatar">
         <i class="fas fa-motorcycle"></i>
       </div>
       <div class="rep-hero-info">
-        <div class="rep-hero-nombre">
+        <div class="rep-hero-nombre" th:text="${repartidor.usuario.nombres} + ' ' + ${repartidor.usuario.apellidos}">
           Usuario
         </div>
         <div class="rep-hero-email">
-          <i class="fas fa-envelope"></i>
+          <i class="fas fa-envelope"></i> <span th:text="${repartidor.usuario.correo}"></span>
         </div>
-        <span class="rep-hero-vehiculo">
+        <span class="rep-hero-vehiculo" th:if="${repartidor.vehiculo != null}">
           <i class="fas fa-motorcycle"></i>
-          Moto · ABC-123
+          <span th:text="${repartidor.vehiculo.tipoVehiculo} + ' · ' + ${repartidor.vehiculo.placa}">Moto · ABC-123</span>
+          <span th:if="${repartidor.vehiculo.soat != null}"> &nbsp;·&nbsp; SOAT: <span th:text="${repartidor.vehiculo.soat}"></span></span>
+          <span th:if="${repartidor.vehiculo.seguroVehiculo != null}"> &nbsp;·&nbsp; Seguro: <span th:text="${repartidor.vehiculo.seguroVehiculo}"></span></span>
         </span>
       </div>
     </div>
@@ -69,110 +63,104 @@
 
   <div class="rep-contenido">
 
-    <!-- TEMPORAL:
-         Laravel mostraba aquí un mensaje flash (session('exito')) tras
-         tomar/entregar/cancelar un pedido.
+    <div th:if="${exito != null}" class="msg-verificacion msg-exito" style="margin-bottom:1.5rem;">
+      <i class="fas fa-check-circle"></i> <span th:text="${exito}"></span>
+    </div>
+    <div th:if="${error != null}" class="msg-verificacion msg-error" style="margin-bottom:1.5rem;">
+      <i class="fas fa-exclamation-triangle"></i> <span th:text="${error}"></span>
+    </div>
 
-         Cuando implementemos Java/Python, este mensaje deberá volver a
-         mostrarse dinámicamente según la respuesta del backend.
-    -->
-
-    <!-- TEMPORAL:
-         Laravel mostraba aquí el conteo real de pedidos en camino
-         ($pedidosEnCurso->count()), disponibles ($pedidosDisponibles->count())
-         y entregados ($pedidosRealizados->count()) del repartidor.
-
-         Cuando implementemos Java/Python, estos contadores deberán
-         calcularse dinámicamente con los datos obtenidos desde el backend.
-    -->
     <div class="rep-stats">
       <div class="stat-card">
-        <div class="stat-numero">0</div>
+        <div class="stat-numero" th:text="${#lists.size(pedidosEnCurso)}">0</div>
         <div class="stat-label">En camino</div>
       </div>
       <div class="stat-card">
-        <div class="stat-numero">0</div>
+        <div class="stat-numero" th:text="${#lists.size(pedidosDisponibles)}">0</div>
         <div class="stat-label">Disponibles</div>
       </div>
       <div class="stat-card">
-        <div class="stat-numero">0</div>
+        <div class="stat-numero" th:text="${#lists.size(pedidosRealizados)}">0</div>
         <div class="stat-label">Entregados</div>
       </div>
     </div>
 
-    <!-- TEMPORAL:
-         Laravel recorría ($pedidosEnCurso as $envio) los envíos que el
-         repartidor tiene actualmente en camino, mostrando por cada uno:
-         restaurante, número de pedido, fecha, hora estimada de entrega,
-         lista de platos (con cantidades) y el total calculado. Cada
-         tarjeta tenía un formulario PATCH ("Marcar entregado"). Si no
-         había pedidos en camino mostraba un mensaje vacío.
-
-         Cuando implementemos Java/Python, esta lista deberá generarse
-         dinámicamente con los envíos del repartidor obtenidos desde el
-         backend, y "Marcar entregado" deberá conectarse nuevamente
-         mediante JavaScript/API.
-    -->
+    <!-- EN CAMINO -->
     <div class="rep-seccion">
       <div class="rep-seccion-titulo">
         <i class="fas fa-shipping-fast"></i> En camino
       </div>
 
-      <div class="pedido-card">
+      <div th:if="${#lists.isEmpty(pedidosEnCurso)}" class="rep-vacio">
+        <i class="fas fa-shipping-fast"></i>
+        <p>No tienes pedidos en camino ahora mismo.</p>
+      </div>
+
+      <div class="pedido-card" th:each="item : ${pedidosEnCurso}">
         <div class="pedido-icono naranja">
           <i class="fas fa-shipping-fast"></i>
         </div>
         <div class="pedido-info">
-          <div class="pedido-restaurante">Green Kitchen</div>
+          <div class="pedido-restaurante" th:text="${item.envio.pedido.restaurante.nombre} ?: 'Restaurante'"></div>
           <div class="pedido-meta">
-            Pedido #1001 &nbsp;·&nbsp; Hoy &nbsp;·&nbsp; Entrega estimada: —
+            Pedido #<span th:text="${item.envio.pedido.codigoPedido}"></span>
+            &nbsp;·&nbsp; <span th:text="${#temporals.format(item.envio.fechaEnvio, 'dd/MM/yyyy')}"></span>
+            &nbsp;·&nbsp; Entrega estimada: <span th:text="${item.envio.horaEntrega != null ? item.envio.horaEntrega : '—'}"></span>
           </div>
-          <div class="pedido-items">1× Bandeja Paisa</div>
-          <div class="pedido-total">Total: $18.000</div>
+          <div class="pedido-items" th:if="${!#lists.isEmpty(item.envio.pedido.detalles)}">
+            <span th:each="det, iter : ${item.envio.pedido.detalles}">
+              <span th:text="${det.cantidad} + '× ' + ${det.plato.nombre}"></span><span th:unless="${iter.last}">, </span>
+            </span>
+          </div>
+          <div class="pedido-total">Total: $<span th:text="${#numbers.formatDecimal(item.total, 0, 'POINT', 0, 'COMMA')}"></span></div>
         </div>
         <div class="pedido-acciones">
-          <button type="button" class="btn btn-verde" style="white-space:nowrap;">
-            <i class="fas fa-check"></i> Marcar entregado
-          </button>
+          <form th:action="@{'/repartidor/entregar/' + ${item.envio.codigoEnvio}}" method="POST">
+            <button type="submit" class="btn btn-verde" style="white-space:nowrap;">
+              <i class="fas fa-check"></i> Marcar entregado
+            </button>
+          </form>
         </div>
       </div>
     </div>
 
-    <!-- TEMPORAL:
-         Laravel recorría ($pedidosDisponibles as $envio) los envíos sin
-         repartidor asignado, mostrando restaurante, número de pedido,
-         fecha, platos y total, con un formulario POST ("Tomar pedido")
-         y un botón "Cancelar". Si no había pedidos disponibles mostraba
-         un mensaje vacío.
-
-         Cuando implementemos Java/Python, esta lista deberá generarse
-         dinámicamente con los pedidos disponibles obtenidos desde el
-         backend, y "Tomar pedido" deberá conectarse nuevamente mediante
-         JavaScript/API. El botón "Cancelar" ya usa fetch() en el script
-         de esta página, pero apunta a un endpoint que todavía no existe.
-    -->
+    <!-- DISPONIBLES -->
     <div class="rep-seccion">
       <div class="rep-seccion-titulo">
         <i class="fas fa-bell"></i> Pedidos disponibles
       </div>
 
-      <div class="pedido-card" data-pedido="1002">
+      <div th:if="${#lists.isEmpty(pedidosDisponibles)}" class="rep-vacio">
+        <i class="fas fa-bell-slash"></i>
+        <p>No hay pedidos disponibles en este momento.</p>
+      </div>
+
+      <div class="pedido-card" th:each="item : ${pedidosDisponibles}" th:attr="data-pedido=${item.envio.pedido.codigoPedido}">
         <div class="pedido-icono verde">
           <i class="fas fa-box-open"></i>
         </div>
         <div class="pedido-info">
-          <div class="pedido-restaurante">Green Kitchen</div>
-          <div class="pedido-meta">Pedido #1002 &nbsp;·&nbsp; Hoy</div>
-          <div class="pedido-items">2× Ensalada César</div>
-          <div class="pedido-total">Total: $24.000</div>
+          <div class="pedido-restaurante" th:text="${item.envio.pedido.restaurante.nombre} ?: 'Restaurante'"></div>
+          <div class="pedido-meta">
+            Pedido #<span th:text="${item.envio.pedido.codigoPedido}"></span>
+            &nbsp;·&nbsp; <span th:text="${#temporals.format(item.envio.fechaEnvio, 'dd/MM/yyyy')}"></span>
+          </div>
+          <div class="pedido-items" th:if="${!#lists.isEmpty(item.envio.pedido.detalles)}">
+            <span th:each="det, iter : ${item.envio.pedido.detalles}">
+              <span th:text="${det.cantidad} + '× ' + ${det.plato.nombre}"></span><span th:unless="${iter.last}">, </span>
+            </span>
+          </div>
+          <div class="pedido-total">Total: $<span th:text="${#numbers.formatDecimal(item.total, 0, 'POINT', 0, 'COMMA')}"></span></div>
         </div>
         <div class="pedido-acciones" style="display:flex;flex-direction:column;gap:0.5rem;">
-          <button type="button" class="btn btn-verde" style="white-space:nowrap;width:100%;">
-            <i class="fas fa-hand-paper"></i> Tomar pedido
-          </button>
+          <form th:action="@{'/repartidor/tomar/' + ${item.envio.codigoEnvio}}" method="POST">
+            <button type="submit" class="btn btn-verde" style="white-space:nowrap;width:100%;">
+              <i class="fas fa-hand-paper"></i> Tomar pedido
+            </button>
+          </form>
           <button type="button"
                   class="btn btn-gris btn-cancelar-disponible"
-                  data-pedido="1002"
+                  th:attr="data-pedido=${item.envio.pedido.codigoPedido}"
                   style="white-space:nowrap;width:100%;">
             <i class="fas fa-times-circle"></i> Cancelar
           </button>
@@ -180,32 +168,32 @@
       </div>
     </div>
 
-    <!-- TEMPORAL:
-         Laravel recorría ($pedidosRealizados as $envio) el historial de
-         entregas del repartidor, mostrando restaurante, platos, fecha
-         y estado ("Entregado") en una tabla. Si no había entregas
-         mostraba un mensaje vacío.
-
-         Cuando implementemos Java/Python, esta tabla deberá generarse
-         dinámicamente con el historial de entregas obtenido desde el
-         backend.
-    -->
+    <!-- HISTORIAL -->
     <div class="rep-seccion">
       <div class="rep-seccion-titulo">
         <i class="fas fa-history"></i> Historial de entregas
       </div>
 
-      <div class="historial-tabla">
+      <div th:if="${#lists.isEmpty(pedidosRealizados)}" class="rep-vacio">
+        <i class="fas fa-history"></i>
+        <p>Aún no has realizado ninguna entrega.</p>
+      </div>
+
+      <div class="historial-tabla" th:unless="${#lists.isEmpty(pedidosRealizados)}">
         <div class="historial-fila header">
           <span>Restaurante</span>
           <span>Platos</span>
           <span class="col-fecha">Fecha</span>
           <span class="col-estado">Estado</span>
         </div>
-        <div class="historial-fila">
-          <span>Green Kitchen</span>
-          <span>1× Bandeja Paisa</span>
-          <span class="col-fecha">Hoy</span>
+        <div class="historial-fila" th:each="item : ${pedidosRealizados}">
+          <span th:text="${item.envio.pedido.restaurante.nombre} ?: '—'"></span>
+          <span>
+            <span th:each="det, iter : ${item.envio.pedido.detalles}">
+              <span th:text="${det.cantidad} + '× ' + ${det.plato.nombre}"></span><span th:unless="${iter.last}">, </span>
+            </span>
+          </span>
+          <span class="col-fecha" th:text="${#temporals.format(item.envio.fechaEnvio, 'dd/MM/yyyy')}"></span>
           <span class="col-estado">
             <span class="badge-entregado">Entregado</span>
           </span>

@@ -602,6 +602,12 @@
   border: 1.5px solid #b2dfcc;
 }
 
+.gestion-alerta-error {
+  background: #fdecea;
+  color: #a42828;
+  border: 1.5px solid #f3b8b8;
+}
+
 .gestion-bloque {
   background: #fff;
   border: 1.5px solid var(--borde, #e0e0e0);

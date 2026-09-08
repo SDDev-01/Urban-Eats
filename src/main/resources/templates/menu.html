@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Crear Menú – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" th:content="${_csrf.token}">
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="/css/restaurante.css">
   <link rel="stylesheet" href="/css/menu.css">
@@ -42,22 +43,13 @@
 
     <div class="form-page-header">
       <h2><i class="fas fa-utensils"></i> Crear Menú</h2>
-      <!-- TEMPORAL: Laravel mostraba aquí el nombre del restaurante ($restaurante->Nombre) del gerente autenticado -->
-      <p>Crea una categoría de menú para <strong>tu restaurante</strong> y agrega sus platos.</p>
+      <p>Crea una categoría de menú para <strong th:text="${restaurante.nombre}">tu restaurante</strong> y agrega sus platos.</p>
     </div>
 
     <div class="form-card">
       <div class="form-card-body">
 
-        <!-- TEMPORAL:
-             Laravel enviaba este formulario por POST al backend para crear
-             una categoría de menú y sus platos (incluía @csrf y old()
-             para conservar los valores si la validación fallaba).
-
-             Cuando implementemos Java/Python, este formulario deberá
-             conectarse nuevamente con el backend mediante JavaScript/API.
-        -->
-        <form id="form-menu">
+        <form id="form-menu" th:action="@{/menu}" method="post">
 
           <!-- Categoría del menú -->
           <div class="campo">
@@ -88,19 +80,19 @@
               </button>
               <div class="campo">
                 <label>Nombre del plato <span style="color:red">*</span></label>
-                <input type="text" name="nuevos_platos[__i__][Nombre]" placeholder="Ej: Bandeja Paisa">
+                <input type="text" name="platoNombre" placeholder="Ej: Bandeja Paisa">
               </div>
               <div class="campo">
                 <label>Tipo de comida</label>
-                <input type="text" name="nuevos_platos[__i__][TipoComida]" placeholder="Ej: Plato fuerte">
+                <input type="text" name="platoTipoComida" placeholder="Ej: Plato fuerte">
               </div>
               <div class="campo">
                 <label>Precio (COP)</label>
-                <input type="number" step="100" min="0" name="nuevos_platos[__i__][Precio]" placeholder="Ej: 18000">
+                <input type="number" step="100" min="0" name="platoPrecio" placeholder="Ej: 18000">
               </div>
               <div class="campo">
                 <label>Disponibilidad</label>
-                <select name="nuevos_platos[__i__][Disponibilidad]">
+                <select name="platoDisponibilidad">
                   <option value="Disponible">Disponible</option>
                   <option value="No disponible">No disponible</option>
                   <option value="Temporalmente agotado">Temporalmente agotado</option>
@@ -108,7 +100,7 @@
               </div>
               <div class="campo plato-fila-full">
                 <label>Descripción</label>
-                <input type="text" name="nuevos_platos[__i__][Descripcion]" placeholder="Descripción breve del plato">
+                <input type="text" name="platoDescripcion" placeholder="Descripción breve del plato">
               </div>
             </div>
           </template>

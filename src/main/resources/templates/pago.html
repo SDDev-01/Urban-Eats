@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Pago – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" th:content="${_csrf.token}">
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="/css/pago.css">
@@ -45,10 +46,9 @@
     </div>
 
     <div class="pago-layout">
-    <!-- Mercado Pago: usar la Public Key configurada para el entorno -->
-     <!-- IMPORTANTE: como esto es hrml puro pues no hay nada q lea la llave, por eso esta asi, por ende lo cambiaremos despues-->
-    <script>
-        window.MP_PUBLIC_KEY = "TU_PUBLIC_KEY";
+    <!-- Mercado Pago: la Public Key viene del modelo (mercadopago.public-key en application.properties) -->
+    <script th:inline="javascript">
+        window.MP_PUBLIC_KEY = /*[[${mpPublicKey}]]*/ "";
     </script>
       <!-- Columna izquierda: mercado pago -->
       <script src="https://sdk.mercadopago.com/js/v2"></script>

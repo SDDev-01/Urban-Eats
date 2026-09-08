@@ -1,6 +1,8 @@
 package com.urbaneats.controller;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,9 +15,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.urbaneats.dao.PagoRepository;
+import com.urbaneats.dao.PedidoRepository;
+import com.urbaneats.entity.Direccion;
+import com.urbaneats.entity.Envio;
 import com.urbaneats.entity.Menu;
+import com.urbaneats.entity.Pago;
+import com.urbaneats.entity.Pedido;
 import com.urbaneats.entity.Plato;
 import com.urbaneats.entity.Restaurante;
+import com.urbaneats.entity.Telefono;
+import com.urbaneats.entity.Usuario;
 import com.urbaneats.service.IMenuService;
 import com.urbaneats.service.IPlatoService;
 import com.urbaneats.service.IRestauranteService;
@@ -34,9 +44,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PerfilRestauranteController {
 
+    private static final Map<String, String> ESTADO_A_JS = Map.of(
+            "En Proceso", "nuevo",
+            "Entregado", "entregado",
+            "Cancelado", "rechazado"
+    );
+
     private final IRestauranteService restauranteService;
     private final IMenuService menuService;
     private final IPlatoService platoService;
+    private final PedidoRepository pedidoRepository;
+    private final PagoRepository pagoRepository;
 
     /**
      * Lee de la sesion el restaurante activo que dejo SeleccionRolController.
@@ -75,6 +93,7 @@ public class PerfilRestauranteController {
             platosPorMenu.put(menu, platoService.listarPlatosPorMenu(menu.getCodigoMenu()));
         }
 
+        model.addAttribute("pedidosJson", pedidosDeHoy(restaurante));
         model.addAttribute("restaurante", restaurante);
         model.addAttribute("menus", menus);
         model.addAttribute("platosPorMenu", platosPorMenu);
@@ -163,5 +182,59 @@ public class PerfilRestauranteController {
 
         redirect.addFlashAttribute("exito", "Plato eliminado.");
         return "redirect:/perfilRestaurante";
+    }
+
+    /** Arma la lista que perfil-restaurante.js espera en window.PEDIDOS_BD, con los pedidos de hoy. */
+    private List<PedidoDashboardItem> pedidosDeHoy(Restaurante restaurante) {
+        List<Pedido> pedidos = pedidoRepository.findByRestaurante_CodigoRestauranteAndFechaPedido(
+                restaurante.getCodigoRestaurante(), LocalDate.now());
+
+        return pedidos.stream().map(this::aDashboardItem).toList();
+    }
+
+    private PedidoDashboardItem aDashboardItem(Pedido pedido) {
+        Envio envio = pedido.getEnvio();
+        Usuario usuario = envio != null && envio.getCliente() != null ? envio.getCliente().getUsuario() : null;
+        Pago pago = envio != null
+                ? pagoRepository.findByEnvio_CodigoEnvio(envio.getCodigoEnvio()).orElse(null)
+                : null;
+
+        String cliente = usuario != null
+                ? (nullASinValor(usuario.getNombres()) + " " + nullASinValor(usuario.getApellidos())).trim()
+                : "—";
+        String direccion = usuario != null && usuario.getDirecciones() != null && !usuario.getDirecciones().isEmpty()
+                ? primeraDireccion(usuario) : "—";
+        String telefono = usuario != null && usuario.getTelefonos() != null && !usuario.getTelefonos().isEmpty()
+                ? primerTelefono(usuario) : "—";
+        String hora = envio != null && envio.getHoraEntrega() != null
+                ? envio.getHoraEntrega().format(DateTimeFormatter.ofPattern("HH:mm")) : "—";
+        BigDecimal total = pago != null && pago.getMonto() != null ? pago.getMonto() : BigDecimal.ZERO;
+        String estado = ESTADO_A_JS.getOrDefault(pedido.getEstado(), "nuevo");
+        String descripcion = envio != null && envio.getDescripcion() != null ? envio.getDescripcion() : "Sin descripción";
+
+        return new PedidoDashboardItem(
+                "P-" + String.format("%03d", pedido.getCodigoPedido()),
+                cliente.isBlank() ? "—" : cliente,
+                direccion,
+                telefono,
+                List.of(descripcion),
+                total,
+                estado,
+                hora
+        );
+    }
+
+    private String primeraDireccion(Usuario usuario) {
+        Direccion direccion = usuario.getDirecciones().get(0);
+        return direccion.getDireccion() != null ? direccion.getDireccion() : "—";
+    }
+
+    private String primerTelefono(Usuario usuario) {
+        Telefono telefono = usuario.getTelefonos().get(0);
+        return telefono.getTelefono() != null ? telefono.getTelefono() : "—";
+    }
+
+    private String nullASinValor(String valor) {
+        return valor != null ? valor : "";
     }
 }
