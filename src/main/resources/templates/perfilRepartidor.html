@@ -25,7 +25,7 @@
     </div>
     <div class="navbar-right">
         <a href="/perfil" class="navbar-usuario" style="text-decoration:none;">
-        <i class="fas fa-user-circle"></i> <span id="navbar-nombre">Usuario</span>
+        <i class="fas fa-user-circle"></i> <span id="navbar-nombre" th:text="${#authentication.principal instanceof T(com.urbaneats.security.CustomUserDetails)} ? ${#authentication.principal.nombres} : 'Usuario'">Usuario</span>
         </a>
         <a href="/carrito" class="btn-carrito" aria-label="Ver carrito">
         <i class="fas fa-shopping-cart"></i>

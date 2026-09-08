@@ -101,10 +101,20 @@ const renderPaymentBrick = async (bricksBuilder) => {
                 window.UE.guardarCarrito([]);
                 window.location.href = "/rastreo";
               } else {
+                /*ALERTA */
+                /*ALERTA */
+                /* IMPORTANTE ESTO ES LO QUE DEBE HACER SI ESTA MAL, POR MOTIVOS DE PRUEBA CAMBIAREMOS ESTO, ARREGLAR URGENTE!*/ 
+                /*ALERTA */
+                /*ALERTA */
+                /*
                 window.UE.mostrarToast(
                   data.mensaje_error || 'Tu pago fue rechazado. Intenta con otro método.',
                   'fa-exclamation-circle'
                 );
+                */
+                /*ALERTA */
+                /*ALERTA */
+                window.location.href = "/rastreo";
               }
               resolve();
             })
