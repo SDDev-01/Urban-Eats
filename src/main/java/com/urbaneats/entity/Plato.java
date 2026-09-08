@@ -22,7 +22,7 @@ import lombok.ToString;
  * En el Schema.sql CodigoMenu admite NULL, por eso la relacion es opcional.
  */
 @Entity
-@Table(name = "Plato")
+@Table(name = "plato")
 @Getter
 @Setter
 @NoArgsConstructor

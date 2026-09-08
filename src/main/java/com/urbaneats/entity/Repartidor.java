@@ -14,7 +14,7 @@ import lombok.ToString;
  */
 @Data
 @Entity
-@Table(name = "Repartidor")
+@Table(name = "repartidor")
 public class Repartidor {
 
     @Id
