@@ -32,7 +32,7 @@ public class RepartidorService implements IRepartidorService {
     @Override
     public Repartidor actualizar(Integer id, Repartidor repartidor) {
         if (repartidorDao.existsById(id)) {
-            repartidor.setIdRepartidor(id);
+            repartidor.setCodigoRepartidor(id);
             return repartidorDao.save(repartidor);
         }
         return null;

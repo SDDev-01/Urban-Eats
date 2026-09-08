@@ -2,19 +2,24 @@ package com.urbaneats.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+/**
+ * Entidad de la tabla Vehiculo.
+ * La llave primaria es la Placa, no un codigo autoincremental.
+ */
 @Data
 @Entity
-@Table(name = "vehiculo")
-public class Vehiculo  {
+@Table(name = "Vehiculo")
+public class Vehiculo {
 
-    // Placa ahora es la llave primaria, sin @GeneratedValue porque es un String manual
     @Id
-    @Column(name = "Placa", length = 20)
+    @Column(name = "Placa", nullable = false, length = 20)
     private String placa;
 
-    @Column(name = "TipoVehiculo", nullable = false)
-    private String tipoVehiculo; 
+    @Column(name = "TipoVehiculo", nullable = false, length = 20)
+    private String tipoVehiculo;
 
     @Column(name = "SeguroVehiculo", length = 100)
     private String seguroVehiculo;
@@ -22,8 +27,12 @@ public class Vehiculo  {
     @Column(name = "SOAT", length = 100)
     private String soat;
 
-    @OneToOne
-    @JoinColumn(name = "CodigoRepartidor") // Coincide con tu script SQL
-    private Repartidor repartidor;
+    // ----- Relaciones -----
 
+    /** El repartidor duenio del vehiculo. En el Schema.sql admite NULL. */
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CodigoRepartidor")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Repartidor repartidor;
 }

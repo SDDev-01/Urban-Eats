@@ -23,7 +23,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/", "/login", "/registro",
-                    "/catalogo", "/restaurantes", "/restauranteDetalle",
+                    "/catalogo", "/restaurantes", "/restauranteDetalle", "/reportes",
                     "/chatbot", "/carrito", "/mapa",
                     "/css/**", "/js/**", "/images/**", "/webjars/**"
                 ).permitAll()

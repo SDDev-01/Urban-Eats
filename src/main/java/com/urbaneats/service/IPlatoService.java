@@ -1,5 +1,6 @@
 package com.urbaneats.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.urbaneats.entity.Plato;
@@ -24,4 +25,14 @@ public interface IPlatoService {
 
     /** Devuelve los platos que pertenecen a un menu. */
     List<Plato> listarPlatosPorMenu(Integer codigoMenu);
+
+    /**
+     * Reporte con filtros multicriterio. Cualquier parametro puede venir en null,
+     * y en ese caso ese criterio simplemente no filtra.
+     */
+    List<Plato> listarPlatosFiltrados(Integer codigoRestaurante,
+                                      String categoria,
+                                      String disponibilidad,
+                                      BigDecimal precioMinimo,
+                                      BigDecimal precioMaximo);
 }

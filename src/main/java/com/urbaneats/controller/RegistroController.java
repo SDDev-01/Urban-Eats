@@ -69,7 +69,10 @@ public class RegistroController {
             usuario.setNombres(Nombres);
             usuario.setApellidos(Apellidos);
             usuario.setCorreo(Correo);
-            usuario.setPassword(passwordEncoder.encode(Password)); // Contraseña encriptada
+            // La contrasena se pasa en texto plano a proposito: UsuarioService.guardar
+            // es quien la cifra con BCrypt. Si tambien se cifrara aqui quedaria guardada
+            // como encode(encode(clave)) y ningun usuario podria volver a iniciar sesion.
+            usuario.setPassword(Password);
 
             Usuario usuarioGuardado = usuarioService.guardar(usuario);
 
@@ -85,15 +88,10 @@ public class RegistroController {
             direccion.setUsuario(usuarioGuardado);
             direccionService.guardar(direccion);
 
-            // 4. Crear Cliente (Asociado al Usuario)
-            Cliente cliente = new Cliente();
-            cliente.setNombre(Nombres);
-            cliente.setApellido(Apellidos);
-            cliente.setCorreo(Correo);
-            cliente.setTelefono(Telefono);
-            cliente.setDireccion(Direccion);
-            cliente.setUsuario(usuarioGuardado);
-            clienteService.guardar(cliente);
+            // 4. El Cliente NO se crea aqui.
+            // El trigger crear_cliente_automaticamente del Schema.sql inserta la fila
+            // en cliente apenas se guarda el usuario. La tabla solo tiene CodigoCliente
+            // y CodigoUsuario: los datos personales viven en usuario, telefono y direccion.
 
             // 5. Cargar UserDetails y autenticar
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(usuarioGuardado.getCorreo());
