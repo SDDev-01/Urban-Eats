@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`cliente` (
   `CodigoCliente` INT(11) NOT NULL AUTO_INCREMENT,
   `CodigoUsuario` INT(11) NOT NULL,
   PRIMARY KEY (`CodigoCliente`),
-  INDEX `CodigoUsuario` (`CodigoUsuario` ASC),
+  UNIQUE INDEX `CodigoUsuario` (`CodigoUsuario` ASC),
   CONSTRAINT `cliente_ibfk_1`
     FOREIGN KEY (`CodigoUsuario`)
     REFERENCES `urbaneats`.`usuario` (`CodigoUsuario`))
@@ -146,7 +146,7 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`repartidor` (
   `CodigoRepartidor` INT(11) NOT NULL AUTO_INCREMENT,
   `CodigoUsuario` INT(11) NOT NULL,
   PRIMARY KEY (`CodigoRepartidor`),
-  INDEX `CodigoUsuario` (`CodigoUsuario` ASC),
+  UNIQUE INDEX `CodigoUsuario` (`CodigoUsuario` ASC),
   CONSTRAINT `repartidor_ibfk_1`
     FOREIGN KEY (`CodigoUsuario`)
     REFERENCES `urbaneats`.`usuario` (`CodigoUsuario`))
@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `urbaneats`.`gerente` (
   `CodigoGerente` INT(11) NOT NULL AUTO_INCREMENT,
   `CodigoUsuario` INT(11) NOT NULL,
   PRIMARY KEY (`CodigoGerente`),
-  INDEX `CodigoUsuario` (`CodigoUsuario` ASC),
+  UNIQUE INDEX `CodigoUsuario` (`CodigoUsuario` ASC),
   CONSTRAINT `gerente_ibfk_1`
     FOREIGN KEY (`CodigoUsuario`)
     REFERENCES `urbaneats`.`usuario` (`CodigoUsuario`))

@@ -13,6 +13,7 @@ import com.urbaneats.security.CustomUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -80,7 +81,13 @@ public class RepartidorController {
         return "repartidor";
     }
 
+    /**
+     * La transaccion evita que un doble envio del formulario deje dos filas de
+     * repartidor para el mismo usuario, que era lo que rompia el perfil despues
+     * de registrarse.
+     */
     @PostMapping("/repartidor")
+    @Transactional
     public String registrar(@RequestParam String tipoVehiculo,
                              @RequestParam String placa,
                              @RequestParam(required = false) String soat,
