@@ -22,6 +22,12 @@
     </a>
     <div class="navbar-links">
         <a href="/restaurantes" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
+        <!-- Solo para quien inicio sesion: sin sesion el principal es el usuario anonimo. -->
+        <a th:if="${#authentication != null
+                   and #authentication.principal instanceof T(com.urbaneats.security.CustomUserDetails)}"
+           th:href="@{/reportes}" href="/reportes" class="navbar-link">
+           <i class="fas fa-filter"></i> Filtrar platos
+        </a>
     </div>
     <div class="navbar-right">
         <a href="/perfil" class="navbar-usuario" style="text-decoration:none;">
