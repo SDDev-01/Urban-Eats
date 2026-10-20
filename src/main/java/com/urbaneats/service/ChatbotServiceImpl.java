@@ -1,171 +1,109 @@
 package com.urbaneats.service;
 
-import com.urbaneats.dao.MenuRepository;
-import com.urbaneats.dao.RestauranteRepository;
-import com.urbaneats.entity.Menu;
-import com.urbaneats.entity.Plato;
-import com.urbaneats.entity.Restaurante;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.time.Duration;
-import java.util.*;
-import java.util.stream.Collectors;
+import com.urbaneats.integracion.ServicioPythonCliente;
+import com.urbaneats.integracion.ServicioPythonException;
+import com.urbaneats.security.CustomUserDetails;
+import com.urbaneats.security.SesionHelper;
 
+import jakarta.servlet.http.HttpSession;
+
+/**
+ * Chatbot: Java decide QUIEN pregunta (usuario y rol, que ya conoce por la sesion)
+ * y Python + Ollama arman la respuesta con los datos reales de la base.
+ *
+ * Antes este servicio llamaba a una API de pago (Anthropic) que no tenia clave, y
+ * ademas Spring inyectaba una clase de relleno, por eso el chat nunca respondia.
+ */
 @Service
 public class ChatbotServiceImpl implements IChatbotService {
 
-    // Lee la variable desde el .env. Si no existe, asigna un string vacío.
-    @Value("${ANTHROPIC_API_KEY:}")
-    private String apiKey;
+    private static final Logger log = LoggerFactory.getLogger(ChatbotServiceImpl.class);
+    private static final String CLAVE_HISTORIAL = "chat_historial";
+    private static final int TURNOS_MAXIMOS = 6;
 
-    private static final List<String> HORARIO_KEYWORDS = Arrays.asList("horario", "hora", "abre", "cierra", "disponible", "cuando", "abierto");
-    private static final List<String> UBICACION_KEYWORDS = Arrays.asList("donde", "ubicación", "ubicacion", "direccion", "dirección", "lugar", "mapa");
+    private final ServicioPythonCliente python;
 
-    private final RestauranteRepository restauranteRepository;
-    private final MenuRepository menuRepository;
-    private final IPlatoService platoService;
-    private final RestTemplate restTemplate;
-
-    public ChatbotServiceImpl(RestauranteRepository restauranteRepository,
-                               MenuRepository menuRepository,
-                               IPlatoService platoService) {
-        this.restauranteRepository = restauranteRepository;
-        this.menuRepository = menuRepository;
-        this.platoService = platoService;
-
-        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-        requestFactory.setConnectTimeout((int) Duration.ofSeconds(20).toMillis());
-        requestFactory.setReadTimeout((int) Duration.ofSeconds(20).toMillis());
-        this.restTemplate = new RestTemplate(requestFactory);
+    public ChatbotServiceImpl(ServicioPythonCliente python) {
+        this.python = python;
     }
 
     @Override
-    public String procesarMensaje(String mensaje) {
-        String mensajeLower = mensaje.toLowerCase().trim();
+    public Map<String, Object> procesarMensaje(String mensaje, String pagina, HttpSession session) {
+        CustomUserDetails usuario = SesionHelper.usuarioActual();
+        List<Map<String, String>> historial = historial(session);
 
-        if (contienePalabras(mensajeLower, HORARIO_KEYWORDS)) {
-            return respuestaHorarios();
+        Map<String, Object> entrada = new HashMap<>();
+        entrada.put("mensaje", mensaje);
+        entrada.put("rol", rolSegunPagina(pagina, session));
+        entrada.put("historial", historial);
+        if (usuario != null) {
+            entrada.put("codigo_usuario", usuario.getCodigoUsuario());
+            entrada.put("nombre", usuario.getNombres());
         }
-
-        if (contienePalabras(mensajeLower, UBICACION_KEYWORDS)) {
-            return respuestaUbicaciones();
+        if (session.getAttribute("restaurante_activo") instanceof Integer cocina) {
+            entrada.put("codigo_restaurante", cocina);
         }
-
-        return respuestaIA(mensaje);
-    }
-
-    private boolean contienePalabras(String texto, List<String> palabras) {
-        return palabras.stream().anyMatch(texto::contains);
-    }
-
-    private String respuestaHorarios() {
-        List<Restaurante> restaurantes = restauranteRepository.findAll();
-        if (restaurantes.isEmpty()) {
-            return "Actualmente no tenemos información de horarios disponible. ¡Contáctanos para más detalles!";
-        }
-
-        String lineas = restaurantes.stream()
-                .map(r -> "• **" + r.getNombre() + "**: " + r.getHorario())
-                .collect(Collectors.joining("\n"));
-
-        return "¡Claro! Aquí están los horarios de nuestros restaurantes:\n\n" + lineas
-                + "\n\n¿Hay algo más en lo que pueda ayudarte?";
-    }
-
-    private String respuestaUbicaciones() {
-        List<Restaurante> restaurantes = restauranteRepository.findAll();
-        if (restaurantes.isEmpty()) {
-            return "No tenemos información de ubicaciones disponible en este momento.";
-        }
-
-        String lineas = restaurantes.stream()
-                .map(r -> "• **" + r.getNombre() + "**: " + r.getDireccion())
-                .collect(Collectors.joining("\n"));
-
-        return "¡Con gusto! Estas son nuestras ubicaciones:\n\n" + lineas
-                + "\n\n¿Necesitas ayuda con algo más?";
-    }
-
-    private String respuestaIA(String mensaje) {
-        if (apiKey == null || apiKey.isEmpty()) {
-            return "Lo siento, el asistente de IA no está disponible en este momento. ¿Puedo ayudarte con horarios o ubicaciones?";
-        }
-
-        String url = "https://api.anthropic.com/v1/messages";
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("x-api-key", apiKey);
-        headers.set("anthropic-version", "2023-06-01");
-
-        String systemPrompt = "Eres UrbanBot, el asistente virtual de Urban Eats, una plataforma de comida saludable en Bogotá.\n"
-                + "Responde siempre en español, de forma amigable, concisa y útil. No inventes información.\n"
-                + "Si no puedes responder con los datos disponibles, sugiere al usuario que visite la sección de restaurantes.\n\n"
-                + "INFORMACIÓN ACTUAL DE URBAN EATS:\n" + construirContexto();
-
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("model", "claude-haiku-4-5-20251001");
-        requestBody.put("max_tokens", 512);
-        requestBody.put("system", systemPrompt);
-        requestBody.put("messages", Collections.singletonList(
-                Map.of("role", "user", "content", mensaje)
-        ));
-
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
         try {
-            ResponseEntity<Map> response = restTemplate.postForEntity(url, entity, Map.class);
-            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                List<Map<String, Object>> content = (List<Map<String, Object>>) response.getBody().get("content");
-                if (content != null && !content.isEmpty()) {
-                    return (String) content.get(0).get("text");
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Error Anthropic: " + e.getMessage());
+            Map<String, Object> salida = python.chat(entrada);
+            String respuesta = String.valueOf(salida.get("respuesta"));
+            guardarTurno(historial, mensaje, respuesta);
+            return Map.of("respuesta", respuesta, "modo", String.valueOf(salida.get("modo")));
+        } catch (ServicioPythonException e) {
+            log.warn("Chatbot sin servicio Python: {}", e.getMessage());
+            return Map.of("respuesta", "Ahora no puedo responder: el asistente está fuera de servicio. "
+                    + "Puedes seguir tus pedidos en \"Mis pedidos\".", "modo", "basico");
         }
-
-        return "Tuve un problema al conectarme. Por favor, intenta de nuevo en un momento.";
     }
 
-    /** Arma un resumen de restaurantes -> menus -> platos para que la IA responda con datos reales. */
-    private String construirContexto() {
-        List<Restaurante> restaurantes = restauranteRepository.findAll();
-        if (restaurantes.isEmpty()) {
-            return "No hay restaurantes registrados actualmente.";
+    /**
+     * El rol con el que pregunta. Se toma de la pagina, pero solo si el usuario
+     * de verdad tiene ese rol (asi nadie se hace pasar por cocina cambiando la pagina).
+     */
+    private String rolSegunPagina(String pagina, HttpSession session) {
+        if (SesionHelper.usuarioActual() == null) {
+            return "anonimo";
         }
-
-        StringBuilder sb = new StringBuilder();
-        for (Restaurante restaurante : restaurantes) {
-            sb.append("RESTAURANTE: ").append(restaurante.getNombre()).append('\n');
-            sb.append("  Dirección: ").append(restaurante.getDireccion()).append('\n');
-            sb.append("  Horario: ").append(restaurante.getHorario()).append('\n');
-
-            List<Menu> menus = menuRepository.findByRestaurante_CodigoRestaurante(restaurante.getCodigoRestaurante());
-            for (Menu menu : menus) {
-                sb.append("  Categoría de menú: ").append(menu.getCategoria()).append('\n');
-
-                List<Plato> platos = platoService.listarPlatosPorMenu(menu.getCodigoMenu());
-                for (Plato plato : platos) {
-                    sb.append("    - ").append(plato.getNombre())
-                            .append(" | $").append(plato.getPrecio())
-                            .append(" | ").append(plato.getTipoComida())
-                            .append(" | ").append(plato.getDisponibilidad())
-                            .append('\n');
-
-                    if (plato.getDescripcion() != null && !plato.getDescripcion().isBlank()) {
-                        sb.append("      Descripción: ").append(plato.getDescripcion()).append('\n');
-                    }
-                }
-            }
-            sb.append('\n');
+        String ruta = pagina == null ? "" : pagina;
+        if ((ruta.startsWith("/perfilRestaurante") || ruta.startsWith("/reportes"))
+                && SesionHelper.tieneRol("GERENTE") && session.getAttribute("restaurante_activo") != null) {
+            return "cocina";
         }
+        if (ruta.startsWith("/perfilRepartidor") && SesionHelper.tieneRol("REPARTIDOR")) {
+            return "repartidor";
+        }
+        if (ruta.startsWith("/tecnico") && SesionHelper.tieneRol("TECNICO")) {
+            return "tecnico";
+        }
+        return "cliente";
+    }
 
-        return sb.toString();
+    @SuppressWarnings("unchecked")
+    private List<Map<String, String>> historial(HttpSession session) {
+        Object guardado = session.getAttribute(CLAVE_HISTORIAL);
+        if (guardado instanceof List<?> lista) {
+            return (List<Map<String, String>>) lista;
+        }
+        List<Map<String, String>> nuevo = new ArrayList<>();
+        session.setAttribute(CLAVE_HISTORIAL, nuevo);
+        return nuevo;
+    }
+
+    /** Guarda la pregunta y la respuesta; solo se conservan los ultimos turnos. */
+    private void guardarTurno(List<Map<String, String>> historial, String mensaje, String respuesta) {
+        historial.add(Map.of("rol", "usuario", "texto", mensaje));
+        historial.add(Map.of("rol", "asistente", "texto", respuesta.length() > 1500 ? respuesta.substring(0, 1500) : respuesta));
+        while (historial.size() > TURNOS_MAXIMOS) {
+            historial.remove(0);
+        }
     }
 }

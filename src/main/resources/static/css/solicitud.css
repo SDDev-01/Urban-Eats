@@ -1,0 +1,56 @@
+/* ============================
+   Solicitudes de cocina y panel del tecnico (fase 6)
+   ============================ */
+.sol-pagina { max-width: 1050px; margin: 0 auto; padding: calc(var(--navbar-height) + 1.5rem) 1.25rem 3rem; }
+.sol-pagina h2 { margin-bottom: 0.25rem; }
+.sol-sub { color: var(--texto-gris); margin-bottom: 1.25rem; }
+.sol-card {
+  background: var(--blanco); border-radius: var(--radio); box-shadow: var(--sombra);
+  padding: 1.25rem 1.5rem; margin-bottom: 1.25rem;
+}
+.sol-card h3 { font-size: 1.05rem; margin-bottom: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
+.sol-card h3 i { color: var(--principal); }
+.sol-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.9rem 1rem; }
+.sol-campo label { display: block; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.25rem; }
+.sol-campo input, .sol-campo select, .sol-campo textarea {
+  width: 100%; padding: 0.55rem 0.7rem; border: 1px solid var(--borde); border-radius: 8px;
+  font-family: inherit; font-size: 0.92rem; background: #fff;
+}
+.sol-campo .ayuda { font-size: 0.75rem; color: var(--texto-gris); margin-top: 0.2rem; }
+.sol-campo .error-campo { font-size: 0.78rem; color: var(--principal); margin-top: 0.2rem; }
+.sol-campo.con-error input, .sol-campo.con-error select { border-color: var(--principal); }
+.sol-mapa { height: 280px; border-radius: 10px; border: 1px solid var(--borde); margin-top: 0.5rem; z-index: 0; }
+.sol-doc { border: 1px dashed var(--borde); border-radius: 10px; padding: 0.9rem; margin-bottom: 0.8rem; }
+.sol-doc h4 { font-size: 0.92rem; margin-bottom: 0.6rem; }
+.sol-acciones { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
+.sol-alerta { padding: 0.8rem 1rem; border-radius: 10px; margin-bottom: 1rem; font-size: 0.9rem; }
+.sol-alerta.error { background: var(--principal-claro); color: var(--principal); }
+.sol-alerta.exito { background: #e3f4e8; color: #1e6b3a; }
+.sol-alerta.info { background: var(--secundario-claro); color: var(--texto); }
+.sol-tabla { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+.sol-tabla th { text-align: left; background: var(--fondo); padding: 0.55rem; font-size: 0.8rem; }
+.sol-tabla td { padding: 0.55rem; border-bottom: 1px solid var(--borde); vertical-align: top; }
+.sol-estado { display: inline-block; padding: 0.2rem 0.65rem; border-radius: 999px; font-size: 0.78rem; font-weight: 700; }
+.sol-estado.Borrador { background: #eee; color: #555; }
+.sol-estado.Enviada { background: var(--secundario-claro); color: #7a5a00; }
+.sol-estado.En.revision, .sol-estado.revision { background: var(--terciario-claro); color: #b8431f; }
+.sol-estado.Requiere, .sol-estado.ajustes { background: #fff1bf; color: #7a5a00; }
+.sol-estado.Aprobada { background: #e3f4e8; color: #1e6b3a; }
+.sol-estado.Rechazada { background: var(--principal-claro); color: var(--principal); }
+.check-item { display: flex; gap: 0.6rem; align-items: flex-start; padding: 0.45rem 0; border-bottom: 1px solid var(--borde); font-size: 0.9rem; }
+.check-item i.fa-circle-check { color: #1e6b3a; }
+.check-item i.fa-circle-xmark { color: var(--principal); }
+.sol-filtros { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; align-items: end; }
+.sol-historial li { list-style: none; padding: 0.45rem 0; border-bottom: 1px solid var(--borde); font-size: 0.86rem; }
+.barra-hora { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; margin: 0.12rem 0; }
+.barra-hora .etiqueta { width: 3rem; color: var(--texto-gris); }
+.barra-hora .barra { height: 14px; border-radius: 4px; background: var(--terciario); min-width: 2px; }
+.barra-hora .barra.nocturna { background: var(--principal); }
+.indicadores { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 0.9rem; margin-bottom: 1.25rem; }
+.indicador { background: var(--blanco); border-radius: var(--radio); box-shadow: var(--sombra); padding: 1rem; text-align: center; }
+.indicador .valor { font-size: 1.6rem; font-weight: 700; color: var(--principal); }
+.indicador .nombre { font-size: 0.8rem; color: var(--texto-gris); }
+@media (max-width: 600px) {
+  .sol-card { padding: 1rem; }
+  .sol-tabla { font-size: 0.8rem; }
+}

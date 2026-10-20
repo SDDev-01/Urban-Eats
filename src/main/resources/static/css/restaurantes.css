@@ -207,3 +207,6 @@
     padding: 0 1rem 1rem;
   }
 }
+
+/* Fase 6: la cocina esta fuera de horario o pausada */
+.restaurante-badge.badge-cerrado { background: #555; color: #fff; }

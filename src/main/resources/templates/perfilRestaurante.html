@@ -64,11 +64,12 @@
           <a href="/menu" class="btn btn-verde" style="margin-bottom:0.5rem;">
             <i class="fas fa-utensils"></i> Crear Menú
           </a>
-          <button class="rest-toggle-estado" id="btn-estado">
+          <button class="rest-toggle-estado" id="btn-estado" th:attr="data-acepta=${restaurante.aceptaPedidos}">
             <span class="estado-dot" id="estado-dot"></span>
             <span id="estado-texto">Abierto</span>
           </button>
-          <p class="estado-hint" id="estado-hint">Clic para cerrar</p>
+          <p class="estado-hint" id="estado-hint">Clic para pausar pedidos</p>
+          <a href="/reportes" class="btn btn-gris" style="margin-top:0.5rem;"><i class="fas fa-chart-column"></i> Reportes</a>
         </div>
 
       </div>
@@ -131,7 +132,7 @@
 
         <!-- Clientes del día -->
         <div class="zona-card">
-          <h3><i class="fas fa-users"></i> Clientes del día</h3>
+          <h3><i class="fas fa-users"></i> Pedidos activos y de hoy</h3>
           <div class="tabla-wrap">
             <table class="tabla-clientes">
               <thead>
@@ -158,13 +159,15 @@
     <div class="tab-content" id="tab-pedidos">
       <div class="zona-wrapper">
 
+        <p class="pedidos-actualizado" id="pedidos-actualizado">Cargando pedidos...</p>
         <div class="pedidos-filtros">
           <button class="filtro-btn activo" data-filtro="todos">Todos</button>
           <button class="filtro-btn" data-filtro="nuevo">Nuevos</button>
-          <button class="filtro-btn" data-filtro="aceptado">Aceptados</button>
-          <button class="filtro-btn" data-filtro="preparando">Preparando</button>
-          <button class="filtro-btn" data-filtro="listo">Listos</button>
+          <button class="filtro-btn" data-filtro="preparando">En preparación</button>
+          <button class="filtro-btn" data-filtro="listo">Listos para envío</button>
+          <button class="filtro-btn" data-filtro="encamino">En camino</button>
           <button class="filtro-btn" data-filtro="entregado">Entregados</button>
+          <button class="filtro-btn" data-filtro="rechazado">Cancelados</button>
         </div>
 
         <div class="pedidos-lista" id="pedidos-lista">
@@ -210,6 +213,7 @@
                 <th>Nombre</th>
                 <th>Tipo de Comida</th>
                 <th>Precio</th>
+                <th>Calorías / sellos</th>
                 <th>Disponibilidad</th>
                 <th>Descripción</th>
                 <th></th>
@@ -222,6 +226,11 @@
                 <td th:text="${plato.tipoComida} ?: '—'"></td>
                 <td th:text="'$' + ${#numbers.formatDecimal(plato.precio ?: 0, 0, 'POINT', 0, 'COMMA')}"></td>
                 <td>
+                  <span th:if="${plato.calorias != null}" class="dato-nutricional" th:text="${plato.calorias} + ' kcal'"></span>
+                  <span th:each="e : ${plato.listaEtiquetas}" class="sello-plato"
+                        th:classappend="${e == 'Balanceado'} ? 'sello-balanceado'" th:text="${e}"></span>
+                </td>
+                <td>
                   <form th:action="@{'/perfilRestaurante/plato/' + ${plato.codigoPlato} + '/disponibilidad'}"
                         method="POST" class="form-disponibilidad-inline">
                     <select name="Disponibilidad" class="select-disponibilidad" onchange="this.form.submit()">
@@ -233,9 +242,10 @@
                 </td>
                 <td th:text="${plato.descripcion} ?: '—'"></td>
                 <td>
+                  <!-- La confirmacion la hace perfil-restaurante.js leyendo data-nombre
+                       (Thymeleaf no permite meter texto de la base dentro de un onsubmit). -->
                   <form th:action="@{'/perfilRestaurante/plato/' + ${plato.codigoPlato} + '/eliminar'}"
-                        method="POST"
-                        th:attr="onsubmit=|return confirm('¿Eliminar «${plato.nombre}»? Esta acción no se puede deshacer.')|">
+                        method="POST" class="form-eliminar-plato" th:attr="data-nombre=${plato.nombre}">
                     <button type="submit" class="btn-plato-eliminar" title="Eliminar plato">
                       <i class="fas fa-trash"></i>
                     </button>
@@ -263,8 +273,8 @@
         <div class="form-plato-grid">
           <div class="campo">
             <label for="p-nombre">Nombre <span style="color:red">*</span></label>
-            <input type="text" id="p-nombre" name="Nombre"
-                   placeholder="Ej: Bandeja Paisa">
+            <input type="text" id="p-nombre" name="Nombre" required minlength="3" maxlength="150"
+                   placeholder="Ej: Caldo de costilla">
           </div>
           <div class="campo">
             <label for="p-tipo">Tipo de comida</label>
@@ -273,8 +283,8 @@
           </div>
           <div class="campo">
             <label for="p-precio">Precio (COP)</label>
-            <input type="number" id="p-precio" name="Precio"
-                   step="100" min="0" placeholder="Ej: 18000">
+            <input type="number" id="p-precio" name="Precio" required
+                   step="100" min="1000" max="500000" placeholder="Ej: 18000">
           </div>
           <div class="campo">
             <label for="p-disponibilidad">Disponibilidad</label>
@@ -283,6 +293,21 @@
               <option value="No disponible">No disponible</option>
               <option value="Temporalmente agotado">Temporalmente agotado</option>
             </select>
+          </div>
+          <div class="campo">
+            <label for="p-calorias">Calorías aprox. (kcal)</label>
+            <input type="number" id="p-calorias" name="Calorias" min="0" max="5000" placeholder="Ej: 450">
+          </div>
+          <div class="campo form-plato-full">
+            <label>Sellos del plato</label>
+            <div style="display:flex;flex-wrap:wrap;gap:0.75rem;font-size:0.9rem;">
+              <label><input type="checkbox" name="Etiquetas" value="Balanceado"> Balanceado</label>
+              <label><input type="checkbox" name="Etiquetas" value="Casero"> Casero</label>
+              <label><input type="checkbox" name="Etiquetas" value="Alto en proteína"> Alto en proteína</label>
+              <label><input type="checkbox" name="Etiquetas" value="Vegetariano"> Vegetariano</label>
+              <label><input type="checkbox" name="Etiquetas" value="Sin gluten"> Sin gluten</label>
+              <label><input type="checkbox" name="Etiquetas" value="Sin azúcar"> Sin azúcar</label>
+            </div>
           </div>
           <div class="campo form-plato-full">
             <label for="p-descripcion">Descripción</label>
@@ -303,13 +328,11 @@
   <!-- ============================================================== -->
 
   <footer>
-    <p>&copy; 2026 Urban Eats – Proyecto Formativo SENA. Comida saludable para todos.</p>
+    <p>&copy; 2026 Urban Eats – Proyecto Formativo SENA. Comida real para quienes mueven la noche.</p>
   </footer>
 
   <script src="/js/app.js"></script>
-  <script th:inline="javascript">
-    window.PEDIDOS_BD = /*[[${pedidosJson}]]*/ [];
-  </script>
   <script src="/js/perfil-restaurante.js"></script>
+<div th:replace="~{fragments/comunes :: franjaDemo}"></div>
 </body>
 </html>

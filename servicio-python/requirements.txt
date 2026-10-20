@@ -1,0 +1,12 @@
+# Servicio Python de Urban Eats (probado con Python 3.15 y 3.13)
+fastapi==0.149.0
+uvicorn==0.54.0
+SQLAlchemy==2.1.5
+PyMySQL==1.2.3
+pydantic==2.14.1
+pydantic-settings==2.16.0
+httpx==0.28.1
+python-multipart==0.0.32
+openpyxl==3.1.5
+fpdf2==2.8.9
+pytest==9.1.1

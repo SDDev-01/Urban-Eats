@@ -17,7 +17,7 @@ function pintarHero() {
   if (!hero) return;
   const id = parseInt(hero.dataset.id);
   if (isNaN(id)) return;
-  hero.style.background = `linear-gradient(135deg, ${colorPorId(id)} 0%, #1b5e20 100%)`;
+  hero.style.background = 'linear-gradient(135deg, #a42828 0%, #f7643b 100%)';
 }
 
 /* ---- FILTROS: muestran u ocultan las tarjetas que ya están en el DOM ---- */
@@ -83,13 +83,9 @@ function iniciarBotonesVer() {
 }
 
 function abrirModal(datos) {
-  productoSeleccionado = {
-    id: parseInt(datos.id),
-    nombre: datos.nombre,
-    descripcion: datos.descripcion,
-    precio: parseFloat(datos.precio),
-    categoria: datos.categoria
-  };
+  // productoDesdeDataset (app.js) lee los data-* que puso Thymeleaf: id, precio, cocina,
+  // disponibilidad, calorias, etiquetas y alergenos.
+  productoSeleccionado = window.UE.productoDesdeDataset(datos);
   cantidadModal = 1;
 
   const color = colorPorId(productoSeleccionado.id);
@@ -106,7 +102,9 @@ function abrirModal(datos) {
     </div>
   `;
 
-  document.getElementById('modal-stats').innerHTML = '';
+  // Informacion nutricional y sello Balanceado (orientativa, no es consejo medico).
+  document.getElementById('modal-stats').innerHTML = window.UE.infoNutricionalHTML(productoSeleccionado);
+  document.getElementById('btn-agregar-carrito').disabled = !productoSeleccionado.disponible;
 
   actualizarPrecioModal();
   document.getElementById('modal-detalle').classList.add('abierto');
@@ -146,19 +144,10 @@ document.getElementById('btn-menos').addEventListener('click', () => {
 
 document.getElementById('btn-agregar-carrito').addEventListener('click', () => {
   if (!productoSeleccionado) return;
-
-  const carrito = window.UE.obtenerCarrito();
-  const existe = carrito.find(p => p.id === productoSeleccionado.id);
-
-  if (existe) {
-    existe.cantidad += cantidadModal;
-  } else {
-    carrito.push({ ...productoSeleccionado, cantidad: cantidadModal });
+  // agregarPlatoAlCarrito (app.js) valida disponibilidad y que el carrito sea de una sola cocina.
+  if (window.UE.agregarPlatoAlCarrito(productoSeleccionado, cantidadModal)) {
+    document.getElementById('modal-detalle').classList.remove('abierto');
   }
-
-  window.UE.guardarCarrito(carrito);
-  window.UE.mostrarToast(`¡${productoSeleccionado.nombre} agregado al carrito!`);
-  document.getElementById('modal-detalle').classList.remove('abierto');
 });
 
 /* ---- ARRANQUE ---- */

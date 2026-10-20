@@ -33,6 +33,10 @@ public interface IPlatoService {
     List<Plato> listarPlatosFiltrados(Integer codigoRestaurante,
                                       String categoria,
                                       String disponibilidad,
+                                      String etiqueta,
                                       BigDecimal precioMinimo,
                                       BigDecimal precioMaximo);
+
+    /** Platos que se muestran en el catalogo: solo los de cocinas activas. */
+    List<Plato> listarPlatosDeCocinasActivas();
 }

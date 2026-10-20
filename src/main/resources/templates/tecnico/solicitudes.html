@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel del técnico – Urban Eats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/solicitud.css">
+</head>
+<body>
+<nav th:replace="~{fragments/comunes :: navbar}"></nav>
+
+<div class="sol-pagina">
+  <h2><i class="fas fa-clipboard-check" style="color:var(--principal);"></i> Verificación de cocinas</h2>
+  <p class="sol-sub">Revisa los datos y documentos de cada cocina antes de publicarla.
+    <a href="/reportes" style="color:var(--principal);font-weight:700;">Ver reportes</a></p>
+  <div th:replace="~{fragments/comunes :: mensajes}"></div>
+
+  <!-- Filtros combinables (viajan por GET: quedan en la URL) -->
+  <form class="sol-card sol-filtros" method="get" action="/tecnico/solicitudes">
+    <div class="sol-campo"><label>Estado</label>
+      <select name="estado">
+        <option value="">Todos</option>
+        <option th:each="e : ${ {'Borrador','Enviada','En revision','Requiere ajustes','Aprobada','Rechazada'} }"
+                th:value="${e}" th:text="${e}" th:selected="${filtros['estado'] == e}"></option>
+      </select></div>
+    <div class="sol-campo"><label>Localidad</label>
+      <select name="localidad">
+        <option value="">Todas</option>
+        <option th:each="l : ${localidades}" th:value="${l}" th:text="${l}" th:selected="${filtros['localidad'] == l}"></option>
+      </select></div>
+    <div class="sol-campo"><label>Tipo</label>
+      <select name="tipo">
+        <option value="">Todos</option>
+        <option value="Cocina oculta" th:selected="${filtros['tipo'] == 'Cocina oculta'}">Cocina oculta</option>
+        <option value="Restaurante" th:selected="${filtros['tipo'] == 'Restaurante'}">Restaurante</option>
+      </select></div>
+    <div class="sol-campo"><label>Buscar</label>
+      <input name="q" th:value="${filtros['q']}" placeholder="Nombre o NIT"></div>
+    <div class="sol-campo"><label>Ordenar por</label>
+      <select name="orden">
+        <option value="fecha_desc" th:selected="${filtros['orden'] == 'fecha_desc'}">Más recientes</option>
+        <option value="fecha_asc" th:selected="${filtros['orden'] == 'fecha_asc'}">Más antiguas</option>
+        <option value="nombre_asc" th:selected="${filtros['orden'] == 'nombre_asc'}">Nombre A-Z</option>
+        <option value="estado_asc" th:selected="${filtros['orden'] == 'estado_asc'}">Estado</option>
+      </select></div>
+    <div class="sol-campo"><button class="btn btn-verde" style="width:100%;"><i class="fas fa-filter"></i> Filtrar</button></div>
+  </form>
+
+  <div class="sol-card">
+    <p style="font-size:0.85rem;color:var(--texto-gris);margin-bottom:0.6rem;"
+       th:text="${pagina['total']} + ' solicitud(es) encontrada(s)'"></p>
+    <table class="sol-tabla" th:unless="${#lists.isEmpty(pagina['resultados'])}">
+      <thead><tr><th>#</th><th>Cocina</th><th>NIT</th><th>Localidad</th><th>Tipo</th><th>Estado</th><th></th></tr></thead>
+      <tbody>
+        <tr th:each="s : ${pagina['resultados']}">
+          <td th:text="${s['codigo_solicitud']}"></td>
+          <td><strong th:text="${s['nombre_comercial']}"></strong>
+            <span th:if="${s['es_demo']}" class="sello-plato">Prueba</span></td>
+          <td th:text="${s['nit']} + '-' + ${s['digito_verificacion']}"></td>
+          <td th:text="${s['localidad']}"></td>
+          <td th:text="${s['tipo_establecimiento']}"></td>
+          <td><span class="sol-estado" th:classappend="${s['estado']}" th:text="${s['estado']}"></span></td>
+          <td><a th:href="@{'/tecnico/solicitudes/' + ${s['codigo_solicitud']}}" class="btn btn-verde">Revisar</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="sol-acciones" th:if="${totalPaginas > 1}">
+      <a th:each="n : ${#numbers.sequence(1, totalPaginas)}" class="btn"
+         th:classappend="${n == pagina['pagina']} ? 'btn-verde' : 'btn-gris'"
+         th:href="@{/tecnico/solicitudes(estado=${filtros['estado']},localidad=${filtros['localidad']},tipo=${filtros['tipo']},q=${filtros['q']},orden=${filtros['orden']},pagina=${n})}"
+         th:text="${n}">1</a>
+    </div>
+  </div>
+</div>
+<div th:replace="~{fragments/comunes :: franjaDemo}"></div>
+<script src="/js/app.js"></script>
+</body>
+</html>

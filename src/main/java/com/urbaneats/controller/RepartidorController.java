@@ -1,104 +1,112 @@
 package com.urbaneats.controller;
 
 import com.urbaneats.dao.EnvioRepository;
-import com.urbaneats.dao.PedidoRepository;
 import com.urbaneats.dao.RepartidorRepository;
+import com.urbaneats.dao.RolRepository;
 import com.urbaneats.dao.UsuarioRepository;
 import com.urbaneats.dao.VehiculoRepository;
 import com.urbaneats.entity.Envio;
-import com.urbaneats.entity.Pedido;
+import com.urbaneats.entity.EstadoPedido;
 import com.urbaneats.entity.Repartidor;
+import com.urbaneats.entity.Rol;
+import com.urbaneats.entity.Usuario;
 import com.urbaneats.entity.Vehiculo;
 import com.urbaneats.security.CustomUserDetails;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.urbaneats.security.SesionHelper;
+import com.urbaneats.service.PedidoEstadoService;
+import com.urbaneats.service.ReglaNegocioException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
- * Controlador de repartidor: registro, perfil y flujo de toma/entrega de pedidos.
- * Equivale a RepartidorController de la rama php-Laravel.
- * La autenticacion la resuelve Spring Security (SecurityConfig exige login para estas rutas),
- * por eso no hay un requiereLogin() explicito como en PHP.
+ * Controlador de repartidor: registro, panel y flujo de toma/entrega de pedidos.
+ *
+ * Reglas (las hace cumplir PedidoEstadoService):
+ *   - Solo se ven y se toman pedidos "Listo para envio" que nadie haya tomado.
+ *   - Tomar es atomico: dos repartidores no pueden quedarse con el mismo pedido.
+ *   - "Liberar" devuelve el pedido a la lista (antes el boton cancelaba el pedido del cliente).
+ *   - Solo el repartidor asignado puede entregar, y solo si el pedido va "En camino".
  */
 @Controller
 public class RepartidorController {
 
-    private static final Set<String> TIPOS_VEHICULO_VALIDOS = Set.of("Moto", "Carro", "Bicicleta", "Bici");
-
-    /** Repartidor por defecto asignado a todo envio nuevo (ver PagoService). Se excluye de "disponibles"
-     *  para que no vea duplicados los pedidos que el sistema ya le puso por defecto. */
-    private static final Integer CODIGO_REPARTIDOR_DEFECTO = 1;
+    private static final Set<String> TIPOS_VEHICULO_VALIDOS = Set.of("Moto", "Carro", "Bicicleta");
+    private static final String NOMBRE_ROL_REPARTIDOR = "Repartidor";
 
     private final RepartidorRepository repartidorRepository;
     private final VehiculoRepository vehiculoRepository;
     private final EnvioRepository envioRepository;
-    private final PedidoRepository pedidoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final RolRepository rolRepository;
+    private final PedidoEstadoService pedidoEstadoService;
+    private final SesionHelper sesionHelper;
 
     public RepartidorController(RepartidorRepository repartidorRepository,
-                                 VehiculoRepository vehiculoRepository,
-                                 EnvioRepository envioRepository,
-                                 PedidoRepository pedidoRepository,
-                                 UsuarioRepository usuarioRepository) {
+                                VehiculoRepository vehiculoRepository,
+                                EnvioRepository envioRepository,
+                                UsuarioRepository usuarioRepository,
+                                RolRepository rolRepository,
+                                PedidoEstadoService pedidoEstadoService,
+                                SesionHelper sesionHelper) {
         this.repartidorRepository = repartidorRepository;
         this.vehiculoRepository = vehiculoRepository;
         this.envioRepository = envioRepository;
-        this.pedidoRepository = pedidoRepository;
         this.usuarioRepository = usuarioRepository;
+        this.rolRepository = rolRepository;
+        this.pedidoEstadoService = pedidoEstadoService;
+        this.sesionHelper = sesionHelper;
     }
 
-    private CustomUserDetails getUsuarioActual() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.getPrincipal() instanceof CustomUserDetails) {
-            return (CustomUserDetails) auth.getPrincipal();
-        }
-        return null;
+    /** El repartidor del usuario que inicio sesion, o null si todavia no se ha registrado como tal. */
+    private Repartidor repartidorActual() {
+        CustomUserDetails usuario = SesionHelper.usuarioActual();
+        return repartidorRepository.findByUsuario_CodigoUsuario(usuario.getCodigoUsuario()).orElse(null);
     }
 
     @GetMapping("/repartidor")
     public String mostrarFormulario(Model model) {
-        CustomUserDetails usuarioActual = getUsuarioActual();
-
-        boolean yaEsRepartidor = repartidorRepository
-                .findByUsuario_CodigoUsuario(usuarioActual.getCodigoUsuario())
-                .isPresent();
-        if (yaEsRepartidor) {
+        if (repartidorActual() != null) {
             return "redirect:/perfilRepartidor";
         }
-
-        model.addAttribute("nombreUsuario", usuarioActual.getNombres());
+        model.addAttribute("nombreUsuario", SesionHelper.usuarioActual().getNombres());
         return "repartidor";
     }
 
     /**
-     * La transaccion evita que un doble envio del formulario deje dos filas de
-     * repartidor para el mismo usuario, que era lo que rompia el perfil despues
-     * de registrarse.
+     * Registro como repartidor. La transaccion evita que un doble envio del formulario
+     * deje dos filas para el mismo usuario. Ademas ahora se le da el rol Repartidor
+     * (antes no se le asignaba) y se recarga la sesion para que pueda entrar a su panel.
      */
     @PostMapping("/repartidor")
     @Transactional
     public String registrar(@RequestParam String tipoVehiculo,
-                             @RequestParam String placa,
-                             @RequestParam(required = false) String soat,
-                             @RequestParam(required = false) String seguroVehiculo,
-                             RedirectAttributes redirect) {
-        CustomUserDetails usuarioActual = getUsuarioActual();
+                            @RequestParam String placa,
+                            @RequestParam(required = false) String soat,
+                            @RequestParam(required = false) String seguroVehiculo,
+                            HttpServletRequest request,
+                            HttpServletResponse response,
+                            RedirectAttributes redirect) {
+        CustomUserDetails usuarioActual = SesionHelper.usuarioActual();
 
-        if (repartidorRepository.findByUsuario_CodigoUsuario(usuarioActual.getCodigoUsuario()).isPresent()) {
+        if (repartidorActual() != null) {
             return "redirect:/perfilRepartidor";
         }
-
         if (tipoVehiculo == null || !TIPOS_VEHICULO_VALIDOS.contains(tipoVehiculo)) {
             redirect.addFlashAttribute("error", "Selecciona un tipo de vehículo válido.");
             return "redirect:/repartidor";
@@ -107,14 +115,20 @@ public class RepartidorController {
             redirect.addFlashAttribute("error", "La placa es obligatoria.");
             return "redirect:/repartidor";
         }
-        String placaNormalizada = placa.trim().toUpperCase();
+        String placaNormalizada = placa.trim().toUpperCase().replace(" ", "").replace("-", "");
+        if (!"Bicicleta".equals(tipoVehiculo) && !placaNormalizada.matches("[A-Z]{3}[0-9]{2}[A-Z0-9]")) {
+            redirect.addFlashAttribute("error", "La placa debe tener el formato colombiano: ABC123 (carro) o ABC12D (moto).");
+            return "redirect:/repartidor";
+        }
         if (vehiculoRepository.existsById(placaNormalizada)) {
             redirect.addFlashAttribute("error", "Esa placa ya está registrada.");
             return "redirect:/repartidor";
         }
 
+        Usuario usuario = usuarioRepository.findById(usuarioActual.getCodigoUsuario()).orElseThrow();
+
         Repartidor repartidor = new Repartidor();
-        repartidor.setUsuario(usuarioRepository.getReferenceById(usuarioActual.getCodigoUsuario()));
+        repartidor.setUsuario(usuario);
         repartidor = repartidorRepository.save(repartidor);
 
         Vehiculo vehiculo = new Vehiculo();
@@ -125,31 +139,32 @@ public class RepartidorController {
         vehiculo.setSeguroVehiculo(seguroVehiculo);
         vehiculoRepository.save(vehiculo);
 
+        if (!usuario.tieneRol(NOMBRE_ROL_REPARTIDOR)) {
+            Rol rol = rolRepository.findByNombreRol(NOMBRE_ROL_REPARTIDOR).orElseThrow();
+            usuario.getRoles().add(rol);
+            usuarioRepository.saveAndFlush(usuario);
+        }
+        sesionHelper.recargarRoles(request, response);
+
         redirect.addFlashAttribute("exito", "¡Te has registrado como repartidor!");
         return "redirect:/perfilRepartidor";
     }
 
     @GetMapping("/perfilRepartidor")
     public String mostrarPerfil(Model model) {
-        CustomUserDetails usuarioActual = getUsuarioActual();
-
-        Repartidor repartidor = repartidorRepository
-                .findByUsuario_CodigoUsuario(usuarioActual.getCodigoUsuario())
-                .orElse(null);
+        Repartidor repartidor = repartidorActual();
         if (repartidor == null) {
             return "redirect:/repartidor";
         }
 
         List<Envio> pedidosEnCurso = envioRepository
                 .findByRepartidor_CodigoRepartidorAndPedido_EstadoOrderByFechaEnvioDesc(
-                        repartidor.getCodigoRepartidor(), "En Proceso");
+                        repartidor.getCodigoRepartidor(), EstadoPedido.EN_CAMINO);
         List<Envio> pedidosRealizados = envioRepository
                 .findByRepartidor_CodigoRepartidorAndPedido_EstadoOrderByFechaEnvioDesc(
-                        repartidor.getCodigoRepartidor(), "Entregado");
-
-        List<Envio> pedidosDisponibles = repartidor.getCodigoRepartidor().equals(CODIGO_REPARTIDOR_DEFECTO)
-                ? List.of()
-                : envioRepository.findByPedido_EstadoOrderByFechaEnvioDesc("Iniciando");
+                        repartidor.getCodigoRepartidor(), EstadoPedido.ENTREGADO);
+        List<Envio> pedidosDisponibles = envioRepository
+                .findByRepartidorIsNullAndPedido_EstadoOrderByCodigoEnvioAsc(EstadoPedido.LISTO_PARA_ENVIO);
 
         model.addAttribute("repartidor", repartidor);
         model.addAttribute("pedidosEnCurso", conTotales(pedidosEnCurso));
@@ -175,57 +190,60 @@ public class RepartidorController {
 
     @PostMapping("/repartidor/tomar/{envioId}")
     public String tomarPedido(@PathVariable Integer envioId, RedirectAttributes redirect) {
-        CustomUserDetails usuarioActual = getUsuarioActual();
+        return ejecutar(redirect, "¡Pedido tomado! Recógelo en la cocina y llévalo al cliente.",
+                repartidor -> pedidoEstadoService.tomar(envioId, repartidor, SesionHelper.usuarioActual().getCodigoUsuario()));
+    }
 
-        Repartidor repartidor = repartidorRepository
-                .findByUsuario_CodigoUsuario(usuarioActual.getCodigoUsuario())
-                .orElse(null);
-        if (repartidor == null) {
-            return "redirect:/repartidor";
-        }
-
-        Envio envio = envioRepository.findById(envioId).orElse(null);
-        if (envio == null || envio.getPedido() == null || !"Iniciando".equals(envio.getPedido().getEstado())) {
-            redirect.addFlashAttribute("error", "Ese pedido ya no está disponible.");
-            return "redirect:/perfilRepartidor";
-        }
-
-        envio.setRepartidor(repartidor);
-        envioRepository.save(envio);
-
-        Pedido pedido = envio.getPedido();
-        pedido.setEstado("En Proceso");
-        pedidoRepository.save(pedido);
-
-        redirect.addFlashAttribute("exito", "¡Pedido tomado! Ya aparece en tus envíos en camino.");
-        return "redirect:/perfilRepartidor";
+    @PostMapping("/repartidor/liberar/{envioId}")
+    public String liberarPedido(@PathVariable Integer envioId, RedirectAttributes redirect) {
+        return ejecutar(redirect, "Liberaste el pedido: vuelve a la lista para otro repartidor.",
+                repartidor -> pedidoEstadoService.liberar(envioId, repartidor, SesionHelper.usuarioActual().getCodigoUsuario()));
     }
 
     @PostMapping("/repartidor/entregar/{envioId}")
     public String marcarEntregado(@PathVariable Integer envioId, RedirectAttributes redirect) {
-        CustomUserDetails usuarioActual = getUsuarioActual();
+        return ejecutar(redirect, "¡Pedido marcado como entregado!",
+                repartidor -> pedidoEstadoService.entregar(envioId, repartidor, SesionHelper.usuarioActual().getCodigoUsuario()));
+    }
 
-        Repartidor repartidor = repartidorRepository
-                .findByUsuario_CodigoUsuario(usuarioActual.getCodigoUsuario())
-                .orElse(null);
+    /**
+     * Recibe la posicion del repartidor (cada pocos segundos) desde su navegador:
+     * el GPS del celular o el boton "Simular recorrido" de la demostracion.
+     * Cuerpo: {"envioId": 12, "lat": 4.65, "lng": -74.06}
+     */
+    @PostMapping("/repartidor/ubicacion")
+    @ResponseBody
+    public ResponseEntity<?> actualizarUbicacion(@RequestBody Map<String, Object> cuerpo) {
+        Repartidor repartidor = repartidorActual();
+        if (repartidor == null) {
+            return ResponseEntity.status(403).body(Map.of("error", "No estás registrado como repartidor."));
+        }
+        try {
+            Integer envioId = Integer.valueOf(String.valueOf(cuerpo.get("envioId")));
+            BigDecimal lat = new BigDecimal(String.valueOf(cuerpo.get("lat")));
+            BigDecimal lng = new BigDecimal(String.valueOf(cuerpo.get("lng")));
+            pedidoEstadoService.actualizarUbicacion(envioId, repartidor, lat, lng);
+            return ResponseEntity.ok(Map.of("ok", true));
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Datos de ubicación inválidos."));
+        } catch (ReglaNegocioException e) {
+            return ResponseEntity.status(409).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    /** Ejecuta una accion del repartidor y traduce el resultado en un mensaje para la pantalla. */
+    private String ejecutar(RedirectAttributes redirect, String mensajeExito,
+                            java.util.function.Consumer<Repartidor> accion) {
+        Repartidor repartidor = repartidorActual();
         if (repartidor == null) {
             return "redirect:/repartidor";
         }
-
-        Envio envio = envioRepository.findById(envioId).orElse(null);
-        boolean perteneceAlRepartidor = envio != null
-                && envio.getRepartidor() != null
-                && repartidor.getCodigoRepartidor().equals(envio.getRepartidor().getCodigoRepartidor());
-        if (!perteneceAlRepartidor || envio.getPedido() == null) {
-            redirect.addFlashAttribute("error", "Ese envío no te pertenece.");
-            return "redirect:/perfilRepartidor";
+        try {
+            accion.accept(repartidor);
+            redirect.addFlashAttribute("exito", mensajeExito);
+        } catch (ReglaNegocioException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
         }
-
-        Pedido pedido = envio.getPedido();
-        pedido.setEstado("Entregado");
-        pedidoRepository.save(pedido);
-
-        redirect.addFlashAttribute("exito", "¡Pedido marcado como entregado!");
         return "redirect:/perfilRepartidor";
     }
 }

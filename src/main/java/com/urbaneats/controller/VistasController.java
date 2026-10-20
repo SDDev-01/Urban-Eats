@@ -24,16 +24,4 @@ public class VistasController {
     public String carrito() {
         return "carrito";
     }
-
-    /** Mapa de cobertura. */
-    @GetMapping("/mapa")
-    public String mapa() {
-        return "mapa";
-    }
-
-    /** Pantalla de cliente. */
-    @GetMapping("/cliente")
-    public String cliente() {
-        return "cliente";
-    }
 }

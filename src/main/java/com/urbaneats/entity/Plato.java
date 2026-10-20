@@ -1,6 +1,8 @@
 package com.urbaneats.entity;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,6 +32,9 @@ import lombok.ToString;
 @ToString
 public class Plato {
 
+    /** El unico valor de Disponibilidad que permite agregar el plato al carrito. */
+    public static final String DISPONIBLE = "Disponible";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CodigoPlato", nullable = false)
@@ -50,6 +55,14 @@ public class Plato {
     @Column(name = "Disponibilidad", length = 50)
     private String disponibilidad;
 
+    /** Calorias aproximadas: informacion orientativa, no es consejo medico. */
+    @Column(name = "Calorias")
+    private Integer calorias;
+
+    /** Etiquetas separadas por comas: "Balanceado,Alto en proteína". */
+    @Column(name = "Etiquetas", length = 200)
+    private String etiquetas;
+
     // ----- Relaciones -----
 
     /** Muchos platos pertenecen a un menu. */
@@ -57,4 +70,25 @@ public class Plato {
     @JoinColumn(name = "CodigoMenu")
     @ToString.Exclude
     private Menu menu;
+
+    /** Las etiquetas como lista, sin espacios sobrantes ni vacias. */
+    public List<String> getListaEtiquetas() {
+        if (etiquetas == null || etiquetas.isBlank()) {
+            return List.of();
+        }
+        return Arrays.stream(etiquetas.split(","))
+                .map(String::trim)
+                .filter(etiqueta -> !etiqueta.isEmpty())
+                .toList();
+    }
+
+    /** True si el plato tiene el sello "Balanceado". */
+    public boolean isBalanceado() {
+        return getListaEtiquetas().stream().anyMatch(etiqueta -> etiqueta.equalsIgnoreCase("Balanceado"));
+    }
+
+    /** True si el plato se puede pedir ahora. */
+    public boolean isDisponible() {
+        return DISPONIBLE.equalsIgnoreCase(disponibilidad);
+    }
 }

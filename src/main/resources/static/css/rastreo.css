@@ -115,3 +115,34 @@
     @media (max-width: 800px) {
       .rastreo-layout { grid-template-columns: 1fr; }
     }
+
+/* ============================
+   FASE 6: mapa del recorrido (Leaflet + OpenStreetMap)
+   ============================ */
+.mapa-rastreo {
+  height: 380px;
+  border-radius: 12px;
+  margin-top: 0.75rem;
+  border: 1px solid var(--borde);
+  z-index: 0;
+}
+.mapa-leyenda { display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.8rem; margin-top: 0.6rem; color: var(--texto-gris); }
+.punto-leyenda { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 0.3rem; vertical-align: middle; }
+.punto-leyenda.cocina { background: #a42828; }
+.punto-leyenda.destino { background: #111417; }
+.punto-leyenda.repartidor { background: #f7643b; }
+.mapa-info { font-size: 0.82rem; color: var(--texto-gris); margin-top: 0.4rem; }
+
+.marcador-mapa {
+  display: flex !important; align-items: center; justify-content: center;
+  border-radius: 50%; color: #fff; font-size: 15px;
+  border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+}
+.marcador-mapa.cocina { background: #a42828; }
+.marcador-mapa.destino { background: #111417; }
+.marcador-mapa.repartidor { background: #f7643b; }
+
+.historial-pedido { list-style: none; margin-top: 0.75rem; }
+.historial-pedido li { padding: 0.55rem 0; border-bottom: 1px solid var(--borde); font-size: 0.85rem; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.historial-pedido .hora-hito { color: var(--terciario); font-weight: 700; min-width: 70px; }
+.historial-pedido .comentario-hito { color: var(--texto-gris); flex-basis: 100%; padding-left: 74px; }

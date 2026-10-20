@@ -6,25 +6,33 @@
   'use strict';
 
   const QUICK_OPTIONS = [
-    { label: '🕐 Horarios',    texto: '¿Cuáles son los horarios de los restaurantes?' },
-    { label: '📍 Ubicaciones', texto: '¿Dónde están ubicados los restaurantes?' },
-    { label: '🍽️ Menús',      texto: '¿Qué platos hay disponibles?' },
-    { label: '💰 Precios',     texto: '¿Cuáles son los precios del menú?' },
+    { label: '📦 Mi pedido',     texto: '¿Dónde está mi pedido?' },
+    { label: '🥗 Balanceado',    texto: 'Recomiéndame algo balanceado por menos de $20.000' },
+    { label: '🌙 Abiertas ahora', texto: '¿Qué cocinas están abiertas ahora?' },
+    { label: '⚠️ Alérgenos',     texto: '¿Qué platos no tienen gluten?' },
   ];
 
   const BIENVENIDA =
-    '¡Hola! Soy **UrbanBot** 🤖, tu asistente de Urban Eats. Puedo ayudarte con horarios, ubicaciones, menús y precios. ¿En qué te puedo ayudar hoy?';
+    '¡Hola! Soy **UrbanBot** 🤖. Te ayudo con el estado de tu pedido, platos balanceados, cocinas abiertas de noche y alérgenos. ¿Qué necesitas?';
 
-  /* ---- Obtener CSRF token de Laravel ---- */
+  /* ---- Obtener el token CSRF de Spring Security (meta csrf-token) ---- */
   function getCsrfToken() {
     const meta = document.querySelector('meta[name="csrf-token"]');
     return meta ? meta.getAttribute('content') : '';
   }
 
-  /* ---- Parsear markdown básico ---- */
+  /* ---- Parsear markdown básico ----
+     Primero se escapa el HTML (anti-XSS: ni el usuario ni la IA pueden inyectar
+     etiquetas) y despues se convierten **negritas** y saltos de linea. */
+  function escapar(texto) {
+    return String(texto ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
   function parsearMarkdown(texto) {
-    return texto
+    return escapar(texto)
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
       .replace(/\n/g, '<br>');
   }
 
@@ -60,7 +68,7 @@
       </div>
       <div class="chatbot-gdpr">
         <i class="fas fa-shield-alt"></i>
-        Estás interactuando con una IA. Tus mensajes son procesados por Anthropic Claude.
+        Asistente con IA local (Ollama): tus mensajes no salen de los servidores de Urban Eats. Puede equivocarse.
       </div>
       <div class="chatbot-messages" id="chatbot-messages"></div>
       <div class="chatbot-quick-btns" id="chatbot-quick-btns">
@@ -135,12 +143,17 @@
           'X-CSRF-TOKEN': getCsrfToken(),
           'Accept': 'application/json',
         },
-        body: JSON.stringify({ mensaje: texto }),
+        // La pagina actual le dice al servidor si quien pregunta actua como cliente,
+        // cocina o repartidor (el servidor igual verifica que tenga ese rol).
+        body: JSON.stringify({ mensaje: texto, pagina: window.location.pathname }),
       });
 
       const datos = await res.json();
       ocultarEscribiendo();
-      agregarBurbuja(datos.respuesta || 'Algo salió mal, intenta de nuevo.', 'bot');
+      const burbuja = agregarBurbuja(datos.respuesta || 'Algo salió mal, intenta de nuevo.', 'bot');
+      if (datos.modo === 'basico') {
+        burbuja.title = 'Modo básico: la IA local no estaba disponible';
+      }
     } catch {
       ocultarEscribiendo();
       agregarBurbuja('No pude conectarme. Por favor, verifica tu conexión.', 'bot');

@@ -2,166 +2,161 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Reporte de platos – Urban Eats</title>
+  <title>Reportes – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/solicitud.css">
 </head>
 <body>
+<nav th:replace="~{fragments/comunes :: navbar}"></nav>
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <a th:href="@{/catalogo}" href="/catalogo" class="navbar-logo">
-      <img src="/images/Logo.png" alt="Urban Eats">
-      <span>Urban Eats</span>
-    </a>
-    <div class="navbar-links">
-      <a th:href="@{/catalogo}" href="/catalogo" class="navbar-link"><i class="fas fa-utensils"></i> Catálogo</a>
-      <a th:href="@{/restaurantes}" href="/restaurantes" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
+<div class="sol-pagina">
+  <h2><i class="fas fa-chart-column" style="color:var(--principal);"></i> Reportes</h2>
+  <p class="sol-sub" th:text="${esTecnico} ? 'Toda la operación de Urban Eats.' : 'Datos de ' + ${cocinaActiva.nombre} + '.'"></p>
+  <div th:replace="~{fragments/comunes :: mensajes}"></div>
+
+  <!-- ===== Filtros (viajan por GET, se combinan entre si) ===== -->
+  <form class="sol-card sol-filtros" method="get" action="/reportes">
+    <div class="sol-campo"><label>Desde</label><input type="date" name="desde" th:value="${filtros['desde']}"></div>
+    <div class="sol-campo"><label>Hasta</label><input type="date" name="hasta" th:value="${filtros['hasta']}"></div>
+    <div class="sol-campo"><label>Estado</label>
+      <select name="estado"><option value="">Todos</option>
+        <option th:each="e : ${ {'Solicitado','En preparacion','Listo para envio','En camino','Entregado','Cancelado'} }"
+                th:value="${e}" th:text="${e}" th:selected="${filtros['estado'] == e}"></option></select></div>
+    <div class="sol-campo"><label>Franja</label>
+      <select name="franja"><option value="">Todo el día</option>
+        <option value="nocturna" th:selected="${filtros['franja'] == 'nocturna'}">Nocturna (10 p. m.–6 a. m.)</option>
+        <option value="diurna" th:selected="${filtros['franja'] == 'diurna'}">Diurna</option></select></div>
+    <div class="sol-campo" th:if="${esTecnico}"><label>Cocina</label>
+      <select name="codigo_restaurante"><option value="">Todas</option>
+        <option th:each="c : ${cocinas}" th:value="${c.codigoRestaurante}" th:text="${c.nombre}"
+                th:selected="${filtros['codigo_restaurante'] == c.codigoRestaurante.toString()}"></option></select></div>
+    <div class="sol-campo"><label>Cliente o plato</label><input name="q" th:value="${filtros['q']}"></div>
+    <div class="sol-campo"><label>Monto mínimo</label><input type="number" name="monto_min" min="0" step="1000" th:value="${filtros['monto_min']}"></div>
+    <div class="sol-campo"><label>Sello de platos</label>
+      <select name="etiqueta"><option value="">Todos</option>
+        <option th:each="e : ${ {'Balanceado','Casero','Alto en proteína','Vegetariano'} }" th:value="${e}" th:text="${e}"
+                th:selected="${filtros['etiqueta'] == e}"></option></select></div>
+    <div class="sol-campo"><label>Ordenar pedidos</label>
+      <select name="orden">
+        <option value="fecha_desc" th:selected="${filtros['orden'] == 'fecha_desc'}">Más recientes</option>
+        <option value="fecha_asc" th:selected="${filtros['orden'] == 'fecha_asc'}">Más antiguos</option>
+        <option value="total_desc" th:selected="${filtros['orden'] == 'total_desc'}">Mayor valor</option>
+        <option value="total_asc" th:selected="${filtros['orden'] == 'total_asc'}">Menor valor</option>
+        <option value="cocina_asc" th:selected="${filtros['orden'] == 'cocina_asc'}">Cocina</option>
+      </select></div>
+    <div class="sol-campo"><button class="btn btn-verde" style="width:100%;"><i class="fas fa-filter"></i> Aplicar</button></div>
+    <div class="sol-campo"><a href="/reportes" class="btn btn-gris" style="width:100%;">Limpiar</a></div>
+  </form>
+
+  <th:block th:if="${pedidos != null}">
+  <!-- ===== Indicadores ===== -->
+  <div class="indicadores">
+    <div class="indicador"><div class="valor" th:text="${pedidos['total_registros']}">0</div><div class="nombre">Pedidos (con filtros)</div></div>
+    <div class="indicador"><div class="valor" th:text="'$' + ${#numbers.formatInteger(pedidos['suma_total'], 0, 'POINT')}">$0</div><div class="nombre">Valor de esos pedidos</div></div>
+    <div class="indicador"><div class="valor" th:text="${porHora['porcentaje_nocturno']} + '%'">0%</div><div class="nombre">Pedidos en franja nocturna</div></div>
+  </div>
+
+  <!-- ===== Pedidos ===== -->
+  <div class="sol-card">
+    <h3><i class="fas fa-receipt"></i> Pedidos
+      <span style="margin-left:auto;font-size:0.8rem;">
+        <a th:href="@{'/reportes/exportar/pedidos?formato=xlsx&' + ${consulta}}" class="btn btn-gris"><i class="fas fa-file-excel"></i> Excel</a>
+        <a th:href="@{'/reportes/exportar/pedidos?formato=pdf&' + ${consulta}}" class="btn btn-gris"><i class="fas fa-file-pdf"></i> PDF</a>
+        <a th:href="@{'/reportes/exportar/pedidos?formato=csv&' + ${consulta}}" class="btn btn-gris"><i class="fas fa-file-csv"></i> CSV</a>
+      </span></h3>
+    <p th:if="${#lists.isEmpty(pedidos['filas'])}" style="color:var(--texto-gris);">Ningún pedido cumple los filtros.</p>
+    <div style="overflow-x:auto;" th:unless="${#lists.isEmpty(pedidos['filas'])}">
+      <table class="sol-tabla">
+        <thead><tr><th>#</th><th>Fecha y hora</th><th>Cocina</th><th>Cliente</th><th>Platos</th><th>Estado</th><th>Franja</th><th>Total</th></tr></thead>
+        <tbody>
+          <tr th:each="p : ${pedidos['filas']}">
+            <td th:text="${p['codigo']}"></td>
+            <td th:text="${#strings.replace(#strings.substring(p['fecha_hora'],0,16),'T',' ')}"></td>
+            <td th:text="${p['cocina']}"></td>
+            <td th:text="${p['cliente']}"></td>
+            <td th:text="${p['platos']}"></td>
+            <td th:text="${p['estado']}"></td>
+            <td th:text="${p['franja']}"></td>
+            <td th:text="'$' + ${#numbers.formatInteger(p['total'], 0, 'POINT')}"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  </nav>
+    <p style="font-size:0.8rem;color:var(--texto-gris);margin-top:0.5rem;"
+       th:text="'Mostrando hasta 25 de ' + ${pedidos['total_registros']} + ' (la descarga incluye todos).'"></p>
+  </div>
 
-  <div style="padding-top: var(--navbar-height);">
-    <div class="form-wrapper" style="max-width:1100px;margin:0 auto;padding:1.5rem;">
-
-      <div class="form-page-header">
-        <h2><i class="fas fa-chart-column"></i> Reporte de platos</h2>
-        <p>Consulta el catálogo combinando restaurante, categoría, disponibilidad y rango de precio.</p>
+  <div class="sol-grid" style="grid-template-columns: 1fr 1fr; align-items:start;">
+    <!-- ===== Pedidos por hora: muestra la demanda nocturna ===== -->
+    <div class="sol-card" th:with="max=${T(com.urbaneats.controller.ReportesController).maximo(porHora['filas'])}">
+      <h3><i class="fas fa-moon"></i> Pedidos por hora
+        <a th:href="@{'/reportes/exportar/pedidos-por-hora?formato=xlsx&' + ${consulta}}" class="btn btn-gris" style="margin-left:auto;font-size:0.75rem;">Excel</a></h3>
+      <div class="barra-hora" th:each="h : ${porHora['filas']}">
+        <span class="etiqueta" th:text="${h['etiqueta']}"></span>
+        <span class="barra" th:classappend="${h['franja'] == 'Nocturna'} ? 'nocturna'"
+              th:style="'width:' + ${h['pedidos'] * 80 / max} + '%'"></span>
+        <span th:text="${h['pedidos']}"></span>
       </div>
+      <p style="font-size:0.78rem;color:var(--texto-gris);margin-top:0.5rem;">Rojo oscuro: franja nocturna (10 p. m.–6 a. m.).</p>
+    </div>
 
-      <!-- ===================== FILTROS ===================== -->
-      <div class="form-card">
-        <div class="form-card-body">
-          <form method="get" th:action="@{/reportes}">
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;">
-
-              <div class="campo">
-                <label for="f-restaurante">Restaurante</label>
-                <select id="f-restaurante" name="codigoRestaurante">
-                  <option value="">Todos</option>
-                  <option th:each="r : ${restaurantes}"
-                          th:value="${r.codigoRestaurante}"
-                          th:text="${r.nombre}"
-                          th:selected="${filtroRestaurante != null and filtroRestaurante == r.codigoRestaurante}">
-                    Restaurante
-                  </option>
-                </select>
-              </div>
-
-              <div class="campo">
-                <label for="f-categoria">Categoría</label>
-                <select id="f-categoria" name="categoria">
-                  <option value="">Todas</option>
-                  <option th:each="c : ${categorias}"
-                          th:value="${c}" th:text="${c}"
-                          th:selected="${c == filtroCategoria}">Categoría</option>
-                </select>
-              </div>
-
-              <div class="campo">
-                <label for="f-disponibilidad">Disponibilidad</label>
-                <select id="f-disponibilidad" name="disponibilidad">
-                  <option value="">Todas</option>
-                  <option th:each="d : ${disponibilidades}"
-                          th:value="${d}" th:text="${d}"
-                          th:selected="${d == filtroDisponibilidad}">Disponibilidad</option>
-                </select>
-              </div>
-
-              <div class="campo">
-                <label for="f-min">Precio desde (COP)</label>
-                <input type="number" id="f-min" name="precioMinimo" step="500" min="0"
-                       th:value="${filtroPrecioMinimo}" placeholder="Ej: 10000">
-              </div>
-
-              <div class="campo">
-                <label for="f-max">Precio hasta (COP)</label>
-                <input type="number" id="f-max" name="precioMaximo" step="500" min="0"
-                       th:value="${filtroPrecioMaximo}" placeholder="Ej: 30000">
-              </div>
-
-            </div>
-
-            <div class="form-btn-wrap" style="margin-top:1rem;display:flex;gap:0.75rem;">
-              <button type="submit" class="btn btn-verde">
-                <i class="fas fa-filter"></i> Generar reporte
-              </button>
-              <a th:href="@{/reportes}" class="btn" style="background:#eee;color:#333;">
-                <i class="fas fa-rotate-left"></i> Limpiar filtros
-              </a>
-            </div>
-          </form>
-        </div>
+    <div>
+      <!-- ===== Ventas por cocina ===== -->
+      <div class="sol-card">
+        <h3><i class="fas fa-store"></i> Ventas por cocina
+          <a th:href="@{'/reportes/exportar/ventas-por-cocina?formato=xlsx&' + ${consulta}}" class="btn btn-gris" style="margin-left:auto;font-size:0.75rem;">Excel</a></h3>
+        <table class="sol-tabla">
+          <thead><tr><th>Cocina</th><th>Pedidos</th><th>Ventas</th><th>% noche</th></tr></thead>
+          <tbody><tr th:each="v : ${ventas['filas']}">
+            <td th:text="${v['cocina']}"></td><td th:text="${v['pedidos']}"></td>
+            <td th:text="'$' + ${#numbers.formatInteger(v['ventas'], 0, 'POINT')}"></td>
+            <td th:text="${v['porcentaje_nocturno']} + '%'"></td></tr></tbody>
+        </table>
       </div>
-
-      <!-- ===================== INDICADORES ===================== -->
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1.5rem 0;">
-        <div class="form-card"><div class="form-card-body" style="text-align:center;">
-          <div style="font-size:0.85rem;color:var(--texto-gris);">Platos encontrados</div>
-          <div style="font-size:1.8rem;font-weight:700;" th:text="${totalResultados}">0</div>
-        </div></div>
-        <div class="form-card"><div class="form-card-body" style="text-align:center;">
-          <div style="font-size:0.85rem;color:var(--texto-gris);">Precio promedio</div>
-          <div style="font-size:1.8rem;font-weight:700;"
-               th:text="${precioPromedio != null} ? '$' + ${#numbers.formatInteger(precioPromedio, 0, 'POINT')} : '—'">—</div>
-        </div></div>
-        <div class="form-card"><div class="form-card-body" style="text-align:center;">
-          <div style="font-size:0.85rem;color:var(--texto-gris);">Precio más bajo</div>
-          <div style="font-size:1.8rem;font-weight:700;"
-               th:text="${precioMenor != null} ? '$' + ${#numbers.formatInteger(precioMenor, 0, 'POINT')} : '—'">—</div>
-        </div></div>
-        <div class="form-card"><div class="form-card-body" style="text-align:center;">
-          <div style="font-size:0.85rem;color:var(--texto-gris);">Precio más alto</div>
-          <div style="font-size:1.8rem;font-weight:700;"
-               th:text="${precioMayor != null} ? '$' + ${#numbers.formatInteger(precioMayor, 0, 'POINT')} : '—'">—</div>
-        </div></div>
+      <!-- ===== Tiempos de entrega ===== -->
+      <div class="sol-card">
+        <h3><i class="fas fa-stopwatch"></i> Tiempos de entrega</h3>
+        <p th:if="${#lists.isEmpty(tiempos['filas'])}" style="color:var(--texto-gris);">Aún no hay entregas con historial.</p>
+        <table class="sol-tabla" th:unless="${#lists.isEmpty(tiempos['filas'])}">
+          <thead><tr><th>Cocina</th><th>Entregas</th><th>Promedio</th></tr></thead>
+          <tbody><tr th:each="t : ${tiempos['filas']}">
+            <td th:text="${t['cocina']}"></td><td th:text="${t['entregas']}"></td>
+            <td th:text="${t['minutos_promedio']} + ' min'"></td></tr></tbody>
+        </table>
       </div>
-
-      <!-- ===================== RESULTADOS ===================== -->
-      <div class="form-card">
-        <div class="form-card-body">
-
-          <p th:if="${#lists.isEmpty(resultados)}"
-             style="text-align:center;color:var(--texto-gris);padding:2rem;">
-            Ningún plato cumple con los filtros seleccionados.
-          </p>
-
-          <div th:unless="${#lists.isEmpty(resultados)}" style="overflow-x:auto;">
-            <table class="gestion-tabla" style="width:100%;">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Plato</th>
-                  <th>Restaurante</th>
-                  <th>Categoría</th>
-                  <th>Tipo de comida</th>
-                  <th>Precio</th>
-                  <th>Disponibilidad</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr th:each="p, i : ${resultados}">
-                  <td th:text="${i.count}">1</td>
-                  <td><strong th:text="${p.nombre}">Plato</strong></td>
-                  <td th:text="${p.menu != null and p.menu.restaurante != null} ? ${p.menu.restaurante.nombre} : '—'">Restaurante</td>
-                  <td th:text="${p.menu != null} ? ${p.menu.categoria} : '—'">Categoría</td>
-                  <td th:text="${p.tipoComida} ?: '—'">Tipo</td>
-                  <td th:text="${p.precio != null} ? '$' + ${#numbers.formatInteger(p.precio, 0, 'POINT')} : '—'">$0</td>
-                  <td th:text="${p.disponibilidad} ?: '—'">Disponibilidad</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-        </div>
-      </div>
-
     </div>
   </div>
 
-  <footer>
-    <p>&copy; 2026 Urban Eats – Proyecto Formativo SENA.</p>
-  </footer>
+  <!-- ===== Platos mas vendidos ===== -->
+  <div class="sol-card">
+    <h3><i class="fas fa-utensils"></i> Platos más vendidos
+      <a th:href="@{'/reportes/exportar/platos-top?formato=xlsx&' + ${consulta}}" class="btn btn-gris" style="margin-left:auto;font-size:0.75rem;">Excel</a></h3>
+    <table class="sol-tabla">
+      <thead><tr><th>Plato</th><th>Cocina</th><th>Unidades</th><th>Ventas</th><th>Kcal</th><th>Sellos</th></tr></thead>
+      <tbody><tr th:each="p : ${platos['filas']}">
+        <td th:text="${p['plato']}"></td><td th:text="${p['cocina']}"></td><td th:text="${p['unidades']}"></td>
+        <td th:text="'$' + ${#numbers.formatInteger(p['ventas'], 0, 'POINT')}"></td>
+        <td th:text="${p['calorias']} ?: '—'"></td><td th:text="${p['sellos']}"></td></tr></tbody>
+    </table>
+  </div>
 
+  <!-- ===== Documentos por vencer (solo tecnico) ===== -->
+  <div class="sol-card" th:if="${esTecnico and documentos != null}">
+    <h3><i class="fas fa-file-circle-exclamation"></i> Documentos que vencen en 30 días
+      <a href="/reportes/exportar/documentos-por-vencer?formato=xlsx" class="btn btn-gris" style="margin-left:auto;font-size:0.75rem;">Excel</a></h3>
+    <p th:if="${#lists.isEmpty(documentos['filas'])}" style="color:var(--texto-gris);">Ningún documento vence pronto.</p>
+    <table class="sol-tabla" th:unless="${#lists.isEmpty(documentos['filas'])}">
+      <thead><tr><th>Cocina</th><th>Documento</th><th>Titular</th><th>Vence</th><th>Días</th></tr></thead>
+      <tbody><tr th:each="d : ${documentos['filas']}">
+        <td th:text="${d['cocina']}"></td><td th:text="${d['documento']}"></td><td th:text="${d['titular']} ?: '—'"></td>
+        <td th:text="${d['vence']}"></td><td th:text="${d['dias_restantes']}"></td></tr></tbody>
+    </table>
+  </div>
+  </th:block>
+</div>
+<div th:replace="~{fragments/comunes :: franjaDemo}"></div>
+<script src="/js/app.js"></script>
 </body>
 </html>

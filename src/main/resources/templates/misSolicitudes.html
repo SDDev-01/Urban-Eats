@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Mis solicitudes – Urban Eats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/solicitud.css">
+</head>
+<body>
+<nav th:replace="~{fragments/comunes :: navbar}"></nav>
+
+<div class="sol-pagina">
+  <h2>Mis solicitudes de cocina</h2>
+  <p class="sol-sub">Aquí ves el estado de la verificación de tus cocinas.</p>
+  <div th:replace="~{fragments/comunes :: mensajes}"></div>
+
+  <div class="sol-acciones" style="margin-bottom:1rem;">
+    <a href="/restaurante/solicitud/nueva" class="btn btn-verde"><i class="fas fa-plus"></i> Nueva solicitud</a>
+  </div>
+
+  <div class="sol-card">
+    <p th:if="${#lists.isEmpty(pagina['resultados'])}" style="color:var(--texto-gris);">Aún no has enviado solicitudes.</p>
+    <table class="sol-tabla" th:unless="${#lists.isEmpty(pagina['resultados'])}">
+      <thead><tr><th>#</th><th>Cocina</th><th>Localidad</th><th>Estado</th><th>Observaciones</th><th></th></tr></thead>
+      <tbody>
+        <tr th:each="s : ${pagina['resultados']}">
+          <td th:text="${s['codigo_solicitud']}">1</td>
+          <td><strong th:text="${s['nombre_comercial']}">Cocina</strong><br>
+            <span style="font-size:0.78rem;color:var(--texto-gris);" th:text="'NIT ' + ${s['nit']} + '-' + ${s['digito_verificacion']}"></span></td>
+          <td th:text="${s['localidad']}">Localidad</td>
+          <td><span class="sol-estado" th:classappend="${s['estado']}" th:text="${s['estado']}">Estado</span></td>
+          <td th:text="${s['observaciones']} ?: '—'">—</td>
+          <td><a th:href="@{'/restaurante/solicitud/' + ${s['codigo_solicitud']}}" class="btn btn-gris">Ver</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div th:replace="~{fragments/comunes :: franjaDemo}"></div>
+<script src="/js/app.js"></script>
+</body>
+</html>

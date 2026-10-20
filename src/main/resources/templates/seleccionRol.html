@@ -126,14 +126,31 @@
         </div>
       </a>
 
-      <a th:href="@{/seleccion-restaurante}" class="opcion-card">
+      <a th:if="${esGerente}" th:href="@{/seleccion-restaurante}" class="opcion-card">
         <div class="opcion-icono"><i class="fas fa-store"></i></div>
         <div>
-          <div class="opcion-nombre">Como gerente</div>
-          <div class="opcion-desc">Administra tu restaurante y gestiona pedidos</div>
+          <div class="opcion-nombre">Como cocina</div>
+          <div class="opcion-desc">Acepta, prepara y despacha los pedidos de tu cocina</div>
+        </div>
+      </a>
+
+      <a th:if="${esRepartidor}" th:href="@{/perfilRepartidor}" class="opcion-card">
+        <div class="opcion-icono"><i class="fas fa-motorcycle"></i></div>
+        <div>
+          <div class="opcion-nombre">Como repartidor</div>
+          <div class="opcion-desc">Toma pedidos listos y comparte tu recorrido</div>
+        </div>
+      </a>
+
+      <a th:if="${esTecnico}" th:href="@{/tecnico/solicitudes}" class="opcion-card">
+        <div class="opcion-icono"><i class="fas fa-clipboard-check"></i></div>
+        <div>
+          <div class="opcion-nombre">Como técnico</div>
+          <div class="opcion-desc">Verifica las cocinas nuevas y revisa los reportes</div>
         </div>
       </a>
     </div>
   </div>
+<div th:replace="~{fragments/comunes :: franjaDemo}"></div>
 </body>
 </html>
