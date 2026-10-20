@@ -743,3 +743,11 @@
 .btn-plato-eliminar:hover {
   background: #fdecea;
 }
+
+/* Fase 6: estado "En camino" (lo lleva un repartidor) */
+.badge-encamino { background: var(--terciario-claro); color: #b8431f; }
+.pedido-card.estado-encamino { border-left-color: var(--terciario); }
+.pedido-repartidor { font-size: 0.85rem; color: var(--texto-gris); margin-top: 0.35rem; }
+.btn-mapa { background: var(--terciario-claro); color: #b8431f; }
+.btn-mapa:hover { background: var(--terciario); color: #fff; }
+.pedidos-actualizado { font-size: 0.8rem; color: var(--texto-gris); margin: 0 0 0.75rem; }

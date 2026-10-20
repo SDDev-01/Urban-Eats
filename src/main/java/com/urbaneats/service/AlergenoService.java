@@ -33,7 +33,6 @@ public class AlergenoService implements IAlergenoService {
     public Alergeno actualizar(Integer id, Alergeno alergeno) {
         Alergeno existente = obtenerPorId(id);
         existente.setNombre(alergeno.getNombre());
-        existente.setDescripcion(alergeno.getDescripcion());
         return alergenoRepository.save(existente);
     }
 

@@ -96,7 +96,8 @@
         <p>No tienes pedidos en camino ahora mismo.</p>
       </div>
 
-      <div class="pedido-card" th:each="item : ${pedidosEnCurso}">
+      <div class="pedido-card tarjeta-en-camino" th:each="item : ${pedidosEnCurso}"
+           th:attr="data-envio=${item.envio.codigoEnvio}, data-pedido=${item.envio.pedido.codigoPedido}">
         <div class="pedido-icono naranja">
           <i class="fas fa-shipping-fast"></i>
         </div>
@@ -112,12 +113,33 @@
               <span th:text="${det.cantidad} + '× ' + ${det.plato.nombre}"></span><span th:unless="${iter.last}">, </span>
             </span>
           </div>
+          <div class="pedido-meta"><i class="fas fa-store"></i> Recoger en: <span th:text="${item.envio.restaurante.direccion} ?: '—'"></span></div>
+          <div class="pedido-meta"><i class="fas fa-location-dot"></i> Entregar en:
+            <span th:text="${item.envio.direccion != null} ? ${item.envio.direccion.direccion} : '—'"></span></div>
           <div class="pedido-total">Total: $<span th:text="${#numbers.formatDecimal(item.total, 0, 'POINT', 0, 'COMMA')}"></span></div>
+          <div class="pedido-meta estado-ubicacion" style="margin-top:0.4rem;">
+            <i class="fas fa-satellite-dish"></i> <span class="texto-ubicacion">Ubicación sin compartir</span>
+          </div>
         </div>
-        <div class="pedido-acciones">
+        <div class="pedido-acciones" style="display:flex;flex-direction:column;gap:0.5rem;">
+          <a th:href="@{'/rastreo/' + ${item.envio.pedido.codigoPedido}}" class="btn btn-gris" style="white-space:nowrap;">
+            <i class="fas fa-map-location-dot"></i> Ver ruta
+          </a>
+          <button type="button" class="btn btn-gris btn-gps" style="white-space:nowrap;">
+            <i class="fas fa-location-crosshairs"></i> Compartir GPS
+          </button>
+          <button type="button" class="btn btn-gris btn-simular" style="white-space:nowrap;">
+            <i class="fas fa-route"></i> Simular recorrido
+          </button>
           <form th:action="@{'/repartidor/entregar/' + ${item.envio.codigoEnvio}}" method="POST">
-            <button type="submit" class="btn btn-verde" style="white-space:nowrap;">
+            <button type="submit" class="btn btn-verde" style="white-space:nowrap;width:100%;">
               <i class="fas fa-check"></i> Marcar entregado
+            </button>
+          </form>
+          <form th:action="@{'/repartidor/liberar/' + ${item.envio.codigoEnvio}}" method="POST"
+                onsubmit="return confirm('¿Liberar el pedido? Volverá a la lista para que otro repartidor lo tome.');">
+            <button type="submit" class="btn btn-gris" style="white-space:nowrap;width:100%;">
+              <i class="fas fa-rotate-left"></i> Liberar pedido
             </button>
           </form>
         </div>
@@ -132,7 +154,7 @@
 
       <div th:if="${#lists.isEmpty(pedidosDisponibles)}" class="rep-vacio">
         <i class="fas fa-bell-slash"></i>
-        <p>No hay pedidos disponibles en este momento.</p>
+        <p>No hay pedidos listos para recoger. Esta lista se actualiza sola cada 20 segundos.</p>
       </div>
 
       <div class="pedido-card" th:each="item : ${pedidosDisponibles}" th:attr="data-pedido=${item.envio.pedido.codigoPedido}">
@@ -150,6 +172,9 @@
               <span th:text="${det.cantidad} + '× ' + ${det.plato.nombre}"></span><span th:unless="${iter.last}">, </span>
             </span>
           </div>
+          <div class="pedido-meta"><i class="fas fa-store"></i> Recoger en: <span th:text="${item.envio.restaurante.direccion} ?: '—'"></span></div>
+          <div class="pedido-meta"><i class="fas fa-location-dot"></i> Entregar en:
+            <span th:text="${item.envio.direccion != null} ? ${item.envio.direccion.direccion} : '—'"></span></div>
           <div class="pedido-total">Total: $<span th:text="${#numbers.formatDecimal(item.total, 0, 'POINT', 0, 'COMMA')}"></span></div>
         </div>
         <div class="pedido-acciones" style="display:flex;flex-direction:column;gap:0.5rem;">
@@ -158,12 +183,6 @@
               <i class="fas fa-hand-paper"></i> Tomar pedido
             </button>
           </form>
-          <button type="button"
-                  class="btn btn-gris btn-cancelar-disponible"
-                  th:attr="data-pedido=${item.envio.pedido.codigoPedido}"
-                  style="white-space:nowrap;width:100%;">
-            <i class="fas fa-times-circle"></i> Cancelar
-          </button>
         </div>
       </div>
     </div>
@@ -207,23 +226,7 @@
 <footer><p>&copy; 2026 Urban Eats – Proyecto Formativo SENA</p></footer>
 <div id="toast-container"></div>
 <script src="/js/app.js"></script>
-<script>
-(function () {
-  const csrf = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
-
-  document.querySelectorAll('.btn-cancelar-disponible').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const pedidoId = btn.dataset.pedido;
-      btn.disabled = true;
-      fetch(`/pedido/${pedidoId}/cancelar`, {
-        method: 'POST',
-        headers: { 'X-CSRF-TOKEN': csrf, 'Content-Type': 'application/json' },
-      }).then(() => {
-        btn.closest('.pedido-card')?.remove();
-      }).catch(() => { btn.disabled = false; });
-    });
-  });
-})();
-</script>
+<script src="/js/repartidor-panel.js"></script>
+<div th:replace="~{fragments/comunes :: franjaDemo}"></div>
 </body>
 </html>

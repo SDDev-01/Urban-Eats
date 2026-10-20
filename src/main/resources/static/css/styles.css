@@ -1,16 +1,40 @@
-
+/* 1. Fuentes de la marca (archivos en /static/fonts; la carpeta va en minuscula) */
 @font-face {
     font-family: 'Creato Display';
-    src: url('../Fonts/CreatoDisplay-Regular.otf') format('opentype');
+    src: url('../fonts/CreatoDisplay-Regular.otf') format('opentype');
     font-weight: 400;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
     font-family: 'Creato Display';
-    src: url('../Fonts/CreatoDisplay-Bold.otf') format('opentype');
+    src: url('../fonts/CreatoDisplay-Bold.otf') format('opentype');
     font-weight: 700;
     font-style: normal;
+    font-display: swap;
+}
+
+/* Cocogoose Pro (titulos). Ojo: los archivos son version "trial"; para uso comercial
+   hay que comprar la licencia o reemplazarla (ver Propuesta de Negociacion Tecnologica).
+   La version trial NO trae los numeros: unicode-range excluye los digitos (U+0030-0039)
+   y el navegador los dibuja con Creato Display, la siguiente fuente de la lista. */
+@font-face {
+    font-family: 'Cocogoose';
+    src: url('../fonts/Cocogoose-Pro-Regular-trial.ttf') format('truetype');
+    unicode-range: U+0000-002F, U+003A-FFFF;
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Cocogoose';
+    src: url('../fonts/Cocogoose-Pro-Bold-trial.ttf') format('truetype');
+    unicode-range: U+0000-002F, U+003A-FFFF;
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
 }
 
 /* 2. Variables Globales */
@@ -35,7 +59,7 @@
     --radio-lg: 20px;
     --navbar-height: 64px;
 
-    --fuente-titulos: 'Cocogoose', sans-serif;
+    --fuente-titulos: 'Cocogoose', 'Creato Display', sans-serif;
     --fuente-texto: 'Creato Display', sans-serif;
 }
 /* 3. Estilos Base */
@@ -663,3 +687,39 @@ footer {
 }
 
 
+
+
+/* ============================
+   FASE 6: sellos de platos, estados y modo demostracion
+   ============================ */
+.producto-sellos { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0.4rem 0 0.2rem; min-height: 1.4rem; }
+.sello-plato {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.15rem 0.6rem; border-radius: 999px;
+    font-size: 0.72rem; font-weight: 700;
+    background: var(--secundario-claro); color: var(--texto);
+}
+.sello-balanceado { background: #e3f4e8; color: #1e6b3a; }
+.sello-agotado { background: var(--principal-claro); color: var(--principal); }
+.dato-nutricional { font-size: 0.75rem; color: var(--texto-gris); display: inline-flex; align-items: center; gap: 0.25rem; }
+.dato-alergenos { font-size: 0.78rem; color: var(--principal); display: block; margin-top: 0.3rem; }
+.producto-agotado { opacity: 0.6; }
+.btn-verde:disabled, .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.badge-estado-pedido {
+    display: inline-block; padding: 0.2rem 0.7rem; border-radius: 999px;
+    font-size: 0.78rem; font-weight: 700;
+}
+.badge-nuevo      { background: var(--principal-claro); color: var(--principal); }
+.badge-preparando { background: var(--secundario-claro); color: var(--texto); }
+.badge-listo      { background: #fff1bf; color: #7a5a00; }
+.badge-encamino   { background: var(--terciario-claro); color: #b8431f; }
+.badge-entregado  { background: #e3f4e8; color: #1e6b3a; }
+.badge-rechazado  { background: #eee; color: var(--texto-gris); }
+
+.franja-demo {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 2000;
+    background: repeating-linear-gradient(45deg, #fec10b, #fec10b 14px, #ffd54a 14px, #ffd54a 28px);
+    color: #111417; text-align: center; font-size: 0.8rem; font-weight: 700;
+    padding: 0.3rem 1rem; box-shadow: 0 -2px 8px rgba(0,0,0,0.15);
+}

@@ -73,6 +73,7 @@ public class PlatoService implements IPlatoService {
     public List<Plato> listarPlatosFiltrados(Integer codigoRestaurante,
                                              String categoria,
                                              String disponibilidad,
+                                             String etiqueta,
                                              BigDecimal precioMinimo,
                                              BigDecimal precioMaximo) {
         return platoRepository.findAll()
@@ -81,10 +82,27 @@ public class PlatoService implements IPlatoService {
                 .filter(plato -> coincideCategoria(plato, categoria))
                 .filter(plato -> vacio(disponibilidad)
                         || disponibilidad.equalsIgnoreCase(plato.getDisponibilidad()))
+                .filter(plato -> vacio(etiqueta)
+                        || plato.getListaEtiquetas().stream().anyMatch(e -> e.equalsIgnoreCase(etiqueta)))
                 .filter(plato -> precioMinimo == null
                         || (plato.getPrecio() != null && plato.getPrecio().compareTo(precioMinimo) >= 0))
                 .filter(plato -> precioMaximo == null
                         || (plato.getPrecio() != null && plato.getPrecio().compareTo(precioMaximo) <= 0))
+                .toList();
+    }
+
+    /**
+     * Solo platos de cocinas activas (una cocina suspendida no se muestra).
+     * La transaccion mantiene abierta la sesion porque menu y restaurante son LAZY.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Plato> listarPlatosDeCocinasActivas() {
+        return platoRepository.findAll()
+                .stream()
+                .filter(plato -> plato.getMenu() != null
+                        && plato.getMenu().getRestaurante() != null
+                        && plato.getMenu().getRestaurante().isActivo())
                 .toList();
     }
 

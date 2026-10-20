@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Mi Perfil – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" th:content="${_csrf.token}">
   <link rel="stylesheet" th:href="@{/css/styles.css}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" th:href="@{/css/pago.css}">
@@ -147,6 +148,11 @@
       <div class="perfil-card">
         <h3><i class="fas fa-rocket"></i> ¿Quieres hacer más?</h3>
         <div class="opciones-grid">
+          <a th:href="@{/mis-pedidos}" class="opcion-card">
+            <div class="opcion-icon"><i class="fas fa-receipt" style="color: #a42828;"></i></div>
+            <div class="opcion-titulo">Mis pedidos</div>
+            <div class="opcion-desc">Sigue tus pedidos en el mapa</div>
+          </a>
           <!-- Repartidor -->
           <a th:if="${esRepartidor}" th:href="@{/perfilRepartidor}" class="opcion-card">
             <div class="opcion-icon"><i class="fas fa-motorcycle" style="color: #3498db;"></i></div>
@@ -165,10 +171,15 @@
             <div class="opcion-titulo">Mi Restaurante</div>
             <div class="opcion-desc">Administrar menú y pedidos</div>
           </a>
-          <a th:if="${!tieneRestaurante}" th:href="@{/restaurante}" class="opcion-card">
+          <a th:if="${!tieneRestaurante}" th:href="@{/restaurante/solicitud/nueva}" class="opcion-card">
             <div class="opcion-icon"><i class="fas fa-store" style="color: #e67e22;"></i></div>
-            <div class="opcion-titulo">Registra tu Restaurante</div>
-            <div class="opcion-desc">Vende tu comida en Urban Eats</div>
+            <div class="opcion-titulo">Vincula tu cocina</div>
+            <div class="opcion-desc">Solicitud con verificación sanitaria</div>
+          </a>
+          <a th:href="@{/restaurante/solicitudes}" class="opcion-card">
+            <div class="opcion-icon"><i class="fas fa-clipboard-check" style="color: #a42828;"></i></div>
+            <div class="opcion-titulo">Mis solicitudes de cocina</div>
+            <div class="opcion-desc">Estado de la verificación</div>
           </a>
         </div>
       </div>
@@ -190,7 +201,6 @@
   </footer>
 
   <script th:src="@{/js/app.js}"></script>
-  <script th:src="@{/js/perfil.js}"></script>
   <script>
     const btnMostrar   = document.getElementById('btn-mostrar-edicion');
     const btnCancelar  = document.getElementById('btn-cancelar-edicion');
@@ -206,5 +216,6 @@
       vista.style.display   = 'block';
     });
   </script>
+<div th:replace="~{fragments/comunes :: franjaDemo}"></div>
 </body>
 </html>

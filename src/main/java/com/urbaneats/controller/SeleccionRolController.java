@@ -5,10 +5,9 @@ import com.urbaneats.entity.Restaurante;
 import com.urbaneats.dao.GerenteRepository;
 import com.urbaneats.dao.RestauranteRepository;
 import com.urbaneats.security.CustomUserDetails;
+import com.urbaneats.security.SesionHelper;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +17,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+/**
+ * Pantalla "¿Como deseas ingresar?" para usuarios con varios roles
+ * (un mismo usuario puede ser cliente, cocina, repartidor o tecnico),
+ * y la eleccion de cual de sus cocinas administrar.
+ */
 @Controller
 @RequiredArgsConstructor
 public class SeleccionRolController {
@@ -25,39 +29,25 @@ public class SeleccionRolController {
     private final GerenteRepository gerenteRepository;
     private final RestauranteRepository restauranteRepository;
 
-    private CustomUserDetails getUsuarioActual() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.getPrincipal() instanceof CustomUserDetails) {
-            return (CustomUserDetails) auth.getPrincipal();
-        }
-        return null;
-    }
-
     @GetMapping("/seleccion-rol")
-    public String mostrarRol(Model model, RedirectAttributes redirect) {
-        CustomUserDetails usuario = getUsuarioActual();
-        if (usuario == null) {
-            return "redirect:/login";
-        }
+    public String mostrarRol(Model model) {
+        boolean esGerente = SesionHelper.tieneRol("GERENTE");
+        boolean esRepartidor = SesionHelper.tieneRol("REPARTIDOR");
+        boolean esTecnico = SesionHelper.tieneRol("TECNICO");
 
-        Gerente gerente = gerenteRepository
-            .findByUsuario_CodigoUsuario(usuario.getCodigoUsuario())
-            .orElse(null);
-
-        if (gerente == null) {
+        if (!esGerente && !esRepartidor && !esTecnico) {
             return "redirect:/catalogo";
         }
 
+        model.addAttribute("esGerente", esGerente);
+        model.addAttribute("esRepartidor", esRepartidor);
+        model.addAttribute("esTecnico", esTecnico);
         return "seleccionRol";
     }
 
     @GetMapping("/seleccion-restaurante")
-    public String mostrarRestaurantes(Model model, RedirectAttributes redirect) {
-        CustomUserDetails usuario = getUsuarioActual();
-        if (usuario == null) {
-            return "redirect:/login";
-        }
-
+    public String mostrarRestaurantes(Model model) {
+        CustomUserDetails usuario = SesionHelper.usuarioActual();
         Gerente gerente = gerenteRepository
             .findByUsuario_CodigoUsuario(usuario.getCodigoUsuario())
             .orElse(null);
@@ -77,11 +67,7 @@ public class SeleccionRolController {
     public String confirmarRestaurante(@PathVariable Integer id,
                                        HttpSession session,
                                        RedirectAttributes redirect) {
-        CustomUserDetails usuario = getUsuarioActual();
-        if (usuario == null) {
-            return "redirect:/login";
-        }
-
+        CustomUserDetails usuario = SesionHelper.usuarioActual();
         Gerente gerente = gerenteRepository
             .findByUsuario_CodigoUsuario(usuario.getCodigoUsuario())
             .orElse(null);

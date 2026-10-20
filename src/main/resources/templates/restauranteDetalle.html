@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Restaurante – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" th:if="${_csrf != null}" th:content="${_csrf.token}">
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="/css/restaurante-detalle.css">
@@ -41,7 +42,11 @@
     <!-- HEADER DEL RESTAURANTE -->
     <div class="restaurante-hero" id="restaurante-hero"
          th:attr="data-id=${restaurante.codigoRestaurante}">
-      <div class="restaurante-logo-grande" style="background: rgba(255,255,255,0.25);">🍽️</div>
+      <div class="restaurante-logo-grande" style="background: rgba(255,255,255,0.25);overflow:hidden;">
+        <img th:if="${restaurante.imagen != null}" th:src="${restaurante.imagen}" alt=""
+             style="width:100%;height:100%;object-fit:cover;">
+        <span th:if="${restaurante.imagen == null}">🍽️</span>
+      </div>
       <div class="restaurante-info-hero">
         <h1 th:text="${restaurante.nombre}">Nombre del restaurante</h1>
         <div class="restaurante-detalles">
@@ -52,6 +57,15 @@
           <div class="restaurante-detalle-item">
             <i class="fas fa-clock"></i>
             <span th:text="${restaurante.horario} ?: '—'">Horario</span>
+          </div>
+          <div class="restaurante-detalle-item" th:if="${restaurante.categoria != null}">
+            <i class="fas fa-utensils"></i>
+            <span th:text="${restaurante.categoria}">Categoría</span>
+          </div>
+          <div class="restaurante-detalle-item">
+            <span th:if="${abiertoAhora}" class="sello-plato sello-balanceado"><i class="fas fa-circle"></i> Abierta ahora</span>
+            <span th:unless="${abiertoAhora}" class="sello-plato sello-agotado"><i class="fas fa-moon"></i> Cerrada ahora</span>
+            <span class="sello-plato"><i class="fas fa-shield-halved"></i> Cocina verificada</span>
           </div>
         </div>
       </div>
@@ -83,6 +97,7 @@
 
       <div class="producto-card"
            th:each="plato : ${platos}"
+           th:classappend="${!plato.disponible} ? 'producto-agotado'"
            th:attr="data-categoria=${plato.menu != null ? plato.menu.categoria : ''}">
         <div class="producto-img-wrap">
           <span class="producto-emoji"
@@ -93,6 +108,11 @@
                th:text="${plato.menu != null ? plato.menu.categoria : '—'}">Categoría</div>
           <div class="producto-nombre" th:text="${plato.nombre}">Nombre del plato</div>
           <div class="producto-desc" th:text="${plato.descripcion}">Descripción</div>
+          <div class="producto-sellos">
+            <span th:if="${plato.balanceado}" class="sello-plato sello-balanceado"><i class="fas fa-leaf"></i> Balanceado</span>
+            <span th:if="${plato.calorias != null}" class="dato-nutricional" th:text="${plato.calorias} + ' kcal'">0 kcal</span>
+            <span th:unless="${plato.disponible}" class="sello-plato sello-agotado">No disponible</span>
+          </div>
           <div class="producto-footer">
             <span class="producto-precio"
                   th:text="'$' + ${#numbers.formatInteger(plato.precio, 0, 'POINT')} + ' COP'">$0 COP</span>
@@ -101,7 +121,13 @@
                              data-nombre=${plato.nombre},
                              data-descripcion=${plato.descripcion},
                              data-precio=${plato.precio},
-                             data-categoria=${plato.menu != null ? plato.menu.categoria : ''}">
+                             data-categoria=${plato.menu != null ? plato.menu.categoria : ''},
+                             data-restaurante=${restaurante.codigoRestaurante},
+                             data-restaurante-nombre=${restaurante.nombre},
+                             data-disponible=${plato.disponible},
+                             data-calorias=${plato.calorias},
+                             data-etiquetas=${plato.etiquetas},
+                             data-alergenos=${alergenosPorPlato.get(plato.codigoPlato)}">
               Ver detalles
             </button>
           </div>
@@ -141,7 +167,7 @@
   </div>
 
   <footer>
-    <p>&copy; 2026 Urban Eats – Proyecto Formativo SENA. Comida saludable para todos.</p>
+    <p>&copy; 2026 Urban Eats – Proyecto Formativo SENA. Comida real para quienes mueven la noche.</p>
   </footer>
 
   <div id="toast-container"></div>
@@ -151,5 +177,6 @@
        RestauranteDetalleController. restaurante-detalle.js solo se encarga de
        los filtros, el modal y el carrito. -->
   <script src="/js/restaurante-detalle.js"></script>
+<div th:replace="~{fragments/comunes :: franjaDemo}"></div>
 </body>
 </html>

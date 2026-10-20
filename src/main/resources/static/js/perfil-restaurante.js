@@ -1,144 +1,136 @@
 /* ============================
-   PERFIL RESTAURANTE
-   ============================ */
+   PERFIL RESTAURANTE (panel de la cocina)
+   ============================
+   Los pedidos llegan del servidor en JSON (GET /perfilRestaurante/pedidos) y se
+   vuelven a pedir cada 15 segundos, asi la cocina ve los pedidos nuevos sin recargar.
+   Cada boton (Aceptar, Rechazar, Marcar listo) guarda el cambio en la base con
+   POST /perfilRestaurante/pedido/{id}/estado. Antes los botones solo cambiaban la
+   pantalla y al recargar todo volvia a "nuevo".
 
-// Datos de demostración — reemplazar con llamadas reales a la API/BD
-const PEDIDOS_DEMO = [
-  {
-    id: 'P-001',
-    cliente: 'María García',
-    direccion: 'Calle 10 #5-20, Bogotá',
-    telefono: '311 234 5678',
-    items: ['Bowl de Quinua x1', 'Jugo Verde x2'],
-    total: 32000,
-    estado: 'nuevo',
-    hora: '08:15'
-  },
-  {
-    id: 'P-002',
-    cliente: 'Carlos López',
-    direccion: 'Carrera 7 #80-15, Bogotá',
-    telefono: '320 876 5432',
-    items: ['Ensalada Tropical x1', 'Agua x1'],
-    total: 18500,
-    estado: 'aceptado',
-    hora: '08:42'
-  },
-  {
-    id: 'P-003',
-    cliente: 'Laura Martínez',
-    direccion: 'Av. 68 #23-40, Bogotá',
-    telefono: '315 112 3344',
-    items: ['Wrap Integral x2', 'Limonada x1'],
-    total: 27000,
-    estado: 'preparando',
-    hora: '09:10'
-  },
-  {
-    id: 'P-004',
-    cliente: 'Andrés Ríos',
-    direccion: 'Calle 100 #15-60, Bogotá',
-    telefono: '300 998 7766',
-    items: ['Cazuela Vegana x1'],
-    total: 22000,
-    estado: 'listo',
-    hora: '09:30'
-  },
-  {
-    id: 'P-005',
-    cliente: 'Sara Niño',
-    direccion: 'Transversal 50 #90-30, Bogotá',
-    telefono: '318 445 6677',
-    items: ['Bowl de Quinua x2', 'Smoothie x1'],
-    total: 41000,
-    estado: 'entregado',
-    hora: '07:55'
-  },
-  {
-    id: 'P-006',
-    cliente: 'Felipe Vargas',
-    direccion: 'Calle 26 #60-10, Bogotá',
-    telefono: '312 889 0011',
-    items: ['Sopa de Lentejas x1'],
-    total: 14000,
-    estado: 'rechazado',
-    hora: '07:30'
-  }
-];
+   Estados (clave CSS -> estado real):
+     nuevo = Solicitado, preparando = En preparacion, listo = Listo para envio,
+     encamino = En camino, entregado = Entregado, rechazado = Cancelado
+*/
 
-const RESTAURANTE_DEMO = {
-  nombre: 'Green Bowl',
-  descripcion: 'Comida saludable y deliciosa para todos',
-  direccion: 'Calle 45 #12-30, Bogotá',
-  telefono: '310 456 7890'
-};
+const INTERVALO_ACTUALIZACION_MS = 15000;
 
-let pedidos = window.PEDIDOS_BD ? [...window.PEDIDOS_BD] : [];
-let abierto = true;
+let pedidos = [];
 let filtroActivo = 'todos';
+let aceptaPedidos = true;
+
+const esc = (texto) => window.UE.escaparHTML(texto);
 
 // ---- INICIALIZACIÓN ----
 document.addEventListener('DOMContentLoaded', function () {
-  cargarInfoRestaurante();
-  actualizarEstado();
-  renderTablaClientes();
-  renderEstadisticas();
-  renderPedidos();
+  const btnEstado = document.getElementById('btn-estado');
+  aceptaPedidos = btnEstado.dataset.acepta !== 'false';
+  actualizarBotonEstado();
+  btnEstado.addEventListener('click', toggleEstado);
+
   iniciarTabs();
   iniciarFiltros();
-  document.getElementById('btn-estado').addEventListener('click', toggleEstado);
+  iniciarConfirmacionEliminar();
+
+  cargarPedidos();
+  setInterval(cargarPedidos, INTERVALO_ACTUALIZACION_MS);
 });
 
-function cargarInfoRestaurante() {
-  // Los datos del restaurante ya fueron renderizados por Blade en el HTML.
-  // Solo sincronizamos el navbar con el nombre del restaurante.
-  const nombreEl = document.getElementById('rest-nombre');
-  const navbarNombre = document.getElementById('navbar-nombre');
-  if (nombreEl && navbarNombre) {
-    navbarNombre.textContent = nombreEl.textContent || RESTAURANTE_DEMO.nombre;
+// ---- PEDIDOS DESDE EL SERVIDOR ----
+async function cargarPedidos() {
+  try {
+    const respuesta = await fetch('/perfilRestaurante/pedidos', { headers: { 'Accept': 'application/json' } });
+    if (!respuesta.ok) throw new Error('HTTP ' + respuesta.status);
+    const nuevos = await respuesta.json();
+
+    // Aviso cuando entra un pedido que no estaba antes.
+    const habiaIds = new Set(pedidos.map(p => p.codigo));
+    const llegoNuevo = pedidos.length > 0 && nuevos.some(p => !habiaIds.has(p.codigo) && p.estado === 'nuevo');
+    pedidos = nuevos;
+    if (llegoNuevo) window.UE.mostrarToast('¡Llegó un pedido nuevo!', 'fa-bell');
+
+    renderTodo();
+    document.getElementById('pedidos-actualizado').textContent =
+      'Actualizado a las ' + new Date().toLocaleTimeString('es-CO') + ' · se actualiza solo cada 15 segundos';
+  } catch (e) {
+    document.getElementById('pedidos-actualizado').textContent =
+      'No se pudieron cargar los pedidos. Reintentando...';
   }
 }
 
-// ---- TOGGLE ABIERTO/CERRADO ----
-function toggleEstado() {
-  abierto = !abierto;
-  actualizarEstado();
-  const msg = abierto ? 'Restaurante abierto' : 'Restaurante cerrado';
-  if (window.UE && window.UE.mostrarToast) {
-    window.UE.mostrarToast(msg, abierto ? 'fa-door-open' : 'fa-door-closed');
+function renderTodo() {
+  renderPedidos();
+  renderTablaClientes();
+  renderEstadisticas();
+}
+
+// ---- ACCIONES SOBRE UN PEDIDO ----
+async function cambiarEstado(codigo, accion) {
+  let motivo = null;
+  if (accion === 'rechazar') {
+    motivo = prompt('¿Por qué rechazas el pedido? (el cliente lo verá)', 'Sin ingredientes disponibles');
+    if (motivo === null) return; // el gerente cancelo el cuadro de dialogo
+  }
+
+  try {
+    const respuesta = await fetch(`/perfilRestaurante/pedido/${codigo}/estado`, {
+      method: 'POST',
+      headers: window.UE.encabezadosCSRF(),
+      body: JSON.stringify({ accion, motivo })
+    });
+    const datos = await respuesta.json();
+    if (!respuesta.ok) {
+      window.UE.mostrarToast(datos.error || 'No se pudo cambiar el estado.', 'fa-exclamation-circle');
+    } else {
+      const mensajes = { aceptar: 'Pedido aceptado: ¡a cocinar!', rechazar: 'Pedido rechazado', listo: 'Listo: ya lo pueden recoger' };
+      window.UE.mostrarToast(mensajes[accion] || 'Estado actualizado', 'fa-check');
+    }
+  } catch (e) {
+    window.UE.mostrarToast('Sin conexión con el servidor.', 'fa-exclamation-circle');
+  }
+  cargarPedidos();
+}
+
+// ---- BOTÓN ABIERTO / CERRADO (pausa la recepción de pedidos) ----
+async function toggleEstado() {
+  const nuevoValor = !aceptaPedidos;
+  try {
+    const respuesta = await fetch('/perfilRestaurante/acepta-pedidos', {
+      method: 'POST',
+      headers: window.UE.encabezadosCSRF(),
+      body: JSON.stringify({ acepta: nuevoValor })
+    });
+    if (!respuesta.ok) throw new Error();
+    const datos = await respuesta.json();
+    aceptaPedidos = datos.acepta;
+    actualizarBotonEstado();
+    window.UE.mostrarToast(aceptaPedidos ? 'Cocina abierta: recibiendo pedidos' : 'Pedidos pausados',
+      aceptaPedidos ? 'fa-door-open' : 'fa-door-closed');
+  } catch (e) {
+    window.UE.mostrarToast('No se pudo cambiar el estado de la cocina.', 'fa-exclamation-circle');
   }
 }
 
-function actualizarEstado() {
+function actualizarBotonEstado() {
   const btn  = document.getElementById('btn-estado');
   const dot  = document.getElementById('estado-dot');
   const txt  = document.getElementById('estado-texto');
   const hint = document.getElementById('estado-hint');
 
-  if (abierto) {
-    btn.classList.remove('cerrado');
-    dot.classList.remove('cerrado');
-    txt.textContent  = 'Abierto';
-    hint.textContent = 'Clic para cerrar';
-  } else {
-    btn.classList.add('cerrado');
-    dot.classList.add('cerrado');
-    txt.textContent  = 'Cerrado';
-    hint.textContent = 'Clic para abrir';
-  }
+  btn.classList.toggle('cerrado', !aceptaPedidos);
+  dot.classList.toggle('cerrado', !aceptaPedidos);
+  txt.textContent  = aceptaPedidos ? 'Abierto' : 'Pausado';
+  hint.textContent = aceptaPedidos ? 'Clic para pausar pedidos' : 'Clic para recibir pedidos';
 }
 
 // ---- ESTADÍSTICAS ----
 function renderEstadisticas() {
-  const entregados  = pedidos.filter(p => p.estado === 'entregado').length;
-  const ventasDia   = pedidos
-    .filter(p => p.estado === 'entregado')
-    .reduce((sum, p) => sum + p.total, 0);
-  const pendientes  = pedidos.filter(p => ['nuevo', 'aceptado', 'preparando', 'listo'].includes(p.estado)).length;
+  const entregados  = pedidos.filter(p => p.estado === 'entregado');
+  const ventasDia   = entregados.reduce((suma, p) => suma + Number(p.total), 0);
+  const pendientes  = pedidos.filter(p => ['nuevo', 'preparando', 'listo'].includes(p.estado)).length;
   const clientesSet = new Set(pedidos.filter(p => p.estado !== 'rechazado').map(p => p.cliente));
 
-  document.getElementById('stat-entregados').textContent = entregados;
-  document.getElementById('stat-ventas').textContent     = '$' + ventasDia.toLocaleString('es-CO');
+  document.getElementById('stat-entregados').textContent = entregados.length;
+  document.getElementById('stat-ventas').textContent     = window.UE.formatoCOP(ventasDia);
   document.getElementById('stat-pendientes').textContent = pendientes;
   document.getElementById('stat-clientes').textContent   = clientesSet.size;
 
@@ -148,25 +140,25 @@ function renderEstadisticas() {
   badgePedidos.classList.toggle('visible', nuevos > 0);
 }
 
-// ---- TABLA DE CLIENTES ----
+// ---- TABLA DE PEDIDOS (vista general) ----
 function renderTablaClientes() {
   const tbody = document.getElementById('tabla-clientes-body');
   const visibles = pedidos.filter(p => p.estado !== 'rechazado');
 
   if (visibles.length === 0) {
-    tbody.innerHTML = '<tr><td class="tabla-vacia" colspan="7">Aún no hay clientes hoy</td></tr>';
+    tbody.innerHTML = '<tr><td class="tabla-vacia" colspan="7">Aún no hay pedidos hoy</td></tr>';
     return;
   }
 
   tbody.innerHTML = visibles.map(p => `
     <tr>
-      <td><strong>${p.cliente}</strong></td>
-      <td>${p.direccion || '—'}</td>
-      <td>${p.telefono || '—'}</td>
-      <td>${p.items.join(', ')}</td>
-      <td><strong>$${p.total.toLocaleString('es-CO')}</strong></td>
-      <td>${p.hora}</td>
-      <td>${badgeHTML(p.estado)}</td>
+      <td><strong>${esc(p.cliente)}</strong></td>
+      <td>${esc(p.direccion || '—')}</td>
+      <td>${esc(p.telefono || '—')}</td>
+      <td>${p.items.map(esc).join(', ')}</td>
+      <td><strong>${window.UE.formatoCOP(p.total)}</strong></td>
+      <td>${esc(p.hora)}</td>
+      <td>${badgeHTML(p)}</td>
     </tr>
   `).join('');
 }
@@ -188,84 +180,59 @@ function renderPedidos() {
   }
 
   lista.innerHTML = filtrados.map(p => `
-    <div class="pedido-card estado-${p.estado}" id="card-${p.id}">
+    <div class="pedido-card estado-${esc(p.estado)}">
       <div class="pedido-header">
         <div class="pedido-id-hora">
-          <span class="pedido-id">${p.id}</span>
-          <span class="pedido-hora"><i class="fas fa-clock"></i> ${p.hora}</span>
+          <span class="pedido-id">Pedido #${esc(p.codigo)}</span>
+          <span class="pedido-hora"><i class="fas fa-clock"></i> ${esc(p.hora)}</span>
         </div>
         <div class="pedido-cliente-total">
-          <div class="pedido-cliente"><i class="fas fa-user"></i> ${p.cliente}</div>
-          <div class="pedido-total">$${p.total.toLocaleString('es-CO')}</div>
+          <div class="pedido-cliente"><i class="fas fa-user"></i> ${esc(p.cliente)}</div>
+          <div class="pedido-total">${window.UE.formatoCOP(p.total)}</div>
         </div>
-        ${badgeHTML(p.estado)}
+        ${badgeHTML(p)}
       </div>
       <div class="pedido-items">
-        <strong>Productos:</strong> ${p.items.join(' · ')}
+        <strong>Productos:</strong> ${p.items.map(esc).join(' · ')}
       </div>
+      <div class="pedido-items"><i class="fas fa-location-dot"></i> ${esc(p.direccion || '—')}</div>
+      ${p.repartidor ? `<div class="pedido-repartidor"><i class="fas fa-motorcycle"></i> Lo lleva: ${esc(p.repartidor)}</div>` : ''}
       <div class="pedido-acciones">
         ${accionesHTML(p)}
       </div>
     </div>
   `).join('');
 
-  // Eventos de botones
   lista.querySelectorAll('[data-accion]').forEach(btn => {
     btn.addEventListener('click', function () {
+      this.disabled = true;
       cambiarEstado(this.dataset.id, this.dataset.accion);
     });
   });
 }
 
 function accionesHTML(pedido) {
-  const { id, estado } = pedido;
-  switch (estado) {
+  const id = esc(pedido.codigo);
+  switch (pedido.estado) {
     case 'nuevo':
       return `
-        <button class="btn-accion btn-aceptar" data-id="${id}" data-accion="aceptado">
-          <i class="fas fa-check"></i> Aceptar
+        <button class="btn-accion btn-aceptar" data-id="${id}" data-accion="aceptar">
+          <i class="fas fa-check"></i> Aceptar y preparar
         </button>
-        <button class="btn-accion btn-rechazar" data-id="${id}" data-accion="rechazado">
+        <button class="btn-accion btn-rechazar" data-id="${id}" data-accion="rechazar">
           <i class="fas fa-times"></i> Rechazar
-        </button>`;
-    case 'aceptado':
-      return `
-        <button class="btn-accion btn-preparando" data-id="${id}" data-accion="preparando">
-          <i class="fas fa-fire-burner"></i> Preparando
         </button>`;
     case 'preparando':
       return `
         <button class="btn-accion btn-listo" data-id="${id}" data-accion="listo">
-          <i class="fas fa-bag-shopping"></i> Listo para recoger
+          <i class="fas fa-bag-shopping"></i> Marcar listo para envío
         </button>`;
     case 'listo':
-      return `
-        <button class="btn-accion btn-listo" data-id="${id}" data-accion="entregado">
-          <i class="fas fa-check-double"></i> Marcar entregado
-        </button>`;
+      return `<span class="pedido-sin-acciones"><i class="fas fa-hourglass-half"></i> Esperando que un repartidor lo recoja</span>`;
+    case 'encamino':
+      return `<a class="btn-accion btn-mapa" href="/rastreo/${id}"><i class="fas fa-map-location-dot"></i> Ver recorrido</a>`;
     default:
       return `<span class="pedido-sin-acciones">Pedido finalizado</span>`;
-  }
-}
-
-function cambiarEstado(id, nuevoEstado) {
-  const pedido = pedidos.find(p => p.id === id);
-  if (!pedido) return;
-  pedido.estado = nuevoEstado;
-
-  renderPedidos();
-  renderTablaClientes();
-  renderEstadisticas();
-
-  const msgs = {
-    aceptado:  'Pedido aceptado',
-    rechazado: 'Pedido rechazado',
-    preparando: 'Pedido en preparación',
-    listo:     'Listo para recoger',
-    entregado: 'Pedido entregado'
-  };
-  if (window.UE && window.UE.mostrarToast) {
-    window.UE.mostrarToast(msgs[nuevoEstado] || 'Estado actualizado', 'fa-check');
   }
 }
 
@@ -294,15 +261,25 @@ function iniciarTabs() {
   });
 }
 
+// ---- CONFIRMAR ANTES DE ELIMINAR UN PLATO ----
+function iniciarConfirmacionEliminar() {
+  document.querySelectorAll('.form-eliminar-plato').forEach(form => {
+    form.addEventListener('submit', function (evento) {
+      const nombre = this.dataset.nombre || 'este plato';
+      if (!confirm(`¿Eliminar «${nombre}»? Esta acción no se puede deshacer.`)) {
+        evento.preventDefault();
+      }
+    });
+  });
+}
+
 // ---- UTILIDADES ----
-function badgeHTML(estado) {
-  const labels = {
-    nuevo:      '<i class="fas fa-bell"></i> Nuevo',
-    aceptado:   '<i class="fas fa-thumbs-up"></i> Aceptado',
-    preparando: '<i class="fas fa-fire-burner"></i> Preparando',
-    listo:      '<i class="fas fa-bag-shopping"></i> Listo',
-    entregado:  '<i class="fas fa-check-circle"></i> Entregado',
-    rechazado:  '<i class="fas fa-ban"></i> Rechazado'
+function badgeHTML(pedido) {
+  const iconos = {
+    nuevo: 'fa-bell', preparando: 'fa-fire-burner', listo: 'fa-bag-shopping',
+    encamino: 'fa-motorcycle', entregado: 'fa-check-circle', rechazado: 'fa-ban'
   };
-  return `<span class="badge-estado badge-${estado}">${labels[estado] || estado}</span>`;
+  return `<span class="badge-estado badge-${esc(pedido.estado)}">
+            <i class="fas ${iconos[pedido.estado] || 'fa-circle'}"></i> ${esc(pedido.estadoEtiqueta)}
+          </span>`;
 }

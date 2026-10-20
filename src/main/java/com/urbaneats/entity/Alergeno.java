@@ -10,8 +10,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+/**
+ * Entidad de la tabla Alergeno: una fila por cada alergeno de un plato.
+ * Antes mapeaba una columna Descripcion que la tabla no tiene.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,14 +30,13 @@ public class Alergeno {
     @Column(name = "CodigoAlergeno")
     private Integer alergenoId;
 
-    @Column(name = "Nombre", nullable = false, length = 100)
+    @Column(name = "Nombre", length = 50)
     private String nombre;
 
-    @Column(name = "Descripcion", columnDefinition = "TEXT")
-    private String descripcion;
-    
     // Cardinalidad
     @ManyToOne
     @JoinColumn(name = "CodigoPlato")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Plato plato;
 }

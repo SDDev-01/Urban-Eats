@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Solicitud de cocina – Urban Eats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/solicitud.css">
+</head>
+<!-- Misma pantalla para el solicitante y el tecnico: vistaTecnico cambia las acciones. -->
+<body th:with="s=${solicitud}, cerrada=${solicitud['estado'] == 'Aprobada' or solicitud['estado'] == 'Rechazada'}">
+<nav th:replace="~{fragments/comunes :: navbar}"></nav>
+
+<div class="sol-pagina">
+  <a th:href="${vistaTecnico} ? @{/tecnico/solicitudes} : @{/restaurante/solicitudes}" style="font-size:0.85rem;color:var(--principal);">
+    <i class="fas fa-arrow-left"></i> Volver</a>
+  <h2 th:text="'Solicitud #' + ${s['codigo_solicitud']} + ' · ' + ${s['nombre_comercial']}">Solicitud</h2>
+  <p class="sol-sub">
+    <span class="sol-estado" th:classappend="${s['estado']}" th:text="${s['estado']}">Estado</span>
+    <span th:if="${s['observaciones'] != null}" th:text="' · ' + ${s['observaciones']}"></span>
+  </p>
+  <div th:replace="~{fragments/comunes :: mensajes}"></div>
+
+  <!-- Aprobada: la cocina ya existe -->
+  <div class="sol-alerta exito" th:if="${s['estado'] == 'Aprobada' and !vistaTecnico}">
+    <i class="fas fa-champagne-glasses"></i> ¡Tu cocina fue aprobada y ya está publicada!
+    <form method="post" th:action="@{'/restaurante/solicitud/' + ${s['codigo_solicitud']} + '/entrar'}" style="display:inline;">
+      <button class="btn btn-verde" style="margin-left:0.75rem;">Entrar a mi cocina</button>
+    </form>
+  </div>
+
+  <div class="sol-grid" style="grid-template-columns: 1fr 1fr; align-items:start;">
+    <!-- Datos -->
+    <div class="sol-card">
+      <h3><i class="fas fa-building"></i> Datos del negocio</h3>
+      <table class="sol-tabla">
+        <tr><th>Razón social</th><td th:text="${s['razon_social']}"></td></tr>
+        <tr><th>NIT</th><td th:text="${s['nit']} + '-' + ${s['digito_verificacion']} + ' (' + ${s['tipo_persona']} + ')'"></td></tr>
+        <tr><th>Matrícula</th><td th:text="${s['matricula_mercantil']} ?: '—'"></td></tr>
+        <tr><th>Tipo</th><td th:text="${s['tipo_establecimiento']} + ' · ' + ${s['categoria']}"></td></tr>
+        <tr><th>Contacto</th><td th:text="${s['telefono']} + ' · ' + ${s['correo']}"></td></tr>
+        <tr><th>Dirección</th><td th:text="${s['direccion']} + ', ' + ${s['localidad']}"></td></tr>
+        <tr><th>Horario</th><td th:text="${#strings.substring(s['hora_apertura'],0,5)} + ' a ' + ${#strings.substring(s['hora_cierre'],0,5)}"></td></tr>
+        <tr><th>En el mapa</th><td th:text="${s['latitud'] != null} ? 'Sí' : 'No (falta la ubicación)'"></td></tr>
+      </table>
+      <div class="sol-acciones" th:if="${!vistaTecnico}">
+        <a th:if="${s['estado'] == 'Borrador' or s['estado'] == 'Requiere ajustes'}"
+           th:href="@{'/restaurante/solicitud/' + ${s['codigo_solicitud']} + '/editar'}" class="btn btn-verde">
+          <i class="fas fa-pen"></i> Corregir y reenviar</a>
+        <form th:if="${s['estado'] == 'Borrador' or s['estado'] == 'Rechazada'}" method="post"
+              th:action="@{'/restaurante/solicitud/' + ${s['codigo_solicitud']} + '/eliminar'}"
+              onsubmit="return confirm('¿Eliminar la solicitud? No se puede deshacer.');">
+          <button class="btn btn-gris"><i class="fas fa-trash"></i> Eliminar</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Checklist automatico (lo calcula el servicio Python) -->
+    <div class="sol-card">
+      <h3><i class="fas fa-list-check"></i> Cumplimiento para aprobar</h3>
+      <div class="check-item" th:each="item : ${cumplimiento['items']}">
+        <i class="fas" th:classappend="${item['cumple']} ? 'fa-circle-check' : 'fa-circle-xmark'"></i>
+        <div><strong th:text="${item['requisito']}"></strong><br><span th:text="${item['detalle']}"></span></div>
+      </div>
+      <p style="margin-top:0.75rem;font-weight:700;"
+         th:style="${cumplimiento['puede_aprobarse']} ? 'color:#1e6b3a;margin-top:0.75rem;font-weight:700;' : 'color:var(--principal);margin-top:0.75rem;font-weight:700;'"
+         th:text="${cumplimiento['puede_aprobarse']} ? 'Cumple todos los requisitos' : 'Aún no cumple los requisitos'"></p>
+    </div>
+  </div>
+
+  <!-- Decision del tecnico -->
+  <div class="sol-card" th:if="${vistaTecnico and !cerrada}">
+    <h3><i class="fas fa-gavel"></i> Decisión del técnico</h3>
+    <form method="post" th:action="@{'/tecnico/solicitudes/' + ${s['codigo_solicitud']} + '/estado'}">
+      <div class="sol-grid">
+        <div class="sol-campo">
+          <label for="estado">Nuevo estado</label>
+          <select id="estado" name="estado">
+            <option value="En revision" th:if="${s['estado'] == 'Enviada'}">En revisión</option>
+            <option value="Aprobada">Aprobar (publica la cocina)</option>
+            <option value="Requiere ajustes">Pedir ajustes</option>
+            <option value="Rechazada">Rechazar</option>
+          </select>
+        </div>
+        <div class="sol-campo" style="grid-column: span 2;">
+          <label for="observaciones">Observaciones (obligatorias al pedir ajustes o rechazar)</label>
+          <input id="observaciones" name="observaciones" maxlength="500">
+        </div>
+      </div>
+      <div class="sol-acciones"><button class="btn btn-verde"><i class="fas fa-check"></i> Guardar decisión</button></div>
+    </form>
+  </div>
+
+  <!-- Documentos -->
+  <div class="sol-card">
+    <h3><i class="fas fa-file-shield"></i> Documentos</h3>
+    <p th:if="${#lists.isEmpty(s['documentos'])}" style="color:var(--texto-gris);">Aún no hay documentos.</p>
+    <table class="sol-tabla" th:unless="${#lists.isEmpty(s['documentos'])}">
+      <thead><tr><th>Documento</th><th>Detalle</th><th>Expedición</th><th>Vence</th><th>Revisión</th><th></th></tr></thead>
+      <tbody>
+        <tr th:each="d : ${s['documentos']}">
+          <td><strong th:text="${d['tipo_documento']}"></strong><br><span th:text="${d['numero_documento']} ?: ''"></span></td>
+          <td>
+            <span th:if="${d['titular'] != null}" th:text="${d['titular']}"></span>
+            <span th:if="${d['resultado'] != null}" th:text="${d['resultado']}"></span>
+            <span th:if="${d['horas_capacitacion'] != null}" th:text="' · ' + ${d['horas_capacitacion']} + ' h'"></span>
+          </td>
+          <td th:text="${d['fecha_expedicion']}"></td>
+          <td th:text="${d['fecha_vencimiento']} ?: '—'"></td>
+          <td><span th:text="${d['estado_revision']}"></span><br>
+            <span style="font-size:0.78rem;color:var(--principal);" th:text="${d['observacion']} ?: ''"></span></td>
+          <td>
+            <a th:if="${d['tiene_archivo'] and vistaTecnico}" th:href="@{'/tecnico/documentos/' + ${d['codigo_documento']} + '/archivo'}"
+               class="btn btn-gris" target="_blank"><i class="fas fa-file-pdf"></i> PDF</a>
+            <span th:if="${d['tiene_archivo'] and !vistaTecnico}"><i class="fas fa-file-pdf"></i> Adjunto</span>
+            <form th:if="${vistaTecnico and !cerrada}" method="post"
+                  th:action="@{'/tecnico/documentos/' + ${d['codigo_documento']} + '/revision'}" style="margin-top:0.35rem;">
+              <input type="hidden" name="solicitud" th:value="${s['codigo_solicitud']}">
+              <select name="estado_revision" style="font-size:0.8rem;">
+                <option value="Valido">Válido</option>
+                <option value="Rechazado">Rechazado</option>
+              </select>
+              <input name="observacion" placeholder="Motivo" style="font-size:0.8rem;width:7rem;">
+              <button class="btn btn-gris" style="padding:0.25rem 0.6rem;">OK</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- El solicitante puede agregar documentos mientras la solicitud no este decidida -->
+    <form th:if="${!vistaTecnico and !cerrada}" method="post" enctype="multipart/form-data"
+          th:action="@{'/restaurante/solicitud/' + ${s['codigo_solicitud']} + '/documentos'}" style="margin-top:1rem;">
+      <h4 style="font-size:0.92rem;margin-bottom:0.5rem;">Agregar documento</h4>
+      <div class="sol-grid">
+        <div class="sol-campo"><label>Tipo</label>
+          <select name="tipo_documento"><option th:each="t : ${tiposDocumento}" th:value="${t}" th:text="${t}"></option></select></div>
+        <div class="sol-campo"><label>Número</label><input name="numero_documento"></div>
+        <div class="sol-campo"><label>Titular (manipulador)</label><input name="titular"></div>
+        <div class="sol-campo"><label>Resultado (concepto)</label>
+          <select name="resultado"><option value="">—</option><option>Favorable</option>
+            <option>Favorable con requerimientos</option><option>Desfavorable</option></select></div>
+        <div class="sol-campo"><label>Horas (curso)</label><input type="number" name="horas_capacitacion" min="1"></div>
+        <div class="sol-campo"><label>Expedición *</label><input type="date" name="fecha_expedicion" required></div>
+        <div class="sol-campo"><label>Vencimiento</label><input type="date" name="fecha_vencimiento"></div>
+        <div class="sol-campo"><label>PDF (máx. 5 MB)</label><input type="file" name="archivo" accept="application/pdf"></div>
+      </div>
+      <div class="sol-acciones"><button class="btn btn-verde"><i class="fas fa-upload"></i> Agregar</button></div>
+    </form>
+  </div>
+
+  <!-- Historial -->
+  <div class="sol-card">
+    <h3><i class="fas fa-clock-rotate-left"></i> Historial</h3>
+    <ul class="sol-historial">
+      <li th:each="h : ${s['historial']}">
+        <strong th:text="${#strings.replace(#strings.substring(h['fecha'],0,16),'T',' ')}"></strong> ·
+        <span th:text="${h['estado_anterior'] != null} ? ${h['estado_anterior']} + ' → ' + ${h['estado_nuevo']} : ${h['estado_nuevo']}"></span>
+        <span style="color:var(--texto-gris);" th:text="' · ' + (${h['comentario']} ?: '')"></span>
+      </li>
+    </ul>
+  </div>
+</div>
+<div th:replace="~{fragments/comunes :: franjaDemo}"></div>
+<script src="/js/app.js"></script>
+</body>
+</html>

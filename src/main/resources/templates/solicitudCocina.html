@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Vincula tu cocina – Urban Eats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" th:content="${_csrf.token}">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <link rel="stylesheet" href="/css/solicitud.css">
+</head>
+<body>
+<nav th:replace="~{fragments/comunes :: navbar}"></nav>
+
+<div class="sol-pagina">
+  <h2 th:text="${codigoEdicion != null} ? 'Corregir solicitud #' + ${codigoEdicion} : 'Vincula tu cocina a Urban Eats'">Vincula tu cocina</h2>
+  <p class="sol-sub">Solo publicamos cocinas verificadas: un técnico revisa tus datos legales y sanitarios
+    (Resolución 2674 de 2013) antes de activar tu cocina. Los campos con * son obligatorios.</p>
+
+  <div th:replace="~{fragments/comunes :: mensajes}"></div>
+
+  <!-- La accion cambia si es una solicitud nueva o una correccion -->
+  <form method="post" enctype="multipart/form-data"
+        th:action="${codigoEdicion != null} ? @{'/restaurante/solicitud/' + ${codigoEdicion} + '/editar'} : @{/restaurante/solicitud}">
+
+    <!-- ===== 1. Datos del negocio ===== -->
+    <div class="sol-card">
+      <h3><i class="fas fa-building"></i> 1. Datos del negocio</h3>
+      <div class="sol-grid">
+        <div class="sol-campo" th:classappend="${erroresCampos['nombre_comercial'] != null} ? 'con-error'">
+          <label for="nombre_comercial">Nombre comercial *</label>
+          <input id="nombre_comercial" name="nombre_comercial" required minlength="3" maxlength="150"
+                 th:value="${datos['nombre_comercial']}" placeholder="Ej: Cocina La Vela">
+          <div class="error-campo" th:text="${erroresCampos['nombre_comercial']}"></div>
+        </div>
+        <div class="sol-campo">
+          <label for="razon_social">Razón social (como aparece en el RUT) *</label>
+          <input id="razon_social" name="razon_social" required minlength="3" maxlength="150"
+                 th:value="${datos['razon_social']}" placeholder="Ej: Cocina La Vela S.A.S.">
+        </div>
+        <div class="sol-campo">
+          <label for="tipo_persona">Tipo de persona *</label>
+          <select id="tipo_persona" name="tipo_persona" required>
+            <option value="Juridica" th:selected="${datos['tipo_persona'] == 'Juridica'}">Jurídica (empresa)</option>
+            <option value="Natural" th:selected="${datos['tipo_persona'] == 'Natural'}">Natural (persona)</option>
+          </select>
+        </div>
+        <div class="sol-campo">
+          <label for="nit">NIT (sin dígito de verificación) *</label>
+          <input id="nit" name="nit" required inputmode="numeric" th:value="${datos['nit']}" placeholder="900123456">
+          <div class="ayuda">Puede escribirlo con puntos: 900.123.456</div>
+        </div>
+        <div class="sol-campo" th:classappend="${erroresCampos['solicitud'] != null} ? 'con-error'">
+          <label for="digito_verificacion">Dígito de verificación (DV) *</label>
+          <input id="digito_verificacion" name="digito_verificacion" required maxlength="1" inputmode="numeric"
+                 th:value="${datos['digito_verificacion']}" placeholder="8">
+          <div class="ayuda">El número después del guion en el RUT. Se verifica con el algoritmo de la DIAN.</div>
+        </div>
+        <div class="sol-campo">
+          <label for="matricula_mercantil">Matrícula mercantil</label>
+          <input id="matricula_mercantil" name="matricula_mercantil" maxlength="30"
+                 th:value="${datos['matricula_mercantil']}" placeholder="Obligatoria para persona jurídica">
+        </div>
+        <div class="sol-campo">
+          <label for="tipo_establecimiento">Tipo de establecimiento *</label>
+          <select id="tipo_establecimiento" name="tipo_establecimiento" required>
+            <option value="Cocina oculta" th:selected="${datos['tipo_establecimiento'] == 'Cocina oculta'}">Cocina oculta (solo domicilios)</option>
+            <option value="Restaurante" th:selected="${datos['tipo_establecimiento'] == 'Restaurante'}">Restaurante con atención al público</option>
+          </select>
+        </div>
+        <div class="sol-campo">
+          <label for="categoria">Categoría *</label>
+          <select id="categoria" name="categoria" required>
+            <option th:each="c : ${categorias}" th:value="${c}" th:text="${c}" th:selected="${datos['categoria'] == c}"></option>
+          </select>
+        </div>
+        <div class="sol-campo" th:classappend="${erroresCampos['telefono'] != null} ? 'con-error'">
+          <label for="telefono">Teléfono *</label>
+          <input id="telefono" name="telefono" required th:value="${datos['telefono']}" placeholder="3205550199">
+          <div class="error-campo" th:text="${erroresCampos['telefono']}"></div>
+        </div>
+        <div class="sol-campo" th:classappend="${erroresCampos['correo'] != null} ? 'con-error'">
+          <label for="correo">Correo de contacto *</label>
+          <input id="correo" name="correo" type="email" required th:value="${datos['correo']}" placeholder="cocina@correo.com">
+          <div class="error-campo" th:text="${erroresCampos['correo']}"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 2. Ubicación y horario ===== -->
+    <div class="sol-card">
+      <h3><i class="fas fa-location-dot"></i> 2. Ubicación y horario nocturno</h3>
+      <div class="sol-grid">
+        <div class="sol-campo">
+          <label for="direccion">Dirección *</label>
+          <input id="direccion" name="direccion" required minlength="5" maxlength="200"
+                 th:value="${datos['direccion']}" placeholder="Cl. 53 # 27-20">
+        </div>
+        <div class="sol-campo" th:classappend="${erroresCampos['localidad'] != null} ? 'con-error'">
+          <label for="localidad">Localidad de Bogotá *</label>
+          <select id="localidad" name="localidad" required>
+            <option th:each="l : ${localidades}" th:value="${l}" th:text="${l}" th:selected="${datos['localidad'] == l}"></option>
+          </select>
+        </div>
+        <div class="sol-campo">
+          <label for="hora_apertura">Hora de apertura *</label>
+          <input id="hora_apertura" name="hora_apertura" type="time" required
+                 th:value="${datos['hora_apertura'] != null} ? ${#strings.substring(datos['hora_apertura'], 0, 5)} : '21:00'">
+        </div>
+        <div class="sol-campo">
+          <label for="hora_cierre">Hora de cierre *</label>
+          <input id="hora_cierre" name="hora_cierre" type="time" required
+                 th:value="${datos['hora_cierre'] != null} ? ${#strings.substring(datos['hora_cierre'], 0, 5)} : '05:00'">
+          <div class="ayuda">Si cierra de madrugada (ej. 05:00), se entiende que es al día siguiente.</div>
+        </div>
+      </div>
+      <div class="sol-campo" style="margin-top:0.9rem;">
+        <label>Ubica tu cocina en el mapa (clic para poner el punto)</label>
+        <div id="mapa-cocina" class="sol-mapa"></div>
+        <input type="hidden" id="latitud" name="latitud" th:value="${datos['latitud']}">
+        <input type="hidden" id="longitud" name="longitud" th:value="${datos['longitud']}">
+        <div class="ayuda" id="texto-coordenadas">Sin ubicación: sin ella no se puede calcular la ruta de los domicilios.</div>
+      </div>
+    </div>
+
+    <!-- ===== 3. Documentos (solo al crear; luego se agregan en el detalle) ===== -->
+    <div class="sol-card" th:if="${codigoEdicion == null}">
+      <h3><i class="fas fa-file-shield"></i> 3. Documentos legales y sanitarios</h3>
+      <p class="sol-sub" style="margin-bottom:0.8rem;">Diligencia los que tengas ahora; los demás puedes subirlos después.
+        Archivos en PDF, máximo 5 MB.</p>
+
+      <div class="sol-doc" th:each="tipo, i : ${tiposDocumento}">
+        <h4 th:text="${tipo == 'Camara de Comercio'} ? 'Certificado de Cámara de Comercio (expedido hace 30 días o menos)'
+                    : (${tipo == 'Certificado manipulacion'} ? 'Certificado de manipulación de alimentos (mínimo 10 horas)'
+                    : (${tipo == 'Certificado medico'} ? 'Certificado médico del manipulador'
+                    : (${tipo == 'Concepto sanitario'} ? 'Concepto sanitario (Secretaría Distrital de Salud)' : 'RUT')))">Documento</h4>
+        <div class="sol-grid">
+          <div class="sol-campo">
+            <label>Número</label>
+            <input th:name="'doc_numero_' + ${i.index}">
+          </div>
+          <div class="sol-campo" th:if="${tipo == 'Certificado manipulacion' or tipo == 'Certificado medico'}">
+            <label>Nombre del manipulador</label>
+            <input th:name="'doc_titular_' + ${i.index}">
+          </div>
+          <div class="sol-campo" th:if="${tipo == 'Concepto sanitario'}">
+            <label>Resultado</label>
+            <select th:name="'doc_resultado_' + ${i.index}">
+              <option value="Favorable">Favorable</option>
+              <option value="Favorable con requerimientos">Favorable con requerimientos</option>
+              <option value="Desfavorable">Desfavorable</option>
+            </select>
+          </div>
+          <div class="sol-campo" th:if="${tipo == 'Certificado manipulacion'}">
+            <label>Horas del curso</label>
+            <input type="number" min="1" max="200" th:name="'doc_horas_' + ${i.index}">
+          </div>
+          <div class="sol-campo">
+            <label>Fecha de expedición</label>
+            <input type="date" th:name="'doc_expedicion_' + ${i.index}">
+          </div>
+          <div class="sol-campo" th:if="${tipo != 'RUT' and tipo != 'Camara de Comercio'}">
+            <label>Fecha de vencimiento</label>
+            <input type="date" th:name="'doc_vencimiento_' + ${i.index}">
+          </div>
+          <div class="sol-campo">
+            <label>Archivo PDF</label>
+            <input type="file" accept="application/pdf" th:name="'doc_archivo_' + ${i.index}">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Autorizacion y envio ===== -->
+    <div class="sol-card">
+      <label th:if="${codigoEdicion == null}" style="display:flex;gap:0.6rem;font-size:0.9rem;align-items:flex-start;">
+        <input type="checkbox" name="autoriza_datos" required style="margin-top:0.25rem;">
+        <span>Autorizo a Urban Eats a tratar mis datos personales y los de mi negocio para verificar la vinculación,
+          según la Ley 1581 de 2012 de protección de datos personales. *</span>
+      </label>
+      <div class="sol-acciones">
+        <button type="submit" name="accion" value="enviar" class="btn btn-verde">
+          <i class="fas fa-paper-plane"></i> Enviar para revisión
+        </button>
+        <button type="submit" name="accion" value="borrador" class="btn btn-gris" formnovalidate>
+          <i class="fas fa-floppy-disk"></i> Guardar como borrador
+        </button>
+        <a href="/restaurante/solicitudes" class="btn btn-gris">Cancelar</a>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div th:replace="~{fragments/comunes :: franjaDemo}"></div>
+<div id="toast-container"></div>
+<script src="/js/app.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="/js/selector-mapa.js"></script>
+<script>iniciarSelectorMapa('mapa-cocina', 'latitud', 'longitud', 'texto-coordenadas');</script>
+</body>
+</html>

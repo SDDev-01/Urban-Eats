@@ -41,46 +41,71 @@
 
   <div class="pagina">
     <div style="max-width:1000px; margin:0 auto; padding:0 2rem 1rem;">
-      <h2 class="seccion-titulo"><i class="fas fa-credit-card" style="color:var(--verde);"></i> Método de Pago</h2>
-      <p class="seccion-subtitulo">Elige cómo quieres pagar tu pedido</p>
+      <h2 class="seccion-titulo"><i class="fas fa-credit-card" style="color:var(--terciario);"></i> Pago del pedido</h2>
+      <p class="seccion-subtitulo">Primero se aprueba el pago y luego tu pedido llega a la cocina.</p>
     </div>
 
-    <div class="pago-layout">
-    <!-- Mercado Pago: la Public Key viene del modelo (mercadopago.public-key en application.properties) -->
+    <!-- Datos que pago.js necesita: llave publica de MercadoPago y si los pagos son simulados -->
     <script th:inline="javascript">
         window.MP_PUBLIC_KEY = /*[[${mpPublicKey}]]*/ "";
+        window.PAGOS_MODO_DEMO = /*[[${pagosModoDemo}]]*/ false;
     </script>
-      <!-- Columna izquierda: mercado pago -->
-      <script src="https://sdk.mercadopago.com/js/v2"></script>
-      <!--contenedor del brick-->
-      <div id="paymentBrick_container">
-        
+
+    <div class="pago-layout">
+      <div>
+        <!-- Errores del pago o del carrito (rechazos, cocina cerrada, platos de varias cocinas...) -->
+        <div id="pago-error" class="msg-verificacion msg-error" style="display:none;margin-bottom:1rem;">
+          <i class="fas fa-exclamation-triangle"></i> <span id="pago-error-texto"></span>
+        </div>
+
+        <!-- Direccion de entrega -->
+        <div class="resumen-pago" style="margin-bottom:1rem;">
+          <h3><i class="fas fa-location-dot" style="color:var(--principal);"></i> Dirección de entrega</h3>
+          <p th:if="${#lists.isEmpty(direcciones)}" style="font-size:0.9rem;">
+            No tienes direcciones. <a th:href="@{/perfil}" style="color:var(--principal);font-weight:700;">Agrega una en tu perfil</a>.
+          </p>
+          <select id="direccion-entrega" th:unless="${#lists.isEmpty(direcciones)}"
+                  style="width:100%;padding:0.6rem;border-radius:8px;border:1px solid var(--borde);font-family:inherit;">
+            <option th:each="d : ${direcciones}" th:value="${d.codigoDireccion}"
+                    th:text="${d.direccion} + (${d.tieneCoordenadas()} ? '' : ' (sin ubicación en el mapa)')">Dirección</option>
+          </select>
+        </div>
+
+        <!-- Modo demostracion: pago simulado, sin MercadoPago -->
+        <div id="pago-demo" class="resumen-pago" style="display:none;">
+          <h3><i class="fas fa-flask" style="color:var(--terciario);"></i> Pago en modo demostración</h3>
+          <p style="font-size:0.9rem;margin:0.5rem 0 1rem;">
+            Este entorno está configurado para la sustentación: el pago se aprueba de forma simulada
+            (no se cobra dinero ni se contacta a MercadoPago). En producción aquí aparece el formulario de MercadoPago.
+          </p>
+          <button type="button" class="btn btn-verde btn-grande" id="btn-pagar-demo" style="width:100%;">
+            <i class="fas fa-lock"></i> Pagar en modo demostración
+          </button>
+        </div>
+
+        <!-- Mercado Pago: el Payment Brick se dibuja aqui -->
+        <div id="paymentBrick_container"></div>
       </div>
 
-      <!-- Resumen lateral -->
+      <!-- Resumen lateral: lo calcula el servidor con los precios de la base -->
       <div class="resumen-pago">
         <h3>Resumen del Pedido</h3>
+        <p id="resumen-cocina" style="font-size:0.85rem;color:var(--texto-gris);margin-bottom:0.5rem;"></p>
         <div id="resumen-items-pago">
-          <p style="color:var(--texto-gris); font-size:0.875rem;">No hay pedido activo.</p>
+          <p style="color:var(--texto-gris); font-size:0.875rem;">Calculando...</p>
         </div>
         <hr class="resumen-separador">
         <div class="resumen-linea"><span class="label">Subtotal</span><span id="pago-subtotal">$0</span></div>
+        <div class="resumen-linea"><span class="label">Domicilio</span><span>Incluido</span></div>
         <hr class="resumen-separador">
         <div class="resumen-total-pago">
           <span>Total</span>
-          <!--monto pago-->
           <span class="monto" id="pago-total">$0 COP</span>
-          <input type="hidden" id="monto-input" name="monto" value="0">
         </div>
-        <!-- boton viejo de pago
-        <button class="btn-pagar" id="btn-pagar">
-          <i class="fas fa-lock"></i> Confirmar Pago
-        </button>
-        <div class="seguridad-nota">
-          <i class="fas fa-shield-alt" style="color:var(--verde);"></i>
-          Pago 100% seguro y encriptado
+        <div class="seguridad-nota" style="font-size:0.8rem;margin-top:0.75rem;color:var(--texto-gris);">
+          <i class="fas fa-shield-alt" style="color:var(--terciario);"></i>
+          El total se calcula en el servidor con los precios vigentes de la cocina.
         </div>
-        -->
       </div>
     </div>
   </div>
@@ -88,6 +113,8 @@
   <footer><p>&copy; 2026 Urban Eats – Proyecto Formativo SENA</p></footer>
   <div id="toast-container"></div>
   <script src="/js/app.js"></script>
+  <script src="https://sdk.mercadopago.com/js/v2"></script>
   <script src="/js/pago.js"></script>
+<div th:replace="~{fragments/comunes :: franjaDemo}"></div>
 </body>
 </html>

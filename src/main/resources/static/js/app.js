@@ -16,6 +16,29 @@
   });
 })();
 
+// ---- SEGURIDAD: escapar texto antes de meterlo en innerHTML ----
+// Nombres de platos, cocinas o clientes vienen de la base: si alguien escribe
+// "<script>" en un nombre, sin esto el navegador lo ejecutaria (XSS).
+function escaparHTML(texto) {
+  return String(texto ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// ---- CSRF: encabezados para los fetch que modifican datos (POST) ----
+function encabezadosCSRF() {
+  const token = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+  return { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token };
+}
+
+// ---- FORMATO DE PESOS COLOMBIANOS: $18.500 ----
+function formatoCOP(valor) {
+  return '$' + Number(valor || 0).toLocaleString('es-CO', { maximumFractionDigits: 0 });
+}
+
 // ---- TOAST ----
 function mostrarToast(mensaje, icono = 'fa-check-circle') {
   let contenedor = document.getElementById('toast-container');
@@ -26,9 +49,9 @@ function mostrarToast(mensaje, icono = 'fa-check-circle') {
   }
   const toast = document.createElement('div');
   toast.className = 'toast';
-  toast.innerHTML = `<i class="fas ${icono}"></i> ${mensaje}`;
+  toast.innerHTML = `<i class="fas ${escaparHTML(icono)}"></i> ${escaparHTML(mensaje)}`;
   contenedor.appendChild(toast);
-  setTimeout(() => toast.remove(), 3000);
+  setTimeout(() => toast.remove(), 3500);
 }
 
 // ---- CARRITO: funciones base ----
@@ -51,6 +74,70 @@ function agregarAlCarrito(producto) {
   }
   guardarCarrito(carrito);
   mostrarToast(`¡${producto.nombre} agregado al carrito!`);
+}
+
+// Agrega un plato desde el modal del catalogo o del detalle de una cocina.
+// Reglas: el plato debe estar disponible y el carrito debe ser de UNA sola cocina
+// (cada cocina despacha su propio domicilio). El servidor vuelve a validar todo al pagar.
+function agregarPlatoAlCarrito(producto, cantidad) {
+  if (producto.disponible === false) {
+    mostrarToast(`${producto.nombre} no está disponible en este momento.`, 'fa-ban');
+    return false;
+  }
+  let carrito = obtenerCarrito();
+  const otraCocina = carrito.find(p => p.restaurante_id && producto.restaurante_id
+                                      && p.restaurante_id !== producto.restaurante_id);
+  if (otraCocina) {
+    const vaciar = confirm(`Tu carrito tiene platos de "${otraCocina.restaurante_nombre}". ` +
+      `Cada cocina envía su propio domicilio.\n\n¿Vaciar el carrito y empezar con "${producto.restaurante_nombre}"?`);
+    if (!vaciar) return false;
+    carrito = [];
+  }
+  const existe = carrito.find(p => p.id === producto.id);
+  if (existe) {
+    existe.cantidad += cantidad;
+  } else {
+    carrito.push({ ...producto, cantidad });
+  }
+  guardarCarrito(carrito);
+  mostrarToast(`¡${producto.nombre} agregado al carrito!`);
+  return true;
+}
+
+// HTML con la informacion nutricional de un plato para el modal de detalle.
+function infoNutricionalHTML(producto) {
+  const partes = [];
+  if (producto.calorias) {
+    partes.push(`<span class="dato-nutricional"><i class="fas fa-fire"></i> ${escaparHTML(producto.calorias)} kcal aprox.</span>`);
+  }
+  (producto.etiquetas || []).forEach(etiqueta => {
+    const clase = etiqueta === 'Balanceado' ? 'sello-plato sello-balanceado' : 'sello-plato';
+    partes.push(`<span class="${clase}">${escaparHTML(etiqueta)}</span>`);
+  });
+  if (producto.alergenos) {
+    partes.push(`<span class="dato-alergenos"><i class="fas fa-triangle-exclamation"></i> Contiene: ${escaparHTML(producto.alergenos)}</span>`);
+  }
+  if (producto.disponible === false) {
+    partes.push('<span class="sello-plato sello-agotado">No disponible ahora</span>');
+  }
+  return partes.join(' ');
+}
+
+// Convierte los data-* de un boton "Ver detalles" en el objeto producto del carrito.
+function productoDesdeDataset(datos) {
+  return {
+    id: parseInt(datos.id),
+    nombre: datos.nombre,
+    descripcion: datos.descripcion,
+    precio: parseFloat(datos.precio),
+    categoria: datos.categoria,
+    restaurante_id: datos.restaurante ? parseInt(datos.restaurante) : null,
+    restaurante_nombre: datos.restauranteNombre || '',
+    disponible: datos.disponible !== 'false',
+    calorias: datos.calorias ? parseInt(datos.calorias) : null,
+    etiquetas: datos.etiquetas ? datos.etiquetas.split(',').map(e => e.trim()).filter(Boolean) : [],
+    alergenos: datos.alergenos || ''
+  };
 }
 
 function actualizarBadgeCarrito() {
@@ -88,9 +175,9 @@ if (formLogin) {
       valido = false;
     }
 
-    // Validar contraseña
-    if (password.value.length < 4) {
-      if (errPass) errPass.textContent = 'La contraseña debe tener al menos 4 caracteres.';
+    // Validar contraseña (solo que no venga vacia: los usuarios antiguos pueden tener claves cortas)
+    if (password.value.length === 0) {
+      if (errPass) errPass.textContent = 'Ingresa tu contraseña.';
       valido = false;
     }
 
@@ -156,10 +243,10 @@ if (formRegistro) {
       valido = false;
     }
 
-    // Validar contraseña (mínimo 4 caracteres, igual que el login)
-    if (campos.password && campos.password.value.length < 4) {
+    // Validar contraseña (mínimo 8 caracteres, la misma regla que valida el servidor)
+    if (campos.password && campos.password.value.length < 8) {
       const err = document.getElementById('error-password');
-      if (err) err.textContent = 'La contraseña debe tener al menos 4 caracteres.';
+      if (err) err.textContent = 'La contraseña debe tener al menos 8 caracteres.';
       valido = false;
     }
 
@@ -199,6 +286,12 @@ window.UE = {
   obtenerCarrito,
   guardarCarrito,
   agregarAlCarrito,
+  agregarPlatoAlCarrito,
+  infoNutricionalHTML,
+  productoDesdeDataset,
   actualizarBadgeCarrito,
   validarCampo,
+  escaparHTML,
+  encabezadosCSRF,
+  formatoCOP,
 };

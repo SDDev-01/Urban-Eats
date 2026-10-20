@@ -1,6 +1,8 @@
 package com.urbaneats.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import jakarta.persistence.*;
@@ -29,8 +31,19 @@ public class Envio {
     @Column(name = "FechaEnvio")
     private LocalDate fechaEnvio;
 
+    /** Hora estimada de entrega. */
     @Column(name = "HoraEntrega")
     private LocalTime horaEntrega;
+
+    /** Ultima posicion que reporto el repartidor (GPS o simulacion). */
+    @Column(name = "LatitudRepartidor", precision = 10, scale = 7)
+    private BigDecimal latitudRepartidor;
+
+    @Column(name = "LongitudRepartidor", precision = 10, scale = 7)
+    private BigDecimal longitudRepartidor;
+
+    @Column(name = "FechaUbicacion")
+    private LocalDateTime fechaUbicacion;
 
     // ----- Relaciones -----
 
@@ -41,7 +54,7 @@ public class Envio {
     @EqualsAndHashCode.Exclude
     private Cliente cliente;
 
-    /** El repartidor asignado. En el Schema.sql admite NULL: un envio puede estar sin tomar. */
+    /** El repartidor asignado. Es NULL mientras ningun repartidor toma el pedido. */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CodigoRepartidor")
     @ToString.Exclude
@@ -54,6 +67,13 @@ public class Envio {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Restaurante restaurante;
+
+    /** La direccion de entrega que eligio el cliente al pagar. */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CodigoDireccion")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Direccion direccion;
 
     /** El pedido asociado. La llave foranea vive en la tabla Pedido. */
     @OneToOne(mappedBy = "envio")

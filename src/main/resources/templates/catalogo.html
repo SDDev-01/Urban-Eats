@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Catálogo – Urban Eats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" th:if="${_csrf != null}" th:content="${_csrf.token}">
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="/css/catalogo.css">
@@ -22,11 +23,13 @@
     </a>
     <div class="navbar-links">
         <a href="/restaurantes" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
-        <!-- Solo para quien inicio sesion: sin sesion el principal es el usuario anonimo. -->
+        <a th:href="@{/filtrar-platos}" href="/filtrar-platos" class="navbar-link">
+           <i class="fas fa-filter"></i> Filtrar platos
+        </a>
         <a th:if="${#authentication != null
                    and #authentication.principal instanceof T(com.urbaneats.security.CustomUserDetails)}"
-           th:href="@{/reportes}" href="/reportes" class="navbar-link">
-           <i class="fas fa-filter"></i> Filtrar platos
+           th:href="@{/mis-pedidos}" href="/mis-pedidos" class="navbar-link">
+           <i class="fas fa-receipt"></i> Mis pedidos
         </a>
     </div>
     <div class="navbar-right">
@@ -120,6 +123,7 @@
 
       <div class="producto-card"
            th:each="plato : ${platos}"
+           th:classappend="${!plato.disponible} ? 'producto-agotado'"
            th:attr="data-categoria=${plato.menu != null ? plato.menu.categoria : ''}, data-precio=${plato.precio}">
         <div class="producto-img-wrap">
           <span class="producto-emoji"
@@ -130,6 +134,11 @@
                th:text="${plato.menu != null ? plato.menu.categoria : '—'}">Categoría</div>
           <div class="producto-nombre" th:text="${plato.nombre}">Nombre del plato</div>
           <div class="producto-desc" th:text="${plato.descripcion}">Descripción</div>
+          <div class="producto-sellos">
+            <span th:if="${plato.balanceado}" class="sello-plato sello-balanceado"><i class="fas fa-leaf"></i> Balanceado</span>
+            <span th:if="${plato.calorias != null}" class="dato-nutricional" th:text="${plato.calorias} + ' kcal'">0 kcal</span>
+            <span th:unless="${plato.disponible}" class="sello-plato sello-agotado">No disponible</span>
+          </div>
           <div class="producto-footer">
             <span class="producto-precio"
                   th:text="'$' + ${#numbers.formatInteger(plato.precio, 0, 'POINT')} + ' COP'">$0 COP</span>
@@ -138,7 +147,13 @@
                              data-nombre=${plato.nombre},
                              data-descripcion=${plato.descripcion},
                              data-precio=${plato.precio},
-                             data-categoria=${plato.menu != null ? plato.menu.categoria : ''}">
+                             data-categoria=${plato.menu != null ? plato.menu.categoria : ''},
+                             data-restaurante=${plato.menu.restaurante.codigoRestaurante},
+                             data-restaurante-nombre=${plato.menu.restaurante.nombre},
+                             data-disponible=${plato.disponible},
+                             data-calorias=${plato.calorias},
+                             data-etiquetas=${plato.etiquetas},
+                             data-alergenos=${alergenosPorPlato.get(plato.codigoPlato)}">
               Ver detalles
             </button>
           </div>
@@ -184,7 +199,7 @@
   </div>
 
   <footer>
-    <p>&copy; 2026 Urban Eats – Proyecto Formativo SENA. Comida para todos.</p>
+    <p>&copy; 2026 Urban Eats – Proyecto Formativo SENA. Comida real para quienes mueven la noche.</p>
   </footer>
 
   <div id="toast-container"></div>
@@ -194,5 +209,6 @@
   <!-- Los productos ya vienen renderizados por Thymeleaf desde CatalogoController.
        catalogo.js solo se encarga de los filtros, el modal y el carrito. -->
   <script src="/js/catalogo.js"></script>
+<div th:replace="~{fragments/comunes :: franjaDemo}"></div>
 </body>
 </html>

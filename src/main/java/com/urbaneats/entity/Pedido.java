@@ -1,6 +1,7 @@
 package com.urbaneats.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -12,6 +13,9 @@ import lombok.ToString;
  * Entidad de la tabla Pedido.
  * En el Schema.sql no hay columna de total ni de cliente: el total se calcula
  * sumando el detalle, y el cliente se alcanza a traves del envio.
+ *
+ * Ojo: el pedido NO se inserta desde Java. Lo crea el trigger
+ * crear_pedido_automaticamente al guardar el envio (ver PedidoDesdeCarritoService).
  */
 @Data
 @Entity
@@ -26,9 +30,14 @@ public class Pedido {
     @Column(name = "FechaPedido")
     private LocalDate fechaPedido;
 
-    /** Valores del ENUM en BD: Iniciando, En Proceso, Entregado, Cancelado. */
-    @Column(name = "Estado", nullable = false, length = 20)
-    private String estado;
+    /** Fecha y hora real del pedido. La llena la base (DEFAULT CURRENT_TIMESTAMP). */
+    @Column(name = "FechaHora", insertable = false, updatable = false)
+    private LocalDateTime fechaHora;
+
+    /** Uno de los seis estados de EstadoPedido; el converter lo guarda como texto. */
+    @Convert(converter = EstadoPedidoConverter.class)
+    @Column(name = "Estado", nullable = false, length = 30)
+    private EstadoPedido estado;
 
     // ----- Relaciones -----
 
