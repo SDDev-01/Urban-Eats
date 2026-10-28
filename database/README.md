@@ -1,5 +1,9 @@
 # Base de datos `urbaneats`
 
+## Forma automática (recomendada)
+
+`scripts\iniciar_demo.cmd` (doble clic) verifica los requisitos, enciende MariaDB y aplica solo los archivos que falten, con un respaldo previo en `database\respaldos\` si la base ya tenía datos. Para solo migrar: `powershell -ExecutionPolicy Bypass -File scripts\migrar_bd.ps1` (`-SoloRevisar` muestra lo pendiente sin cambiar nada).
+
 ## Instalación nueva (XAMPP / MariaDB 10.4 o MySQL 8)
 
 Ejecutar en este orden:
