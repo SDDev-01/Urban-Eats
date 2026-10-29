@@ -3,6 +3,8 @@
    ============================
    1) Pide al servidor el resumen del carrito (POST /pago/resumen): el servidor usa
       los precios de la base, revisa que todo sea de una cocina y calcula el total.
+   El mapa de la entrega (pago-mapa.js) muestra la cocina y el punto de la direccion;
+   sin ese punto no se deja pagar, porque el repartidor no tendria ruta.
    2) Cobra:
       - Modo demostracion: boton "Pagar en modo demostracion" (no hay cobro real).
       - Normal: Payment Brick de MercadoPago con el total que dio el servidor.
@@ -68,6 +70,7 @@ function pintarResumen(resumen) {
     </div>`).join('');
   document.getElementById('pago-subtotal').textContent = window.UE.formatoCOP(totalServidor);
   document.getElementById('pago-total').textContent = window.UE.formatoCOP(totalServidor) + ' COP';
+  window.MapaEntrega.ponerCocina(resumen.cocinaLat, resumen.cocinaLng, resumen.cocina);
 }
 
 function mostrarError(mensaje) {
@@ -82,8 +85,19 @@ function direccionElegida() {
   return select ? Number(select.value) : null;
 }
 
+/** True si la direccion elegida ya tiene su punto en el mapa (sin el no hay ruta). */
+function direccionConPunto() {
+  const select = document.getElementById('direccion-entrega');
+  const opcion = select && select.options[select.selectedIndex];
+  return Boolean(opcion && opcion.dataset.lat && opcion.dataset.lng);
+}
+
 // ---- 3) Enviar el pago al servidor (lo usan el modo demo y el Brick) ----
 async function enviarPago(datosPago) {
+  if (!direccionConPunto()) {
+    mostrarError('Marca en el mapa el punto de entrega antes de pagar.');
+    return false;
+  }
   const respuesta = await fetch('/process_payment', {
     method: 'POST',
     headers: window.UE.encabezadosCSRF(),
@@ -93,7 +107,7 @@ async function enviarPago(datosPago) {
       codigoDireccion: direccionElegida()
     })
   });
-  const datos = await respuesta.json();
+  const datos = await window.UE.leerRespuestaJson(respuesta);
 
   if (datos.status === 'approved' && datos.pedido) {
     window.UE.guardarCarrito([]);
@@ -113,7 +127,7 @@ async function pagarEnModoDemo() {
     const exito = await enviarPago({ metodo: 'demo' });
     if (!exito) boton.disabled = false;
   } catch (e) {
-    mostrarError('No pudimos procesar el pago. Intenta de nuevo.');
+    mostrarError(e.message === window.UE.MENSAJE_SESION_CAMBIO ? e.message : 'No pudimos procesar el pago. Intenta de nuevo.');
     boton.disabled = false;
   }
 }

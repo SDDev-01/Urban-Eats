@@ -69,10 +69,14 @@ public class PagoController {
                             "subtotal", linea.subtotal()))
                     .toList();
 
-            return ResponseEntity.ok(Map.of(
-                    "cocina", carrito.restaurante().getNombre(),
-                    "lineas", lineas,
-                    "total", carrito.total()));
+            // HashMap: las coordenadas de la cocina pueden ser null (Map.of no acepta null).
+            Map<String, Object> respuesta = new HashMap<>();
+            respuesta.put("cocina", carrito.restaurante().getNombre());
+            respuesta.put("cocinaLat", carrito.restaurante().getLatitud());
+            respuesta.put("cocinaLng", carrito.restaurante().getLongitud());
+            respuesta.put("lineas", lineas);
+            respuesta.put("total", carrito.total());
+            return ResponseEntity.ok(respuesta);
         } catch (ReglaNegocioException e) {
             return ResponseEntity.unprocessableEntity().body(Map.of("error", e.getMessage()));
         }

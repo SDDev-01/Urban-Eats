@@ -23,6 +23,19 @@ def obtener_sesion():
         sesion.close()
 
 
+# Columnas agregadas despues de crear las tablas. create_all() no modifica tablas que
+# ya existen, asi que se agregan aqui (MariaDB acepta ADD COLUMN IF NOT EXISTS).
+COLUMNAS_NUEVAS = [
+    "ALTER TABLE ruta_envio ADD COLUMN IF NOT EXISTS PasosJson TEXT NULL",
+]
+
+
+def agregar_columnas_nuevas() -> None:
+    with motor.begin() as conexion:
+        for sql in COLUMNAS_NUEVAS:
+            conexion.execute(text(sql))
+
+
 def probar_conexion() -> str:
     """Devuelve la version del servidor de base de datos; lanza excepcion si no conecta."""
     with motor.connect() as conexion:

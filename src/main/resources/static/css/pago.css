@@ -276,3 +276,18 @@
       .pago-layout { grid-template-columns: 1fr; }
       .resumen-pago { position: static; }
     }
+
+/* Mapa de la direccion de entrega (pago-mapa.js) */
+.mapa-entrega {
+  height: 260px;
+  margin-top: 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--borde);
+  z-index: 0;
+}
+.mapa-entrega-texto {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--texto-gris);
+}
+.mapa-entrega-texto.falta-punto { color: var(--principal); font-weight: 700; }

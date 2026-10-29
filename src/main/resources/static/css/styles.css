@@ -723,3 +723,33 @@ footer {
     color: #111417; text-align: center; font-size: 0.8rem; font-weight: 700;
     padding: 0.3rem 1rem; box-shadow: 0 -2px 8px rgba(0,0,0,0.15);
 }
+
+/* Aviso de rol (fragments/comunes :: navbar) */
+.aviso-rol {
+  position: fixed;
+  top: calc(var(--navbar-height) + 0.75rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 950;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  max-width: min(640px, calc(100% - 2rem));
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: #fff8e1;
+  border: 1px solid #fec10b;
+  color: #111417;
+  font-size: 0.9rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+.aviso-rol a { color: var(--principal); font-weight: 700; }
+.aviso-rol button {
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  color: inherit;
+}
