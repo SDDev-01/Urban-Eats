@@ -21,7 +21,7 @@
   <div th:replace="~{fragments/comunes :: mensajes}"></div>
 
   <!-- La accion cambia si es una solicitud nueva o una correccion -->
-  <form method="post" enctype="multipart/form-data"
+  <form method="post" enctype="multipart/form-data" data-solicitud
         th:action="${codigoEdicion != null} ? @{'/restaurante/solicitud/' + ${codigoEdicion} + '/editar'} : @{/restaurante/solicitud}">
 
     <!-- ===== 1. Datos del negocio ===== -->
@@ -48,19 +48,21 @@
         </div>
         <div class="sol-campo">
           <label for="nit">NIT (sin dígito de verificación) *</label>
-          <input id="nit" name="nit" required inputmode="numeric" th:value="${datos['nit']}" placeholder="900123456">
-          <div class="ayuda">Puede escribirlo con puntos: 900.123.456</div>
+          <input id="nit" name="nit" required inputmode="numeric" autocomplete="off" data-solo-numeros="15"
+                 th:value="${datos['nit']}" placeholder="900123456">
+          <div class="ayuda">Solo números, sin el dígito de verificación. Si lo pegas con puntos, se quitan solos.</div>
         </div>
         <div class="sol-campo" th:classappend="${erroresCampos['solicitud'] != null} ? 'con-error'">
           <label for="digito_verificacion">Dígito de verificación (DV) *</label>
-          <input id="digito_verificacion" name="digito_verificacion" required maxlength="1" inputmode="numeric"
-                 th:value="${datos['digito_verificacion']}" placeholder="8">
+          <input id="digito_verificacion" name="digito_verificacion" required inputmode="numeric"
+                 autocomplete="off" data-solo-numeros="1" th:value="${datos['digito_verificacion']}" placeholder="8">
           <div class="ayuda">El número después del guion en el RUT. Se verifica con el algoritmo de la DIAN.</div>
         </div>
         <div class="sol-campo">
           <label for="matricula_mercantil">Matrícula mercantil</label>
-          <input id="matricula_mercantil" name="matricula_mercantil" maxlength="30"
-                 th:value="${datos['matricula_mercantil']}" placeholder="Obligatoria para persona jurídica">
+          <input id="matricula_mercantil" name="matricula_mercantil" inputmode="numeric"
+                 autocomplete="off" data-solo-numeros="30" th:value="${datos['matricula_mercantil']}" placeholder="01234567">
+          <div class="ayuda">Solo números. Obligatoria para persona jurídica.</div>
         </div>
         <div class="sol-campo">
           <label for="tipo_establecimiento">Tipo de establecimiento *</label>
@@ -77,7 +79,9 @@
         </div>
         <div class="sol-campo" th:classappend="${erroresCampos['telefono'] != null} ? 'con-error'">
           <label for="telefono">Teléfono *</label>
-          <input id="telefono" name="telefono" required th:value="${datos['telefono']}" placeholder="3205550199">
+          <input id="telefono" name="telefono" required inputmode="numeric" autocomplete="off"
+                 data-solo-numeros="10" data-prefijo-pais="57" th:value="${datos['telefono']}" placeholder="3205550199">
+          <div class="ayuda">10 dígitos: celular (3…) o fijo de Bogotá (601…).</div>
           <div class="error-campo" th:text="${erroresCampos['telefono']}"></div>
         </div>
         <div class="sol-campo" th:classappend="${erroresCampos['correo'] != null} ? 'con-error'">
@@ -127,22 +131,24 @@
     <!-- ===== 3. Documentos (solo al crear; luego se agregan en el detalle) ===== -->
     <div class="sol-card" th:if="${codigoEdicion == null}">
       <h3><i class="fas fa-file-shield"></i> 3. Documentos legales y sanitarios</h3>
-      <p class="sol-sub" style="margin-bottom:0.8rem;">Diligencia los que tengas ahora; los demás puedes subirlos después.
-        Archivos en PDF, máximo 5 MB.</p>
+      <p class="sol-sub" style="margin-bottom:0.8rem;">Para enviar la solicitud se necesitan todos, cada uno con su PDF
+        (la Cámara de Comercio solo si es persona jurídica). Si te falta alguno, guárdala como borrador y envíala
+        cuando lo tengas. Archivos PDF de máximo 5 MB; fechas en formato dd/mm/aaaa.</p>
 
-      <div class="sol-doc" th:each="tipo, i : ${tiposDocumento}">
+      <div class="sol-doc" th:each="tipo, i : ${tiposDocumento}"
+           th:attr="data-documento=${tipo}, data-requerido=${tipo == 'Camara de Comercio' ? 'juridica' : 'siempre'}">
         <h4 th:text="${tipo == 'Camara de Comercio'} ? 'Certificado de Cámara de Comercio (expedido hace 30 días o menos)'
                     : (${tipo == 'Certificado manipulacion'} ? 'Certificado de manipulación de alimentos (mínimo 10 horas)'
                     : (${tipo == 'Certificado medico'} ? 'Certificado médico del manipulador'
                     : (${tipo == 'Concepto sanitario'} ? 'Concepto sanitario (Secretaría Distrital de Salud)' : 'RUT')))">Documento</h4>
         <div class="sol-grid">
           <div class="sol-campo">
-            <label>Número</label>
-            <input th:name="'doc_numero_' + ${i.index}">
+            <label>Número o código</label>
+            <input th:name="'doc_numero_' + ${i.index}" maxlength="50" autocomplete="off">
           </div>
           <div class="sol-campo" th:if="${tipo == 'Certificado manipulacion' or tipo == 'Certificado medico'}">
-            <label>Nombre del manipulador</label>
-            <input th:name="'doc_titular_' + ${i.index}">
+            <label>Nombre del manipulador *</label>
+            <input th:name="'doc_titular_' + ${i.index}" maxlength="150">
           </div>
           <div class="sol-campo" th:if="${tipo == 'Concepto sanitario'}">
             <label>Resultado</label>
@@ -153,19 +159,32 @@
             </select>
           </div>
           <div class="sol-campo" th:if="${tipo == 'Certificado manipulacion'}">
-            <label>Horas del curso</label>
-            <input type="number" min="1" max="200" th:name="'doc_horas_' + ${i.index}">
+            <label>Horas del curso *</label>
+            <input th:name="'doc_horas_' + ${i.index}" inputmode="numeric" autocomplete="off"
+                   data-solo-numeros="3" placeholder="Mínimo 10">
           </div>
           <div class="sol-campo">
-            <label>Fecha de expedición</label>
-            <input type="date" th:name="'doc_expedicion_' + ${i.index}">
+            <label>Fecha de expedición *</label>
+            <div class="campo-fecha">
+              <input type="text" th:name="'doc_expedicion_' + ${i.index}" data-fecha="expedicion"
+                     inputmode="numeric" placeholder="dd/mm/aaaa" autocomplete="off">
+              <button type="button" class="btn-calendario" title="Elegir en el calendario"
+                      aria-label="Elegir la fecha de expedición en el calendario"><i class="fas fa-calendar-days"></i></button>
+              <input type="date" class="fecha-nativa" tabindex="-1" aria-hidden="true">
+            </div>
           </div>
           <div class="sol-campo" th:if="${tipo != 'RUT' and tipo != 'Camara de Comercio'}">
             <label>Fecha de vencimiento</label>
-            <input type="date" th:name="'doc_vencimiento_' + ${i.index}">
+            <div class="campo-fecha">
+              <input type="text" th:name="'doc_vencimiento_' + ${i.index}" data-fecha="vencimiento"
+                     inputmode="numeric" placeholder="dd/mm/aaaa" autocomplete="off">
+              <button type="button" class="btn-calendario" title="Elegir en el calendario"
+                      aria-label="Elegir la fecha de vencimiento en el calendario"><i class="fas fa-calendar-days"></i></button>
+              <input type="date" class="fecha-nativa" tabindex="-1" aria-hidden="true">
+            </div>
           </div>
           <div class="sol-campo">
-            <label>Archivo PDF</label>
+            <label>Archivo PDF *</label>
             <input type="file" accept="application/pdf" th:name="'doc_archivo_' + ${i.index}">
           </div>
         </div>
@@ -195,6 +214,7 @@
 <div th:replace="~{fragments/comunes :: franjaDemo}"></div>
 <div id="toast-container"></div>
 <script src="/js/app.js"></script>
+<script src="/js/solicitud-cocina.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="/js/selector-mapa.js"></script>
 <script>iniciarSelectorMapa('mapa-cocina', 'latitud', 'longitud', 'texto-coordenadas');</script>

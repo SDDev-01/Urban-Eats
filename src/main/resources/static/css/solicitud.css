@@ -50,6 +50,22 @@
 .indicador { background: var(--blanco); border-radius: var(--radio); box-shadow: var(--sombra); padding: 1rem; text-align: center; }
 .indicador .valor { font-size: 1.6rem; font-weight: 700; color: var(--principal); }
 .indicador .nombre { font-size: 0.8rem; color: var(--texto-gris); }
+
+/* Fecha dd/mm/aaaa con boton de calendario (solicitud-cocina.js).
+   El input nativo queda invisible encima del boton: solo abre el calendario del navegador. */
+.campo-fecha { position: relative; display: flex; gap: 0.4rem; }
+.campo-fecha input[type="text"] { flex: 1; min-width: 0; }
+.btn-calendario {
+  flex: none; width: 2.6rem; border: 1px solid var(--borde); border-radius: 8px;
+  background: #fff; color: var(--texto-gris); cursor: pointer; font-size: 0.95rem;
+}
+.btn-calendario:hover, .btn-calendario:focus-visible { color: var(--principal); border-color: var(--principal); outline: none; }
+.campo-fecha .fecha-nativa {
+  position: absolute; right: 0; top: 0; width: 2.6rem; height: 100%;
+  opacity: 0; pointer-events: none; border: 0; padding: 0;
+}
+.sol-campo.con-error .btn-calendario { border-color: var(--principal); }
+
 @media (max-width: 600px) {
   .sol-card { padding: 1rem; }
   .sol-tabla { font-size: 0.8rem; }

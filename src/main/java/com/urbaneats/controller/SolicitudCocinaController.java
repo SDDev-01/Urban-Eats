@@ -1,8 +1,16 @@
 package com.urbaneats.controller;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,6 +47,17 @@ public class SolicitudCocinaController {
     /** Documentos que se piden en el formulario, en este orden. */
     public static final List<String> TIPOS_DOCUMENTO = List.of(
             "RUT", "Camara de Comercio", "Concepto sanitario", "Certificado manipulacion", "Certificado medico");
+
+    private static final String CAMARA = "Camara de Comercio";
+    private static final String MANIPULACION = "Certificado manipulacion";
+    private static final String MEDICO = "Certificado medico";
+    private static final int DIAS_CAMARA = 30;
+    private static final int HORAS_MINIMAS = 10;
+    private static final long MAX_PDF = 5L * 1024 * 1024;
+    private static final ZoneId ZONA = ZoneId.of("America/Bogota");
+    /** El formulario manda las fechas dd/mm/aaaa; STRICT rechaza fechas que no existen, como el 31/02. */
+    private static final DateTimeFormatter FECHA_DD_MM_AAAA =
+            DateTimeFormatter.ofPattern("d/M/uuuu").withResolverStyle(ResolverStyle.STRICT);
 
     public static final List<String> LOCALIDADES = List.of(
             "Usaquén", "Chapinero", "Santa Fe", "San Cristóbal", "Usme", "Tunjuelito", "Bosa", "Kennedy",
@@ -77,15 +96,47 @@ public class SolicitudCocinaController {
         return "solicitudCocina";
     }
 
-    /** Create: datos de la solicitud + los documentos que se hayan adjuntado. */
+    /**
+     * Create: los datos de la solicitud y sus documentos en un solo envio.
+     *
+     * Para que al tecnico le llegue completa, primero se revisan aqui los documentos;
+     * despues se guarda como borrador con sus documentos y solo al final pasa a "Enviada".
+     * Si algun documento no se guarda, queda en borrador y el usuario la envia desde el detalle.
+     */
     @PostMapping("/restaurante/solicitud")
     public String crear(MultipartHttpServletRequest request, RedirectAttributes redirect) {
         CustomUserDetails usuario = SesionHelper.usuarioActual();
         Map<String, Object> datos = leerCampos(request);
         datos.put("codigo_usuario", usuario.getCodigoUsuario());
         datos.put("autoriza_datos", "on".equals(request.getParameter("autoriza_datos")));
-        datos.put("enviar", !"borrador".equals(request.getParameter("accion")));
+        boolean enviar = !"borrador".equals(request.getParameter("accion"));
 
+        // 1) Los documentos se revisan antes de crear nada.
+        boolean juridica = "Juridica".equals(datos.get("tipo_persona"));
+        List<Integer> adjuntos = new ArrayList<>();
+        List<String> errores = new ArrayList<>();
+        for (int i = 0; i < TIPOS_DOCUMENTO.size(); i++) {
+            String tipo = TIPOS_DOCUMENTO.get(i);
+            if (!documentoDiligenciado(request, i)) {
+                if (enviar && esObligatorio(tipo, juridica)) {
+                    errores.add(nombreDocumento(tipo) + ": falta adjuntarlo.");
+                }
+                continue;
+            }
+            for (String problema : revisarDocumento(request, i, tipo, enviar)) {
+                errores.add(nombreDocumento(tipo) + ": " + problema);
+            }
+            adjuntos.add(i);
+        }
+        if (!errores.isEmpty()) {
+            redirect.addFlashAttribute("error", "La solicitud no se envió. " + String.join(" ", errores)
+                    + " Corrige eso y vuelve a adjuntar los PDF.");
+            redirect.addFlashAttribute("datos", datos);
+            return "redirect:/restaurante/solicitud/nueva";
+        }
+
+        // 2) Se guarda como borrador y se le suben los documentos.
+        datos.put("enviar", false);
         Integer codigo;
         try {
             codigo = entero(python.crearSolicitud(datos).get("codigo_solicitud"));
@@ -95,25 +146,39 @@ public class SolicitudCocinaController {
             redirect.addFlashAttribute("datos", datos);
             return "redirect:/restaurante/solicitud/nueva";
         }
-
-        // Los documentos se envian uno por uno; si alguno falla, la solicitud ya existe
-        // y el usuario puede volver a subirlo desde el detalle.
         StringBuilder avisos = new StringBuilder();
-        for (int i = 0; i < TIPOS_DOCUMENTO.size(); i++) {
-            String expedicion = request.getParameter("doc_expedicion_" + i);
-            if (expedicion == null || expedicion.isBlank()) {
-                continue; // documento no diligenciado
-            }
+        for (int i : adjuntos) {
             try {
                 python.agregarDocumento(codigo, camposDocumento(request, i, TIPOS_DOCUMENTO.get(i)),
                         request.getFile("doc_archivo_" + i));
             } catch (ServicioPythonException e) {
-                avisos.append(TIPOS_DOCUMENTO.get(i)).append(": ").append(e.getMensajeCompleto()).append(" ");
+                avisos.append(nombreDocumento(TIPOS_DOCUMENTO.get(i))).append(": ")
+                      .append(e.getMensajeCompleto()).append(" ");
             }
         }
-        redirect.addFlashAttribute("exito", "Solicitud #" + codigo + " registrada. Un técnico de Urban Eats la revisará.");
+
+        // 3) Solo con todo guardado pasa a "Enviada" y le aparece al tecnico.
+        if (!enviar) {
+            redirect.addFlashAttribute("exito", "Solicitud #" + codigo
+                    + " guardada como borrador. Envíala cuando tengas todos los documentos.");
+            if (!avisos.isEmpty()) {
+                redirect.addFlashAttribute("error", "Algunos documentos no se guardaron: " + avisos);
+            }
+            return "redirect:/restaurante/solicitud/" + codigo;
+        }
         if (!avisos.isEmpty()) {
-            redirect.addFlashAttribute("error", "Algunos documentos no se guardaron: " + avisos);
+            redirect.addFlashAttribute("error", "La solicitud #" + codigo + " quedó como borrador porque algunos "
+                    + "documentos no se guardaron: " + avisos + "Agrégalos abajo y luego usa «Completar y enviar».");
+            return "redirect:/restaurante/solicitud/" + codigo;
+        }
+        try {
+            Map<String, Object> envio = leerCampos(request);
+            envio.put("enviar", true);
+            python.actualizarSolicitud(codigo, envio, usuario.getCodigoUsuario());
+            redirect.addFlashAttribute("exito", "Solicitud #" + codigo
+                    + " enviada con sus documentos. Un técnico de Urban Eats la revisará.");
+        } catch (ServicioPythonException e) {
+            redirect.addFlashAttribute("error", "La solicitud #" + codigo + " quedó como borrador: " + e.getMessage());
         }
         return "redirect:/restaurante/solicitud/" + codigo;
     }
@@ -164,14 +229,30 @@ public class SolicitudCocinaController {
         }
     }
 
-    /** Update: corrige los datos y (si se pide) la reenvia para revision. */
+    /**
+     * Update: corrige los datos y (si se pide) la envia para revision.
+     * Si faltan documentos obligatorios, guarda las correcciones sin enviarla, para que
+     * al tecnico tampoco le llegue incompleta por este camino.
+     */
     @PostMapping("/restaurante/solicitud/{id}/editar")
     public String actualizar(@PathVariable int id, HttpServletRequest request, RedirectAttributes redirect) {
         Map<String, Object> datos = leerCampos(request);
-        datos.put("enviar", !"borrador".equals(request.getParameter("accion")));
+        boolean enviar = !"borrador".equals(request.getParameter("accion"));
+        datos.put("enviar", enviar);
         try {
+            List<String> faltan = enviar
+                    ? documentosFaltantes(solicitudPropia(id), "Juridica".equals(datos.get("tipo_persona")))
+                    : List.of();
+            if (!faltan.isEmpty()) {
+                datos.put("enviar", false);
+                python.actualizarSolicitud(id, datos, SesionHelper.usuarioActual().getCodigoUsuario());
+                redirect.addFlashAttribute("error", "Guardamos tus cambios, pero la solicitud aún no se envió: "
+                        + "falta " + String.join(", ", faltan) + ". Agrégalo abajo y luego usa «Completar y enviar».");
+                return "redirect:/restaurante/solicitud/" + id;
+            }
             python.actualizarSolicitud(id, datos, SesionHelper.usuarioActual().getCodigoUsuario());
-            redirect.addFlashAttribute("exito", "Solicitud actualizada.");
+            redirect.addFlashAttribute("exito", enviar ? "Solicitud enviada. Un técnico de Urban Eats la revisará."
+                    : "Solicitud actualizada.");
             return "redirect:/restaurante/solicitud/" + id;
         } catch (ServicioPythonException e) {
             redirect.addFlashAttribute("error", e.getMessage());
@@ -188,14 +269,23 @@ public class SolicitudCocinaController {
             solicitudPropia(id);
             String tipo = request.getParameter("tipo_documento");
             MultipartFile archivo = request.getFile("archivo");
+            List<String> problemas = revisarFechas(request.getParameter("fecha_expedicion"),
+                    request.getParameter("fecha_vencimiento"), tipo, true);
+            if (archivo != null && !archivo.isEmpty()) {
+                problemas.addAll(revisarArchivo(archivo));
+            }
+            if (!problemas.isEmpty()) {
+                redirect.addFlashAttribute("error", nombreDocumento(tipo) + ": " + String.join(" ", problemas));
+                return "redirect:/restaurante/solicitud/" + id;
+            }
             Map<String, String> campos = new LinkedHashMap<>();
             campos.put("tipo_documento", tipo);
             campos.put("numero_documento", request.getParameter("numero_documento"));
             campos.put("titular", request.getParameter("titular"));
             campos.put("resultado", request.getParameter("resultado"));
             campos.put("horas_capacitacion", request.getParameter("horas_capacitacion"));
-            campos.put("fecha_expedicion", request.getParameter("fecha_expedicion"));
-            campos.put("fecha_vencimiento", request.getParameter("fecha_vencimiento"));
+            campos.put("fecha_expedicion", fechaIso(request.getParameter("fecha_expedicion")));
+            campos.put("fecha_vencimiento", fechaIso(request.getParameter("fecha_vencimiento")));
             python.agregarDocumento(id, campos, archivo);
             redirect.addFlashAttribute("exito", "Documento agregado.");
         } catch (ServicioPythonException e) {
@@ -262,9 +352,160 @@ public class SolicitudCocinaController {
         campos.put("titular", request.getParameter("doc_titular_" + i));
         campos.put("resultado", request.getParameter("doc_resultado_" + i));
         campos.put("horas_capacitacion", request.getParameter("doc_horas_" + i));
-        campos.put("fecha_expedicion", request.getParameter("doc_expedicion_" + i));
-        campos.put("fecha_vencimiento", request.getParameter("doc_vencimiento_" + i));
+        campos.put("fecha_expedicion", fechaIso(request.getParameter("doc_expedicion_" + i)));
+        campos.put("fecha_vencimiento", fechaIso(request.getParameter("doc_vencimiento_" + i)));
         return campos;
+    }
+
+    // ---------- Revision de documentos (el servicio Python repite estas reglas) ----------
+
+    /** Acepta dd/mm/aaaa (el formulario) o aaaa-mm-dd. Devuelve null si la fecha no existe. */
+    static LocalDate leerFecha(String texto) {
+        if (vacio(texto)) {
+            return null;
+        }
+        String limpio = texto.trim();
+        try {
+            return limpio.contains("/") ? LocalDate.parse(limpio, FECHA_DD_MM_AAAA) : LocalDate.parse(limpio);
+        } catch (DateTimeParseException e) {
+            return null;
+        }
+    }
+
+    /** El servicio Python recibe las fechas en ISO (aaaa-mm-dd). */
+    static String fechaIso(String texto) {
+        LocalDate fecha = leerFecha(texto);
+        if (fecha != null) {
+            return fecha.toString();
+        }
+        return vacio(texto) ? null : texto.trim();
+    }
+
+    /**
+     * Fechas de un documento. Con exigirVigencia (al enviar) tambien rechaza documentos
+     * vencidos y certificados de Camara de Comercio de mas de 30 dias, que el tecnico no aprobaria.
+     */
+    private List<String> revisarFechas(String textoExpedicion, String textoVencimiento, String tipo,
+                                       boolean exigirVigencia) {
+        List<String> problemas = new ArrayList<>();
+        LocalDate hoy = LocalDate.now(ZONA);
+        LocalDate expedicion = leerFecha(textoExpedicion);
+        if (vacio(textoExpedicion)) {
+            problemas.add("falta la fecha de expedición.");
+        } else if (expedicion == null) {
+            problemas.add("la fecha de expedición no existe (usa dd/mm/aaaa).");
+        } else if (expedicion.isAfter(hoy)) {
+            problemas.add("la fecha de expedición no puede ser futura.");
+        } else if (exigirVigencia && CAMARA.equals(tipo) && expedicion.isBefore(hoy.minusDays(DIAS_CAMARA))) {
+            problemas.add("debe estar expedido hace " + DIAS_CAMARA + " días o menos.");
+        }
+        if (!vacio(textoVencimiento)) {
+            LocalDate vencimiento = leerFecha(textoVencimiento);
+            if (vencimiento == null) {
+                problemas.add("la fecha de vencimiento no existe (usa dd/mm/aaaa).");
+            } else if (expedicion != null && !vencimiento.isAfter(expedicion)) {
+                problemas.add("el vencimiento debe ser posterior a la expedición.");
+            } else if (exigirVigencia && vencimiento.isBefore(hoy)) {
+                problemas.add("el documento ya está vencido.");
+            }
+        }
+        return problemas;
+    }
+
+    /** Un documento del formulario de creacion. Al enviar, debe ir con su PDF. */
+    private List<String> revisarDocumento(MultipartHttpServletRequest request, int i, String tipo, boolean enviar) {
+        List<String> problemas = revisarFechas(request.getParameter("doc_expedicion_" + i),
+                request.getParameter("doc_vencimiento_" + i), tipo, enviar);
+        MultipartFile archivo = request.getFile("doc_archivo_" + i);
+        boolean conArchivo = archivo != null && !archivo.isEmpty();
+        if (conArchivo) {
+            problemas.addAll(revisarArchivo(archivo));
+        } else if (enviar) {
+            problemas.add("falta el PDF.");
+        }
+        if ((MANIPULACION.equals(tipo) || MEDICO.equals(tipo)) && vacio(request.getParameter("doc_titular_" + i))) {
+            problemas.add("falta el nombre del manipulador.");
+        }
+        if (MANIPULACION.equals(tipo)) {
+            Integer horas = enteroOpcional(request.getParameter("doc_horas_" + i));
+            if (horas == null || horas <= 0) {
+                problemas.add("faltan las horas del curso.");
+            } else if (enviar && horas < HORAS_MINIMAS) {
+                problemas.add("el curso debe ser de " + HORAS_MINIMAS + " horas o más.");
+            }
+        }
+        return problemas;
+    }
+
+    private static List<String> revisarArchivo(MultipartFile archivo) {
+        List<String> problemas = new ArrayList<>();
+        String nombre = archivo.getOriginalFilename() == null ? "" : archivo.getOriginalFilename().toLowerCase();
+        if (!nombre.endsWith(".pdf") && !"application/pdf".equals(archivo.getContentType())) {
+            problemas.add("el archivo debe ser PDF.");
+        }
+        if (archivo.getSize() > MAX_PDF) {
+            problemas.add("el PDF pesa más de 5 MB.");
+        }
+        return problemas;
+    }
+
+    /** True si el usuario escribio algo o adjunto un archivo en ese documento. */
+    private static boolean documentoDiligenciado(MultipartHttpServletRequest request, int i) {
+        for (String campo : List.of("doc_numero_", "doc_titular_", "doc_horas_", "doc_expedicion_", "doc_vencimiento_")) {
+            if (!vacio(request.getParameter(campo + i))) {
+                return true;
+            }
+        }
+        MultipartFile archivo = request.getFile("doc_archivo_" + i);
+        return archivo != null && !archivo.isEmpty();
+    }
+
+    /** La Camara de Comercio solo se pide a personas juridicas; los demas, a todos. */
+    private static boolean esObligatorio(String tipo, boolean juridica) {
+        return !CAMARA.equals(tipo) || juridica;
+    }
+
+    /** Documentos obligatorios que la solicitud aun no tiene (los rechazados no cuentan). */
+    private static List<String> documentosFaltantes(Map<String, Object> solicitud, boolean juridica) {
+        Set<String> cargados = new HashSet<>();
+        if (solicitud.get("documentos") instanceof List<?> documentos) {
+            for (Object item : documentos) {
+                if (item instanceof Map<?, ?> documento && !"Rechazado".equals(documento.get("estado_revision"))) {
+                    cargados.add(String.valueOf(documento.get("tipo_documento")));
+                }
+            }
+        }
+        List<String> faltan = new ArrayList<>();
+        for (String tipo : TIPOS_DOCUMENTO) {
+            if (esObligatorio(tipo, juridica) && !cargados.contains(tipo)) {
+                faltan.add(nombreDocumento(tipo));
+            }
+        }
+        return faltan;
+    }
+
+    private static String nombreDocumento(String tipo) {
+        if (tipo == null) {
+            return "Documento";
+        }
+        return switch (tipo) {
+            case CAMARA -> "Cámara de Comercio";
+            case MANIPULACION -> "Certificado de manipulación";
+            case MEDICO -> "Certificado médico";
+            default -> tipo;
+        };
+    }
+
+    private static boolean vacio(String valor) {
+        return valor == null || valor.isBlank();
+    }
+
+    private static Integer enteroOpcional(String valor) {
+        try {
+            return vacio(valor) ? null : Integer.valueOf(valor.trim());
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     static Integer entero(Object valor) {

@@ -47,7 +47,8 @@
       <div class="sol-acciones" th:if="${!vistaTecnico}">
         <a th:if="${s['estado'] == 'Borrador' or s['estado'] == 'Requiere ajustes'}"
            th:href="@{'/restaurante/solicitud/' + ${s['codigo_solicitud']} + '/editar'}" class="btn btn-verde">
-          <i class="fas fa-pen"></i> Corregir y reenviar</a>
+          <i class="fas fa-pen"></i>
+          <span th:text="${s['estado'] == 'Borrador'} ? 'Completar y enviar' : 'Corregir y reenviar'">Corregir y reenviar</span></a>
         <form th:if="${s['estado'] == 'Borrador' or s['estado'] == 'Rechazada'}" method="post"
               th:action="@{'/restaurante/solicitud/' + ${s['codigo_solicitud']} + '/eliminar'}"
               onsubmit="return confirm('¿Eliminar la solicitud? No se puede deshacer.');">
@@ -130,20 +131,35 @@
     </table>
 
     <!-- El solicitante puede agregar documentos mientras la solicitud no este decidida -->
-    <form th:if="${!vistaTecnico and !cerrada}" method="post" enctype="multipart/form-data"
+    <form th:if="${!vistaTecnico and !cerrada}" method="post" enctype="multipart/form-data" data-documento-suelto
           th:action="@{'/restaurante/solicitud/' + ${s['codigo_solicitud']} + '/documentos'}" style="margin-top:1rem;">
       <h4 style="font-size:0.92rem;margin-bottom:0.5rem;">Agregar documento</h4>
       <div class="sol-grid">
         <div class="sol-campo"><label>Tipo</label>
           <select name="tipo_documento"><option th:each="t : ${tiposDocumento}" th:value="${t}" th:text="${t}"></option></select></div>
-        <div class="sol-campo"><label>Número</label><input name="numero_documento"></div>
-        <div class="sol-campo"><label>Titular (manipulador)</label><input name="titular"></div>
+        <div class="sol-campo"><label>Número o código</label><input name="numero_documento" maxlength="50" autocomplete="off"></div>
+        <div class="sol-campo"><label>Titular (manipulador)</label><input name="titular" maxlength="150"></div>
         <div class="sol-campo"><label>Resultado (concepto)</label>
           <select name="resultado"><option value="">—</option><option>Favorable</option>
             <option>Favorable con requerimientos</option><option>Desfavorable</option></select></div>
-        <div class="sol-campo"><label>Horas (curso)</label><input type="number" name="horas_capacitacion" min="1"></div>
-        <div class="sol-campo"><label>Expedición *</label><input type="date" name="fecha_expedicion" required></div>
-        <div class="sol-campo"><label>Vencimiento</label><input type="date" name="fecha_vencimiento"></div>
+        <div class="sol-campo"><label>Horas (curso)</label>
+          <input name="horas_capacitacion" inputmode="numeric" autocomplete="off" data-solo-numeros="3"></div>
+        <div class="sol-campo"><label>Expedición *</label>
+          <div class="campo-fecha">
+            <input type="text" name="fecha_expedicion" data-fecha="expedicion" required inputmode="numeric"
+                   placeholder="dd/mm/aaaa" autocomplete="off">
+            <button type="button" class="btn-calendario" title="Elegir en el calendario"
+                    aria-label="Elegir la fecha de expedición en el calendario"><i class="fas fa-calendar-days"></i></button>
+            <input type="date" class="fecha-nativa" tabindex="-1" aria-hidden="true">
+          </div></div>
+        <div class="sol-campo"><label>Vencimiento</label>
+          <div class="campo-fecha">
+            <input type="text" name="fecha_vencimiento" data-fecha="vencimiento" inputmode="numeric"
+                   placeholder="dd/mm/aaaa" autocomplete="off">
+            <button type="button" class="btn-calendario" title="Elegir en el calendario"
+                    aria-label="Elegir la fecha de vencimiento en el calendario"><i class="fas fa-calendar-days"></i></button>
+            <input type="date" class="fecha-nativa" tabindex="-1" aria-hidden="true">
+          </div></div>
         <div class="sol-campo"><label>PDF (máx. 5 MB)</label><input type="file" name="archivo" accept="application/pdf"></div>
       </div>
       <div class="sol-acciones"><button class="btn btn-verde"><i class="fas fa-upload"></i> Agregar</button></div>
@@ -164,5 +180,6 @@
 </div>
 <div th:replace="~{fragments/comunes :: franjaDemo}"></div>
 <script src="/js/app.js"></script>
+<script src="/js/solicitud-cocina.js"></script>
 </body>
 </html>

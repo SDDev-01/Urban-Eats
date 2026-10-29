@@ -22,7 +22,7 @@
     <div class="sol-campo"><label>Estado</label>
       <select name="estado">
         <option value="">Todos</option>
-        <option th:each="e : ${ {'Borrador','Enviada','En revision','Requiere ajustes','Aprobada','Rechazada'} }"
+        <option th:each="e : ${ {'Enviada','En revision','Requiere ajustes','Aprobada','Rechazada'} }"
                 th:value="${e}" th:text="${e}" th:selected="${filtros['estado'] == e}"></option>
       </select></div>
     <div class="sol-campo"><label>Localidad</label>

@@ -50,6 +50,7 @@ public class TecnicoController {
         filtros.add("orden", orden);
         filtros.add("pagina", String.valueOf(pagina));
         filtros.add("tamano", "15");
+        filtros.add("incluir_borradores", "false"); // un borrador todavia no se le ha enviado al tecnico
         try {
             Map<String, Object> resultado = python.listarSolicitudes(filtros);
             model.addAttribute("pagina", resultado);
