@@ -13,7 +13,7 @@ import uvicorn
 from sqlalchemy.exc import OperationalError
 
 from app.core.config import configuracion
-from app.core.database import Base, motor, probar_conexion
+from app.core.database import Base, agregar_columnas_nuevas, motor, probar_conexion
 from app.services import ollama_cliente
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -46,6 +46,7 @@ def verificar_entorno() -> bool:
         # Crea SOLO las tablas propias de Python que falten (nunca modifica las existentes).
         import app.models  # noqa: F401  registra los modelos
         Base.metadata.create_all(motor, checkfirst=True)
+        agregar_columnas_nuevas()
         print("[OK] Tablas del servicio verificadas (solicitudes, documentos, rutas)")
     except Exception as error:  # noqa: BLE001
         print(f"[X] No se pudieron crear las tablas del servicio: {error}")
@@ -58,7 +59,8 @@ def verificar_entorno() -> bool:
     else:
         print(f"[!] IA local no disponible ({estado_ia['detalle']}): el chat respondera en modo basico.")
 
-    proveedor = "OpenRouteService" if configuracion.ors_api_key else "linea recta (falta ORS_API_KEY)"
+    proveedor = ("OpenRouteService" if configuracion.ors_api_key
+                 else "OSRM (sin clave); si no hay internet, linea recta")
     print(f"[OK] Rutas del domicilio: {proveedor}")
     print(f"[OK] Documentacion interactiva: http://{configuracion.host}:{configuracion.puerto}/docs")
     print("=" * 60)

@@ -5,8 +5,10 @@
    - Cada 5 segundos consulta GET /rastreo/{id}/datos hasta que el pedido termine.
    - Dibuja el mapa con Leaflet + OpenStreetMap: cocina, direccion de entrega y la
      ultima posicion del repartidor (GPS del celular o simulacion de la demo).
-   - La ruta por calles la calcula el servicio Python con OpenRouteService
+   - La ruta por calles la calcula el servicio Python con OpenRouteService u OSRM
      (GET /rastreo/{id}/ruta). Si no esta disponible, se dibuja una linea recta.
+   - El repartidor ve ademas las indicaciones paso a paso y los botones para abrir la
+     navegacion en Google Maps o Waze (en el celular, con voz).
 */
 
 const ID_PEDIDO = window.CODIGO_PEDIDO;
@@ -27,6 +29,7 @@ let marcadorCocina = null;
 let marcadorDestino = null;
 let marcadorRepartidor = null;
 let rutaDibujada = false;
+let vistaActual = null;
 let encuadreHecho = false;
 let itemsPintados = false;
 let temporizador = null;
@@ -49,7 +52,9 @@ async function actualizar() {
     pintarRepartidor(datos);
     pintarHistorial(datos.historial);
     if (!itemsPintados) pintarItems(datos);
+    vistaActual = datos.vista;
     pintarMapa(datos);
+    pintarNavegacion(datos);
 
     document.getElementById('btn-cancelar-pedido').style.display = datos.puedeCancelar ? 'inline-flex' : 'none';
 
@@ -210,17 +215,54 @@ async function dibujarRuta(cocina, destino) {
     const respuesta = await fetch(`/rastreo/${ID_PEDIDO}/ruta`);
     if (!respuesta.ok) throw new Error('sin ruta');
     const ruta = await respuesta.json();
-    L.polyline(ruta.coordenadas, { color: '#a42828', weight: 5, opacity: 0.85 }).addTo(mapa);
-    const km = (ruta.distanciaMetros / 1000).toFixed(1);
+    const porCalles = ruta.proveedor !== 'linea_recta';
+    L.polyline(ruta.coordenadas, porCalles
+      ? { color: '#a42828', weight: 5, opacity: 0.85 }
+      : { color: '#a42828', weight: 3, dashArray: '8 8' }).addTo(mapa);
+    const km = (ruta.distanciaMetros / 1000).toFixed(1).replace('.', ',');
     const minutos = Math.round(ruta.duracionSegundos / 60);
-    info.textContent = ruta.proveedor === 'openrouteservice'
-      ? `Ruta por calles: ${km} km · unos ${minutos} min en moto (OpenRouteService).`
+    const fuente = ruta.proveedor === 'openrouteservice' ? 'OpenRouteService' : 'OpenStreetMap/OSRM';
+    info.textContent = porCalles
+      ? `Ruta por calles: ${km} km · unos ${minutos} min en moto (${fuente}).`
       : `Distancia aproximada: ${km} km · unos ${minutos} min (línea recta: la ruta por calles no está disponible).`;
+    if (vistaActual === 'repartidor') pintarIndicaciones(ruta.pasos || []);
   } catch (e) {
     L.polyline([cocina, destino], { color: '#a42828', weight: 3, dashArray: '8 8' }).addTo(mapa);
     const km = (distanciaKm(cocina, destino)).toFixed(1);
     info.textContent = `Distancia en línea recta: ${km} km (el cálculo de ruta por calles no está disponible).`;
   }
+}
+
+/** Lista de indicaciones paso a paso (solo la ve el repartidor). */
+function pintarIndicaciones(pasos) {
+  if (pasos.length === 0) return;
+  const metros = (m) => m >= 1000 ? `${(m / 1000).toFixed(1).replace('.', ',')} km` : `${m} m`;
+  document.getElementById('lista-indicaciones').innerHTML = pasos.map(p =>
+    `<li>${esc(p.texto)}${p.distanciaMetros > 0 ? `<small>${metros(p.distanciaMetros)}</small>` : ''}</li>`).join('');
+  document.getElementById('indicaciones-ruta').style.display = 'block';
+}
+
+/**
+ * Botones de Google Maps y Waze para el repartidor. Mientras el pedido espera en la
+ * cocina (paso 3) llevan a la cocina; cuando va en camino (paso 4), a la entrega.
+ */
+function pintarNavegacion(datos) {
+  const caja = document.getElementById('navegacion-externa');
+  if (datos.vista !== 'repartidor' || (datos.paso !== 3 && datos.paso !== 4)) {
+    caja.style.display = 'none';
+    return;
+  }
+  const haciaCocina = datos.paso === 3;
+  const punto = haciaCocina ? datos.cocina : datos.destino;
+  if (!punto) return;
+  const enBicicleta = Boolean(datos.repartidor && (datos.repartidor.vehiculo || '').startsWith('Bicicleta'));
+  const enlaces = window.UE.enlacesNavegacion(punto.lat, punto.lng, punto.direccion, enBicicleta);
+  document.getElementById('btn-google-maps').href = enlaces.google;
+  document.getElementById('btn-waze').href = enlaces.waze;
+  document.getElementById('navegacion-destino').textContent = haciaCocina
+    ? 'Navegar hasta la cocina para recoger el pedido:'
+    : 'Navegar hasta la dirección de entrega:';
+  caja.style.display = 'flex';
 }
 
 /** Distancia entre dos puntos en km (formula de Haversine). */

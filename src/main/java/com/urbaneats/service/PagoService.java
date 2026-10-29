@@ -49,15 +49,23 @@ public class PagoService implements IPagoService {
 
     private static final String APROBADO = "approved";
 
-    private static final Map<String, String> MENSAJES_ERROR = Map.of(
-            "cc_rejected_insufficient_amount", "Saldo insuficiente en la tarjeta.",
-            "cc_rejected_bad_filled_card_number", "Número de tarjeta incorrecto.",
-            "cc_rejected_bad_filled_date", "Fecha de vencimiento incorrecta.",
-            "cc_rejected_bad_filled_security_code", "Código de seguridad incorrecto.",
-            "cc_rejected_bad_filled_other", "Datos de la tarjeta incorrectos.",
-            "cc_rejected_high_risk", "Tu pago fue rechazado por seguridad.",
-            "cc_rejected_call_for_authorize", "Debes autorizar el pago con tu banco.",
-            "rejected_by_bank", "Pago rechazado por el banco."
+    // Motivos de rechazo de MercadoPago (status_detail). En pruebas se provocan con el
+    // nombre del titular: OTHE, FUND, SECU, EXPI, CALL, LOCK, DUPL... (APRO = aprobado).
+    private static final Map<String, String> MENSAJES_ERROR = Map.ofEntries(
+            Map.entry("cc_rejected_insufficient_amount", "Saldo insuficiente en la tarjeta."),
+            Map.entry("cc_rejected_bad_filled_card_number", "Número de tarjeta incorrecto."),
+            Map.entry("cc_rejected_bad_filled_date", "Fecha de vencimiento incorrecta."),
+            Map.entry("cc_rejected_bad_filled_security_code", "Código de seguridad incorrecto."),
+            Map.entry("cc_rejected_bad_filled_other", "Datos de la tarjeta incorrectos."),
+            Map.entry("cc_rejected_high_risk", "Tu pago fue rechazado por seguridad."),
+            Map.entry("cc_rejected_call_for_authorize", "Debes autorizar el pago con tu banco."),
+            Map.entry("cc_rejected_card_disabled", "La tarjeta está deshabilitada. Llama a tu banco o usa otra."),
+            Map.entry("cc_rejected_duplicated_payment", "Ya hiciste un pago igual hace un momento. Usa otra tarjeta si necesitas pagar de nuevo."),
+            Map.entry("cc_rejected_max_attempts", "Superaste los intentos permitidos. Usa otra tarjeta."),
+            Map.entry("cc_rejected_blacklist", "No pudimos procesar el pago con esta tarjeta."),
+            Map.entry("cc_rejected_invalid_installments", "La tarjeta no acepta ese número de cuotas."),
+            Map.entry("cc_rejected_other_reason", "La tarjeta rechazó el pago. Usa otra tarjeta."),
+            Map.entry("rejected_by_bank", "Pago rechazado por el banco.")
     );
 
     private final PagoRepository pagoRepository;
@@ -73,6 +81,7 @@ public class PagoService implements IPagoService {
                        DireccionRepository direccionRepository,
                        PedidoDesdeCarritoService pedidoDesdeCarritoService,
                        @Value("${mercadopago.access-token:}") String accessToken,
+                       @Value("${mercadopago.public-key:}") String publicKey,
                        @Value("${urbaneats.pagos.modo-demo:false}") boolean pagosModoDemo) {
         this.pagoRepository = pagoRepository;
         this.transaccionRepository = transaccionRepository;
@@ -80,6 +89,25 @@ public class PagoService implements IPagoService {
         this.pedidoDesdeCarritoService = pedidoDesdeCarritoService;
         this.accessToken = accessToken;
         this.pagosModoDemo = pagosModoDemo;
+        avisarSiFaltanCredenciales(publicKey);
+    }
+
+    /** Aviso en la consola de Spring si los pagos reales estan activos sin credenciales validas. */
+    private void avisarSiFaltanCredenciales(String publicKey) {
+        if (pagosModoDemo) {
+            log.info("Pagos en modo demostración (PAGOS_MODO_DEMO=true): no se usa MercadoPago.");
+            return;
+        }
+        if (!credencialValida(accessToken) || !credencialValida(publicKey)) {
+            log.warn("PAGOS_MODO_DEMO=false pero faltan MERCADOPAGO_PUBLIC_KEY o MERCADOPAGO_ACCESS_TOKEN "
+                    + "(deben empezar con TEST- o APP_USR-). La página de pago mostrará un error.");
+        } else if (accessToken.startsWith("TEST-")) {
+            log.info("MercadoPago en modo prueba (credenciales TEST-): usa las tarjetas de prueba.");
+        }
+    }
+
+    private static boolean credencialValida(String credencial) {
+        return credencial != null && (credencial.startsWith("TEST-") || credencial.startsWith("APP_USR-"));
     }
 
     @Override
@@ -155,9 +183,9 @@ public class PagoService implements IPagoService {
                 transaccion.setMetodoPago(payment.getPaymentMethodId());
                 transaccion.setCodigoRespuesta(payment.getStatusDetail());
             } catch (MPApiException e) {
-                log.error("MercadoPago rechazo la solicitud ({}): {}", e.getStatusCode(),
-                        e.getApiResponse() != null ? e.getApiResponse().getContent() : e.getMessage());
-                return marcarFallido(pago, "MercadoPago no pudo procesar el pago. Revisa los datos e intenta de nuevo.");
+                String contenido = e.getApiResponse() != null ? e.getApiResponse().getContent() : e.getMessage();
+                log.error("MercadoPago rechazo la solicitud ({}): {}", e.getStatusCode(), contenido);
+                return marcarFallido(pago, mensajeDeMercadoPago(e.getStatusCode(), contenido));
             } catch (MPException | RuntimeException e) {
                 log.error("Error comunicandose con MercadoPago: {}", e.getMessage(), e);
                 return marcarFallido(pago, "No pudimos comunicarnos con MercadoPago. Intenta de nuevo en un momento.");
@@ -204,6 +232,29 @@ public class PagoService implements IPagoService {
         pago.setEstadoPago("rejected");
         pagoRepository.save(pago);
         return new ResultadoPago("rejected", null, mensaje, null);
+    }
+
+    /** Traduce los errores tipicos de MercadoPago (sobre todo en pruebas) a algo que el usuario pueda corregir. */
+    static String mensajeDeMercadoPago(int codigoHttp, String contenido) {
+        String texto = contenido == null ? "" : contenido.toLowerCase();
+        if (codigoHttp == 401 || texto.contains("unauthorized") || texto.contains("invalid access token")) {
+            return "Las credenciales de MercadoPago del .env no son válidas. Revisa MERCADOPAGO_ACCESS_TOKEN "
+                    + "(credenciales de prueba TEST-).";
+        }
+        if (texto.contains("invalid users involved") || texto.contains("2034")) {
+            return "MercadoPago no acepta ese correo de pagador: usa uno distinto al de la cuenta vendedora "
+                    + "(en pruebas sirve cualquier correo, por ejemplo comprador.prueba@gmail.com).";
+        }
+        if (texto.contains("card_token") || texto.contains("card token") || texto.contains("3003") || texto.contains("2006")) {
+            return "Los datos de la tarjeta vencieron en el formulario. Vuelve a escribirlos e intenta de nuevo.";
+        }
+        if (texto.contains("identification")) {
+            return "El documento del pagador no es válido. En pruebas usa CC 123456789.";
+        }
+        if (texto.contains("email")) {
+            return "Revisa el correo del pagador.";
+        }
+        return "MercadoPago no pudo procesar el pago. Revisa los datos e intenta de nuevo.";
     }
 
     private String mensajePara(String estado, String detalle) {
