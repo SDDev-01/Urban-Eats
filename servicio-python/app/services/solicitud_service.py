@@ -66,9 +66,15 @@ def crear(sesion: Session, datos: SolicitudCrear, es_demo: bool = False) -> Soli
 
 def listar(sesion: Session, estado: str | None = None, localidad: str | None = None,
            tipo: str | None = None, texto: str | None = None, codigo_usuario: int | None = None,
-           orden: str = "fecha_desc", pagina: int = 1, tamano: int = 20) -> tuple[int, list[SolicitudRestaurante]]:
-    """Read (lista): filtros combinables, ordenamiento y paginacion."""
+           orden: str = "fecha_desc", pagina: int = 1, tamano: int = 20,
+           incluir_borradores: bool = True) -> tuple[int, list[SolicitudRestaurante]]:
+    """Read (lista): filtros combinables, ordenamiento y paginacion.
+
+    El panel del tecnico pide incluir_borradores=False: un borrador todavia no se ha enviado.
+    """
     consulta = select(SolicitudRestaurante)
+    if not incluir_borradores:
+        consulta = consulta.where(SolicitudRestaurante.estado != m.BORRADOR)
     if estado:
         consulta = consulta.where(SolicitudRestaurante.estado == estado)
     if localidad:
@@ -116,8 +122,13 @@ def actualizar(sesion: Session, codigo: int, datos: SolicitudActualizar, codigo_
     anterior = solicitud.estado
     if datos.enviar:
         solicitud.estado = m.ENVIADA
-    _registrar_historial(sesion, solicitud, anterior, solicitud.estado, codigo_usuario,
-                         "Datos corregidos y reenviados" if datos.enviar else "Datos actualizados")
+    if not datos.enviar:
+        comentario = "Datos actualizados"
+    elif anterior == m.BORRADOR:
+        comentario = "Solicitud enviada para revisión"
+    else:
+        comentario = "Datos corregidos y reenviados"
+    _registrar_historial(sesion, solicitud, anterior, solicitud.estado, codigo_usuario, comentario)
     sesion.commit()
     return solicitud
 

@@ -36,9 +36,11 @@ def listar(estado: str | None = None,
            orden: Literal["fecha_desc", "fecha_asc", "nombre_asc", "nombre_desc", "estado_asc"] = "fecha_desc",
            pagina: int = Query(default=1, ge=1),
            tamano: int = Query(default=20, ge=1, le=100),
+           incluir_borradores: bool = Query(default=True, description="False para el panel del técnico"),
            sesion: Session = Depends(obtener_sesion)):
     total, resultados = solicitud_service.listar(sesion, estado, localidad, tipo, q, codigo_usuario,
-                                                 orden, pagina, tamano)
+                                                 orden, pagina, tamano,
+                                                 incluir_borradores=incluir_borradores)
     return PaginaSolicitudes(total=total, pagina=pagina, tamano=tamano,
                              resultados=[SolicitudRespuesta.model_validate(s) for s in resultados])
 
