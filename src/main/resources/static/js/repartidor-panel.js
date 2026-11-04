@@ -25,6 +25,13 @@ document.querySelectorAll('.tarjeta-en-camino').forEach(tarjeta => {
   tarjeta.querySelector('.btn-gps')?.addEventListener('click', (evento) => {
     compartirGPS(envioId, texto, evento.currentTarget);
   });
+  // Navegacion por voz hasta la entrega (Google Maps o Waze en el celular)
+  const enlaces = window.UE.enlacesNavegacion(tarjeta.dataset.lat, tarjeta.dataset.lng,
+    tarjeta.dataset.direccion, tarjeta.dataset.bici === 'true');
+  const google = tarjeta.querySelector('.btn-google-maps');
+  const waze = tarjeta.querySelector('.btn-waze');
+  if (google) google.href = enlaces.google;
+  if (waze) waze.href = enlaces.waze;
   tarjeta.querySelector('.btn-simular')?.addEventListener('click', (evento) => {
     simularRecorrido(envioId, pedidoId, texto, evento.currentTarget);
   });
@@ -38,7 +45,7 @@ async function enviarUbicacion(envioId, lat, lng) {
     body: JSON.stringify({ envioId: Number(envioId), lat, lng })
   });
   if (!respuesta.ok) {
-    const datos = await respuesta.json().catch(() => ({}));
+    const datos = await window.UE.leerRespuestaJson(respuesta);
     throw new Error(datos.error || 'No se pudo guardar la ubicación');
   }
 }

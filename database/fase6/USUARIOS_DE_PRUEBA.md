@@ -14,10 +14,50 @@ Contraseña de todos: `UrbanEats2026*`
 
 Los usuarios originales de `Inserts.sql` (`1@email.com` … `15@email.com`) siguen existiendo con su contraseña original.
 
-## Tres sesiones en el mismo navegador
+## Una sesión por rol en el mismo navegador
 
-Las cookies de sesión se guardan por *host*. Para entrar con tres roles a la vez, usa una dirección distinta para cada uno:
+El navegador guarda **una sesión por dirección**: todas las pestañas y ventanas que usan
+`localhost:8080` son el mismo usuario. Si inicias sesión con otro usuario en esa misma
+dirección, las otras pestañas pasan a ser ese usuario y sus paneles avisan
+"Tu sesión cambió". Usa una dirección distinta para cada rol (todas abren la misma aplicación):
 
-- Cliente: `http://localhost:8080`
-- Cocina: `http://127.0.0.1:8080`
-- Repartidor: `http://<nombre-del-equipo>:8080` (por ejemplo `http://DESKTOP-XXXX:8080`) o una ventana de incógnito
+| Rol | Dirección | Usuario |
+|---|---|---|
+| Cliente | `http://localhost:8080` | `cliente.demo@urbaneats.test` |
+| Cocina | `http://127.0.0.1:8080` | `cocina.demo@urbaneats.test` → «Como cocina» |
+| Repartidor | `http://127.0.0.2:8080` | `repartidor.demo@urbaneats.test` → «Como repartidor» |
+| Técnico | `http://127.0.0.3:8080` | `tecnico.demo@urbaneats.test` |
+
+También sirve usar navegadores distintos (Chrome, Edge, Firefox). Una ventana de incógnito
+cuenta como una sola dirección más: no sirve para dos roles a la vez.
+
+Al entrar, la cocina y el repartidor eligen con qué rol trabajar. La barra muestra solo las
+opciones de ese rol: la cocina y el repartidor no ven Restaurantes ni el carrito. Para pedir
+comida con esas cuentas: **Cambiar rol → Como usuario**.
+
+## Pagos de prueba con MercadoPago
+
+1. En https://www.mercadopago.com.co/developers/panel/app → tu aplicación → **Credenciales de prueba**,
+   copia la *Public Key* y el *Access Token* (empiezan con `TEST-`).
+2. En el `.env` de `Urban-Eats`: `MERCADOPAGO_PUBLIC_KEY=TEST-...`, `MERCADOPAGO_ACCESS_TOKEN=TEST-...`
+   y `PAGOS_MODO_DEMO=false`. Reinicia Spring Boot.
+3. En el pago usa una tarjeta de prueba de Colombia (documentación oficial de MercadoPago):
+
+| Tarjeta | Número | CVV | Vence |
+|---|---|---|---|
+| Mastercard crédito | `5254 1336 7440 3564` | 123 | 11/30 |
+| Visa crédito | `4013 5406 8274 6260` | 123 | 11/30 |
+| Visa débito | `4912 6840 6309 1904` | 123 | 11/30 |
+
+El **nombre del titular** decide el resultado: `APRO` aprobado (el pedido llega a la cocina),
+`OTHE` rechazado, `FUND` saldo insuficiente, `SECU` CVV inválido, `CONT` pendiente.
+Documento: CC `123456789`. El correo del pagador debe ser distinto al de la cuenta vendedora.
+
+Sin internet el día de la sustentación: `PAGOS_MODO_DEMO=true` deja el botón de pago simulado.
+
+## Ruta del domicilio
+
+La ruta por calles la calcula el servicio Python: con `ORS_API_KEY` usa OpenRouteService y, sin
+clave, el servidor público de OSRM (OpenStreetMap). Sin internet dibuja una línea recta. El
+repartidor ve las indicaciones paso a paso y los botones **Google Maps** y **Waze**, que en el
+celular abren la navegación por voz hasta la entrega.

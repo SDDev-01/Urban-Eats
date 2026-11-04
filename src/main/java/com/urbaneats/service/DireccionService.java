@@ -10,12 +10,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class DireccionService implements IDireccionService {
+
+    private static final double LATITUD_MIN = 3.7, LATITUD_MAX = 4.9;
+    private static final double LONGITUD_MIN = -74.5, LONGITUD_MAX = -73.9;
 
     private final DireccionRepository direccionRepository;
     private final UsuarioRepository usuarioRepository;
@@ -42,6 +46,9 @@ public class DireccionService implements IDireccionService {
     @Transactional
     public Direccion guardar(Direccion direccion) {
         validarUsuario(direccion.getUsuario());
+        if (direccion.tieneCoordenadas()) {
+            validarEnBogota(direccion.getLatitud(), direccion.getLongitud());
+        }
         return direccionRepository.save(direccion);
     }
 
@@ -55,8 +62,34 @@ public class DireccionService implements IDireccionService {
 
         existente.setDireccion(direccion.getDireccion());
         existente.setUsuario(direccion.getUsuario());
+        if (direccion.tieneCoordenadas()) {
+            validarEnBogota(direccion.getLatitud(), direccion.getLongitud());
+            existente.setLatitud(direccion.getLatitud());
+            existente.setLongitud(direccion.getLongitud());
+        }
 
         return direccionRepository.save(existente);
+    }
+
+    @Override
+    @Transactional
+    public Direccion actualizarUbicacion(Integer id, Integer codigoUsuario, BigDecimal latitud, BigDecimal longitud) {
+        Direccion direccion = direccionRepository.findById(id)
+            .filter(d -> d.getUsuario() != null && d.getUsuario().getCodigoUsuario().equals(codigoUsuario))
+            .orElseThrow(() -> new ReglaNegocioException("Esa dirección no es tuya."));
+        validarEnBogota(latitud, longitud);
+        direccion.setLatitud(latitud);
+        direccion.setLongitud(longitud);
+        return direccionRepository.save(direccion);
+    }
+
+    /** Las entregas son en Bogota (con Sumapaz): un punto fuera es casi siempre un clic equivocado. */
+    private void validarEnBogota(BigDecimal latitud, BigDecimal longitud) {
+        if (latitud == null || longitud == null
+                || latitud.doubleValue() < LATITUD_MIN || latitud.doubleValue() > LATITUD_MAX
+                || longitud.doubleValue() < LONGITUD_MIN || longitud.doubleValue() > LONGITUD_MAX) {
+            throw new ReglaNegocioException("El punto debe quedar dentro de Bogotá.");
+        }
     }
 
     @Override

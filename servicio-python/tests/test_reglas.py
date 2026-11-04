@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 from app.models import solicitud as m
 from app.services import chat_service, exportador
-from app.services.ruta_service import distancia_haversine
+from app.services.ruta_service import _linea_recta, distancia_haversine, pasos_osrm, texto_maniobra
 from app.services.solicitud_service import evaluar_cumplimiento
 
 HOY = date(2026, 10, 19)
@@ -106,3 +106,41 @@ def test_alergeno_mencionado():
     assert chat_service.alergeno_mencionado("¿Qué platos no tienen gluten?") == "Gluten"
     assert chat_service.alergeno_mencionado("soy alérgico al maní") == "Maní"
     assert chat_service.alergeno_mencionado("algo rico") is None
+
+
+# ---- Indicaciones de la ruta (OSRM) ----
+
+def paso_osrm(tipo, calle="", modificador=None, metros=100, salida=None):
+    maniobra = {"type": tipo}
+    if modificador:
+        maniobra["modifier"] = modificador
+    if salida:
+        maniobra["exit"] = salida
+    return {"maneuver": maniobra, "name": calle, "distance": metros}
+
+
+def test_maniobras_de_osrm_en_espanol():
+    assert texto_maniobra("depart", "left", "Avenida Carrera 10") == "Sal por Avenida Carrera 10"
+    assert texto_maniobra("turn", "right", "Calle 72") == "Gira a la derecha por Calle 72"
+    assert texto_maniobra("turn", "slight left", "") == "Gira levemente a la izquierda"
+    assert texto_maniobra("roundabout", None, "Calle 26", 2) == "En la glorieta toma la 2.ª salida hacia Calle 26"
+    assert texto_maniobra("arrive", None, "") == "Llegaste a la dirección de entrega"
+
+
+def test_los_sigue_derecho_por_la_misma_via_se_juntan():
+    pasos = pasos_osrm([
+        paso_osrm("depart", "Avenida Calle 26", "left", 200),
+        paso_osrm("turn", "Avenida Calle 26", "straight", 300),
+        paso_osrm("turn", "", "straight", 50),
+        paso_osrm("turn", "Carrera 7", "right", 400),
+        paso_osrm("arrive", "", None, 0),
+    ])
+    assert [p["texto"] for p in pasos] == ["Sal por Avenida Calle 26", "Gira a la derecha por Carrera 7",
+                                           "Llegaste a la dirección de entrega"]
+    assert pasos[0]["distanciaMetros"] == 550
+
+
+def test_sin_internet_la_ruta_es_linea_recta_sin_pasos():
+    ruta = _linea_recta((4.6097, -74.0721), (4.6680, -74.0560))
+    assert ruta["proveedor"] == "linea_recta" and ruta["pasos"] == []
+    assert 6000 < ruta["distanciaMetros"] < 7000

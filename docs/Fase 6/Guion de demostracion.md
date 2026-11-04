@@ -6,10 +6,11 @@
 
 1. `powershell -ExecutionPolicy Bypass -File scripts\iniciar_demo.ps1` (MariaDB, Ollama, Python y Spring Boot).
 2. `servicio-python\.venv\Scripts\python.exe -m scripts.demo.preparar_demo` (datos limpios: cocina de prueba en *Enviada* y 200 pedidos históricos).
-3. Abrir tres sesiones en el navegador (las cookies son por dirección):
+3. Abrir una sesión por rol en el navegador (una dirección distinta para cada uno; ver `database/fase6/USUARIOS_DE_PRUEBA.md`):
    - Cliente: `http://localhost:8080` → `cliente.demo@urbaneats.test`
-   - Cocina: `http://127.0.0.1:8080` → `cocina.demo@urbaneats.test`
-   - Técnico: ventana de incógnito → `tecnico.demo@urbaneats.test`
+   - Cocina: `http://127.0.0.1:8080` → `cocina.demo@urbaneats.test` → «Como cocina»
+   - Repartidor: `http://127.0.0.2:8080` → `repartidor.demo@urbaneats.test` → «Como repartidor»
+   - Técnico: `http://127.0.0.3:8080` → `tecnico.demo@urbaneats.test`
    - Contraseña de todos: ver `database/fase6/USUARIOS_DE_PRUEBA.md`
 4. Abrir una consola en `servicio-python` y otra con Swagger: `http://127.0.0.1:8000/docs`.
 
@@ -21,9 +22,9 @@
 | 2 | Árbol de carpetas `main.py / models / schemas / services / routers` | B | 8 – estructura |
 | 3 | `demo_cocina_paso_a_paso.py`: NIT con DV malo → 422; crear, listar con filtros, corregir, documentos, PDF falso rechazado, checklist, aprobar, borrar | B | 6 – CRUD · 7 – try/except |
 | 4 | Panel del técnico: revisar la *Cocina Sin Papeles* (no se puede aprobar) y aprobar la *Cocina de Prueba* | B | 6 · realismo |
-| 5 | Cliente pide en *Las Brasas 24h*, paga en modo demo y ve el mapa | Integrante A | flujo de 3 roles |
+| 5 | Cliente pide en *Las Brasas 24h*, revisa el punto de entrega en el mapa y paga con MercadoPago de prueba (titular `APRO`; antes, `OTHE` para mostrar un rechazo) | Integrante A | flujo de 3 roles |
 | 6 | Cocina acepta y marca listo; el cliente ve los pasos cambiar solos | A | flujo de 3 roles |
-| 7 | Repartidor toma el pedido y pulsa **Simular recorrido**: la moto avanza en el mapa del cliente; marca entregado | A | flujo de 3 roles |
+| 7 | Repartidor toma el pedido, abre **Ver ruta** (ruta por calles con indicaciones y botones Google Maps/Waze) y pulsa **Simular recorrido**: la moto avanza por las calles en el mapa del cliente; marca entregado | A | flujo de 3 roles |
 | 8 | Chat: "¿Dónde está mi pedido?" y "Recomiéndame algo balanceado por menos de $20.000" | B | IA local |
 | 9 | `/reportes`: franja nocturna, ordenar por valor, descargar Excel y PDF | A | 10 – reportes |
 | 10 | Diapositivas: presupuesto por sprints y negociación tecnológica | Ambos | 1 a 4 |

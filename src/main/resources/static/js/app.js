@@ -281,6 +281,39 @@ function validarCampo(input, errorId, mensaje) {
 }
 
 // Exportar funciones globales que otros scripts necesitan
+// ---- Respuestas JSON y sesion cambiada ----
+// Las pestanas de un navegador comparten la sesion de cada direccion (localhost,
+// 127.0.0.1...). Si otro usuario inicia sesion, esta pestana queda sin su sesion y el
+// servidor responde con el login (HTML), 401 o el 403 de Spring Security.
+const MENSAJE_SESION_CAMBIO = 'Tu sesión cambió: otro usuario inició sesión en este navegador. '
+  + 'Recarga la página o vuelve a iniciar sesión (usa una dirección distinta para cada rol).';
+
+async function leerRespuestaJson(respuesta) {
+  const tipo = respuesta.headers.get('Content-Type') || '';
+  if (respuesta.status === 401 || (respuesta.redirected && respuesta.url.includes('/login'))
+      || !tipo.includes('json')) {
+    throw new Error(MENSAJE_SESION_CAMBIO);
+  }
+  const datos = await respuesta.json();
+  // El error de Spring Security trae "path"; los errores de la aplicacion no.
+  if (respuesta.status === 403 && datos.path) throw new Error(MENSAJE_SESION_CAMBIO);
+  return datos;
+}
+
+// ---- Navegacion con Google Maps o Waze (sin llave ni costo) ----
+// Sin "origin", Google Maps y Waze salen desde donde esta el celular del repartidor.
+function enlacesNavegacion(lat, lng, textoDireccion, enBicicleta) {
+  const conPunto = lat != null && lat !== '' && lng != null && lng !== '';
+  const destino = conPunto ? `${lat},${lng}` : `${textoDireccion || ''}, Bogotá`;
+  return {
+    google: 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(destino)
+      + '&travelmode=' + (enBicicleta ? 'bicycling' : 'driving'),
+    waze: conPunto
+      ? `https://waze.com/ul?ll=${lat},${lng}&navigate=yes`
+      : 'https://waze.com/ul?q=' + encodeURIComponent(destino) + '&navigate=yes',
+  };
+}
+
 window.UE = {
   mostrarToast,
   obtenerCarrito,
@@ -294,4 +327,7 @@ window.UE = {
   escaparHTML,
   encabezadosCSRF,
   formatoCOP,
+  leerRespuestaJson,
+  MENSAJE_SESION_CAMBIO,
+  enlacesNavegacion,
 };

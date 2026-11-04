@@ -74,6 +74,9 @@
       cursor: pointer;
     }
 
+    .opcion-form { display: flex; }
+    button.opcion-card { width: 100%; font: inherit; }
+
     .opcion-card:hover {
       background: rgba(255,255,255,0.22);
       border-color: rgba(255,255,255,0.55);
@@ -118,13 +121,16 @@
     <h1 class="seleccion-titulo">¿Cómo deseas ingresar?</h1>
 
     <div class="seleccion-opciones">
-      <a th:href="@{/catalogo}" class="opcion-card">
-        <div class="opcion-icono"><i class="fas fa-user"></i></div>
-        <div>
-          <div class="opcion-nombre">Como usuario</div>
-          <div class="opcion-desc">Explora restaurantes y realiza pedidos</div>
-        </div>
-      </a>
+      <!-- "Como usuario" va por POST: guarda CLIENTE como rol activo de la sesion -->
+      <form th:if="${esCliente}" th:action="@{/seleccion-rol/cliente}" method="post" class="opcion-form">
+        <button type="submit" class="opcion-card">
+          <div class="opcion-icono"><i class="fas fa-user"></i></div>
+          <div>
+            <div class="opcion-nombre">Como usuario</div>
+            <div class="opcion-desc">Explora restaurantes y realiza pedidos</div>
+          </div>
+        </button>
+      </form>
 
       <a th:if="${esGerente}" th:href="@{/seleccion-restaurante}" class="opcion-card">
         <div class="opcion-icono"><i class="fas fa-store"></i></div>

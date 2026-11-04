@@ -18,6 +18,8 @@ def salud():
         "servicio": "Urban Eats - servicio Python",
         "base_datos": base_datos,
         "ia_local": ollama_cliente.estado(),
-        "rutas": {"proveedor": "openrouteservice" if configuracion.ors_api_key else "linea_recta"},
+        # Sin clave de ORS se usa OSRM; si no hay internet, cada ruta cae a linea recta.
+        "rutas": {"proveedor": "openrouteservice" if configuracion.ors_api_key else "osrm",
+                  "respaldo": "linea_recta"},
         "modo_demo": configuracion.modo_demo,
     }

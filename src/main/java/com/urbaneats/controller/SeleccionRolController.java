@@ -5,7 +5,9 @@ import com.urbaneats.entity.Restaurante;
 import com.urbaneats.dao.GerenteRepository;
 import com.urbaneats.dao.RestauranteRepository;
 import com.urbaneats.security.CustomUserDetails;
+import com.urbaneats.security.RolActivo;
 import com.urbaneats.security.SesionHelper;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -39,10 +41,24 @@ public class SeleccionRolController {
             return "redirect:/catalogo";
         }
 
+        model.addAttribute("esCliente", SesionHelper.tieneRol(RolActivo.CLIENTE));
         model.addAttribute("esGerente", esGerente);
         model.addAttribute("esRepartidor", esRepartidor);
         model.addAttribute("esTecnico", esTecnico);
         return "seleccionRol";
+    }
+
+    /**
+     * "Como usuario": deja CLIENTE como rol activo y va al catalogo.
+     * (Los paneles de cocina, repartidor y tecnico ponen su rol al abrirse; ver RolActivoInterceptor.)
+     */
+    @PostMapping("/seleccion-rol/cliente")
+    public String entrarComoCliente(HttpServletRequest request) {
+        if (!SesionHelper.tieneRol(RolActivo.CLIENTE)) {
+            return "redirect:/seleccion-rol";
+        }
+        RolActivo.guardar(request, RolActivo.CLIENTE);
+        return "redirect:/catalogo";
     }
 
     @GetMapping("/seleccion-restaurante")
@@ -85,6 +101,7 @@ public class SeleccionRolController {
         }
 
         session.setAttribute("restaurante_activo", id);
+        session.setAttribute(RolActivo.DUENO_COCINA, usuario.getCodigoUsuario());
         return "redirect:/perfilRestaurante";
     }
 }

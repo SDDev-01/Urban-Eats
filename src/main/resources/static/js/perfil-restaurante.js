@@ -39,8 +39,8 @@ document.addEventListener('DOMContentLoaded', function () {
 async function cargarPedidos() {
   try {
     const respuesta = await fetch('/perfilRestaurante/pedidos', { headers: { 'Accept': 'application/json' } });
-    if (!respuesta.ok) throw new Error('HTTP ' + respuesta.status);
-    const nuevos = await respuesta.json();
+    const nuevos = await window.UE.leerRespuestaJson(respuesta);
+    if (!respuesta.ok) throw new Error(nuevos.error || 'No se pudieron cargar los pedidos.');
 
     // Aviso cuando entra un pedido que no estaba antes.
     const habiaIds = new Set(pedidos.map(p => p.codigo));
@@ -53,7 +53,7 @@ async function cargarPedidos() {
       'Actualizado a las ' + new Date().toLocaleTimeString('es-CO') + ' · se actualiza solo cada 15 segundos';
   } catch (e) {
     document.getElementById('pedidos-actualizado').textContent =
-      'No se pudieron cargar los pedidos. Reintentando...';
+      e.message === window.UE.MENSAJE_SESION_CAMBIO ? e.message : 'No se pudieron cargar los pedidos. Reintentando...';
   }
 }
 
@@ -77,7 +77,7 @@ async function cambiarEstado(codigo, accion) {
       headers: window.UE.encabezadosCSRF(),
       body: JSON.stringify({ accion, motivo })
     });
-    const datos = await respuesta.json();
+    const datos = await window.UE.leerRespuestaJson(respuesta);
     if (!respuesta.ok) {
       window.UE.mostrarToast(datos.error || 'No se pudo cambiar el estado.', 'fa-exclamation-circle');
     } else {
@@ -85,7 +85,8 @@ async function cambiarEstado(codigo, accion) {
       window.UE.mostrarToast(mensajes[accion] || 'Estado actualizado', 'fa-check');
     }
   } catch (e) {
-    window.UE.mostrarToast('Sin conexión con el servidor.', 'fa-exclamation-circle');
+    window.UE.mostrarToast(e.message === window.UE.MENSAJE_SESION_CAMBIO ? e.message : 'Sin conexión con el servidor.',
+      'fa-exclamation-circle');
   }
   cargarPedidos();
 }
@@ -99,14 +100,14 @@ async function toggleEstado() {
       headers: window.UE.encabezadosCSRF(),
       body: JSON.stringify({ acepta: nuevoValor })
     });
-    if (!respuesta.ok) throw new Error();
-    const datos = await respuesta.json();
+    const datos = await window.UE.leerRespuestaJson(respuesta);
+    if (!respuesta.ok) throw new Error(datos.error || '');
     aceptaPedidos = datos.acepta;
     actualizarBotonEstado();
     window.UE.mostrarToast(aceptaPedidos ? 'Cocina abierta: recibiendo pedidos' : 'Pedidos pausados',
       aceptaPedidos ? 'fa-door-open' : 'fa-door-closed');
   } catch (e) {
-    window.UE.mostrarToast('No se pudo cambiar el estado de la cocina.', 'fa-exclamation-circle');
+    window.UE.mostrarToast(e.message || 'No se pudo cambiar el estado de la cocina.', 'fa-exclamation-circle');
   }
 }
 

@@ -138,6 +138,13 @@ $envPython = Leer-Env (Join-Path $carpetaPython ".env")
 if ("$($envSpring['PYTHON_API_KEY'])" -ne "$($envPython['API_KEY'])") {
     Aviso "PYTHON_API_KEY (.env) y API_KEY (servicio-python\.env) son distintas: Spring Boot no podra hablar con el servicio Python"
 }
+if ("$($envSpring['PAGOS_MODO_DEMO'])" -eq "true") {
+    Ok "Pagos en modo demostracion (PAGOS_MODO_DEMO=true): no se usa MercadoPago"
+} elseif ("$($envSpring['MERCADOPAGO_PUBLIC_KEY'])" -match '^(TEST|APP_USR)-' -and "$($envSpring['MERCADOPAGO_ACCESS_TOKEN'])" -match '^(TEST|APP_USR)-') {
+    Ok "Credenciales de MercadoPago configuradas (pagos de prueba con el formulario de MercadoPago)"
+} else {
+    Aviso "Faltan MERCADOPAGO_PUBLIC_KEY y MERCADOPAGO_ACCESS_TOKEN en el .env (credenciales de prueba TEST-), o pon PAGOS_MODO_DEMO=true"
+}
 
 # ---------------------------------------------------------------------
 Write-Host "5) Python 3.10+ y servicio-python" -ForegroundColor Yellow

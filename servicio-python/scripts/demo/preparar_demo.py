@@ -14,7 +14,7 @@ from datetime import date, datetime, time, timedelta
 
 from sqlalchemy import text
 
-from app.core.database import Base, SesionLocal, motor
+from app.core.database import Base, SesionLocal, agregar_columnas_nuevas, motor
 from app.schemas.solicitud import SolicitudCrear
 from app.services import documento_service, solicitud_service
 from scripts.demo import documentos_prueba
@@ -205,6 +205,7 @@ def main() -> None:
     exigir_modo_demo()
     import app.models  # noqa: F401
     Base.metadata.create_all(motor, checkfirst=True)
+    agregar_columnas_nuevas()
     with SesionLocal() as sesion:
         limpiar(sesion)
         crear_solicitudes(sesion)

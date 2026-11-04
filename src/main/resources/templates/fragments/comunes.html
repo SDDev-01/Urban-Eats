@@ -2,23 +2,61 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<!-- Navbar sencilla para las paginas nuevas de la fase 6 -->
-<nav th:fragment="navbar" class="navbar">
-  <a href="/catalogo" class="navbar-logo">
-    <img src="/images/Logo.png" alt="Urban Eats">
+<!-- Barra de navegacion de todas las paginas. Muestra solo las opciones del rol
+     con el que se esta trabajando (rolActivo, ver DatosGlobales y RolActivo):
+       sin sesion / CLIENTE: restaurantes, filtrar platos, mis pedidos y carrito
+       GERENTE (cocina): su panel, nuevo menu y reportes
+       REPARTIDOR: pedidos para entregar
+       TECNICO: solicitudes de cocinas y reportes
+     Uso: <nav th:replace="~{fragments/comunes :: navbar}"></nav> -->
+<th:block th:fragment="navbar"
+          th:with="conSesion=${#authentication != null and #authentication.principal instanceof T(com.urbaneats.security.CustomUserDetails)},
+                   rol=${rolActivo != null ? rolActivo : 'CLIENTE'},
+                   inicio=${rol == 'GERENTE' ? '/perfilRestaurante' : (rol == 'REPARTIDOR' ? '/perfilRepartidor' : (rol == 'TECNICO' ? '/tecnico/solicitudes' : '/catalogo'))}">
+<nav class="navbar">
+  <a th:href="@{${inicio}}" href="/catalogo" class="navbar-logo">
+    <img th:src="@{/images/Logo.png}" src="/images/Logo.png" alt="Urban Eats">
     <span>Urban Eats</span>
   </a>
   <div class="navbar-links">
-    <a href="/restaurantes" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
-    <a href="/mis-pedidos" class="navbar-link"><i class="fas fa-receipt"></i> Mis pedidos</a>
+    <th:block th:if="${rol == 'CLIENTE'}">
+      <a th:href="@{/restaurantes}" class="navbar-link"><i class="fas fa-store"></i> Restaurantes</a>
+      <a th:if="${conSesion}" th:href="@{/filtrar-platos}" class="navbar-link"><i class="fas fa-filter"></i> Filtrar platos</a>
+      <a th:if="${conSesion}" th:href="@{/mis-pedidos}" class="navbar-link"><i class="fas fa-receipt"></i> Mis pedidos</a>
+    </th:block>
+    <th:block th:if="${rol == 'GERENTE'}">
+      <a th:href="@{/perfilRestaurante}" class="navbar-link"><i class="fas fa-fire-burner"></i> Mi cocina</a>
+      <a th:href="@{/menu}" class="navbar-link"><i class="fas fa-book-open"></i> Nuevo menú</a>
+      <a th:href="@{/reportes}" class="navbar-link"><i class="fas fa-chart-column"></i> Reportes</a>
+    </th:block>
+    <th:block th:if="${rol == 'REPARTIDOR'}">
+      <a th:href="@{/perfilRepartidor}" class="navbar-link"><i class="fas fa-motorcycle"></i> Mis entregas</a>
+    </th:block>
+    <th:block th:if="${rol == 'TECNICO'}">
+      <a th:href="@{/tecnico/solicitudes}" class="navbar-link"><i class="fas fa-clipboard-check"></i> Solicitudes</a>
+      <a th:href="@{/reportes}" class="navbar-link"><i class="fas fa-chart-column"></i> Reportes</a>
+    </th:block>
+    <a th:if="${puedeCambiarRol}" th:href="@{/seleccion-rol}" class="navbar-link"><i class="fas fa-repeat"></i> Cambiar rol</a>
   </div>
   <div class="navbar-right">
-    <a href="/perfil" class="navbar-usuario" style="text-decoration:none;">
+    <a th:href="@{/perfil}" class="navbar-usuario" style="text-decoration:none;">
       <i class="fas fa-user-circle"></i>
-      <span th:text="${#authentication.principal instanceof T(com.urbaneats.security.CustomUserDetails)} ? ${#authentication.principal.nombres} : 'Usuario'">Usuario</span>
+      <span id="navbar-nombre" th:text="${conSesion} ? ${#authentication.principal.nombres} : 'Ingresar'">Usuario</span>
+    </a>
+    <a th:if="${rol == 'CLIENTE'}" th:href="@{/carrito}" class="btn-carrito" aria-label="Ver carrito">
+      <i class="fas fa-shopping-cart"></i>
+      <span class="carrito-badge" id="carrito-badge">0</span>
     </a>
   </div>
 </nav>
+<!-- Aviso cuando RolActivoInterceptor devolvio al panel desde una pagina de cliente -->
+<div th:if="${param.aviso != null and param.aviso[0] == 'rol'}" class="aviso-rol" role="status">
+  <i class="fas fa-circle-info"></i>
+  <span>Estás trabajando <strong th:text="${rol == 'GERENTE' ? 'como cocina' : (rol == 'REPARTIDOR' ? 'como repartidor' : 'como técnico')}">como cocina</strong>:
+    esa página es para clientes. Para pedir comida usa <a th:href="@{/seleccion-rol}">Cambiar rol</a> → «Como usuario».</span>
+  <button type="button" aria-label="Cerrar" onclick="this.parentElement.remove()">&times;</button>
+</div>
+</th:block>
 
 <!-- Franja de modo demostracion (solo si MODO_DEMO=true en el .env) -->
 <div th:fragment="franjaDemo" th:if="${modoDemo}" class="franja-demo">

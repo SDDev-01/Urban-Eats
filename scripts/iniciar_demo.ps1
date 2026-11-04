@@ -78,10 +78,12 @@ if (Esta-escuchando 8000) {
     $fallos++
 } else {
     Start-Process -FilePath $python -ArgumentList "main.py" -WorkingDirectory (Join-Path $raiz "servicio-python")
-    if (Esperar-puerto 8000 90) {
+    # Antes de abrir el puerto carga el modelo de IA en memoria (en CPU puede tardar 2 minutos).
+    Write-Host "   Arrancando (carga el modelo de IA; puede tardar hasta 3 minutos)..."
+    if (Esperar-puerto 8000 180) {
         Write-Host "   Servicio Python encendido (puerto 8000)"
     } else {
-        Write-Host "   El servicio Python no respondio en 90 s. Revisa su ventana" -ForegroundColor Red
+        Write-Host "   El servicio Python no respondio en 180 s. Revisa su ventana" -ForegroundColor Red
         $fallos++
     }
 }
