@@ -66,3 +66,6 @@ build/
 database/respaldos/
 copia de seguridad bd urban eats/
 /servicio-python/.venv/
+# Cache de Python
+__pycache__/
+*.pyc
