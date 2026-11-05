@@ -64,3 +64,5 @@ build/
 !**/src/test/**/build/
 # Respaldos automaticos de scripts/migrar_bd.ps1
 database/respaldos/
+copia de seguridad bd urban eats/
+/servicio-python/.venv/
