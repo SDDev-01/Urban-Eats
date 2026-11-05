@@ -139,7 +139,8 @@ try {
         Ejecutar-Archivo "fase6\01_migracion.sql" $base
     } else {
         throw ("fase6/01_migracion.sql quedo aplicada a medias ($presentes de $($columnasFase6.Count) columnas). " +
-               "No se puede repetir sin riesgo: restaura un respaldo o termina a mano las secciones que faltan.")
+               "No se puede repetir sin riesgo. Haz un respaldo y ejecuta database\fase6\reparar_01_migracion.sql " +
+               "(ver el encabezado de ese archivo), que completa solo lo que falta.")
     }
 
     # fase6/03_datos_bogota_nocturno.sql (datos de prueba)
